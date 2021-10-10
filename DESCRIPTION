@@ -1,0 +1,21 @@
+Package: rptnlmixr
+Title: Automates Reporting of `nlmixr` Fitting Results
+Version: 0.0.0.9000
+Authors@R: c(person("John", "Harrold",
+                     role    = c("aut", "cre"),
+                     email   = "john.m.harrold@gmail.com",
+                     comment = c(ORCID="0000-0003-2052-4373")))
+Maintainer: John Harrold <john.m.harrold@gmail.com>
+Description: This allows you to generate reporting workflows arround `nlmixr` analyses with outputs in Word and PowerPoint. You can specify figures, tables and report structure in a user-definable yaml file. Also you can use the internal functions to access the figures and tables to allow their inclusing in other outputs (e.g. RMarkdown).
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports:
+  flextable,
+  ggplot2,
+  onbrand,
+  stringr,
+  xpose.nlmixr,
+  yaml

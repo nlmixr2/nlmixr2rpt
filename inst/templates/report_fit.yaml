@@ -1,0 +1,166 @@
+# Notes:
+#
+#
+# This controls default placeholders used in the figure and table labels,
+# captions, etc  below. The commands and other strings just need a
+# placeholder surrounded by === and that will be substituted for the
+# placeholder value
+placeholders:
+  CMPD: Compound Name
+  CUNITS: Conc Units
+  TUNITS: Time Units
+  RUN: RUNN
+parameters:
+  lKbBR:     "K~b,BR~"
+  lKbMU:     "K~b,MU~"  
+  lKbAD:     "K~b,AD~"    
+  lKbRB:     "K~b,RB~"   
+  lKbBO:     "K~b,BO~"     
+  lCLint:    "CL~int~ (L/hr)"    
+  add.err:   "Add Err"
+  prop.err:  "Prop Err"
+options:  
+  output_dir:   "file.path(tempdir(), '===RUN===')"
+  resolution:   300
+  length_units: "in"
+#------
+# Both figures and tables are generated based on user defined commands. These
+# will be depdendnt on input data (e.g., nlmixr fit object), default
+# dimensions (figure width and height), the type of report being generated
+# (onbrand report object), etc. The following objects will be created
+# in the environment where the user code is executed and can be used by the
+# user defined code. Some variables are content type specific and are only
+# present in the environtment for that content type. For example the resoluion
+# option only applies to figures and is not defined in the table generation
+# environment:
+#
+#  fid          - current figure ID
+#  fit          - nlmixr fit object
+#  height       - figure height (figure enviornment only)
+#  length_units - units for length and width below (figure enviornment only)
+#  obnd         - onbrand object of the report document
+#  output_dir   - directory where figures are stored
+#  resolution   - resolution of the figure (figure environment only)
+#  rptdetails   - result of reading in the report yaml file 
+#  rpttype      - either "Word" or "PowerPoint" 
+#  width        - figure width  (figure environment only)
+#  xpdb         - xpose object created from xpose_data_nlmixr(fit) (figure 
+#                 environment only)
+#
+# The output must be stored in p_res and it can be either of the following:
+#  - character variable containing the path to the figure file (you can have
+#    multiple figures that will be treated as paginated).
+#  - ggplot object (this can be a single figure or a paginated figure)
+#
+
+figures:
+  # Here we list all figures to be generated.
+  dv_vs_pred:
+    orientation: "portrait"
+    caption:     "dv_vs_pred caption"
+    title:       "dv_vs_pred title"
+    cmd: |-
+      p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
+      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
+      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+  dv_vs_ipred:
+    orientation: "portrait"
+    caption:     "dv_vs_ipred caption"
+    title:       "dv_vs_ipred title"
+    cmd: |-
+      p_res <- dv_vs_ipred(xpdb, caption=NULL, title=NULL) +
+      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
+      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+  res_vs_pred:
+    orientation: "portrait"
+    caption:     "res_vs_pred caption"
+    title:       "res_vs_pred title"
+    cmd: |-
+       p_res <- res_vs_pred(xpdb, caption=NULL, title=NULL) +
+       xlab("Conditional Weighted Residuals") +
+       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+  res_vs_idv:
+    orientation: "landscape"
+    caption:     "res_vs_idv caption"
+    title:       "res_vs_idv title"   
+    cmd: |-
+      p_res <- res_vs_idv(xpdb, caption=NULL, title=NULL) +
+      xlab("Conditional Weighted Residuals") +
+      ylab("Time (===TUNITS===)")
+  prm_vs_iteration:
+    orientation: "landscape"
+    caption:     "prm_vs_iteration caption"
+    title:       "prm_vs_iteration title"   
+    cmd: |-
+      p_res <- prm_vs_iteration(xpdb, caption=NULL, title=NULL)
+  absval_res_vs_pred:
+    orientation: "landscape"
+    caption:     "absval_res_vs_idv caption"
+    title:       "absval_res_vs_idv title"  
+    cmd: |-
+      p_res <- absval_res_vs_pred(xpdb, res = 'IWRES', caption=NULL, title=NULL) +
+      xlab("Time (===TUNITS===)")
+      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
+  ind_plots:
+    orientation: "landscape"
+    caption:     "ind_plots caption"
+    title:       "ind_plots title"   
+    cmd: |-
+      p_res <- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  + 
+      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
+      xlab("Time (===TUNITS===)")
+tables:
+  # Here we list all the tables to be generated
+  pest_table: 
+    orientation: "portrait"  
+    caption:     "Parameter Estimates"
+    title:       "Parameter Estimates"   
+    cmd: |- 
+      t_res <- gen_pest_table(
+      fit        = fit, 
+      obnd       = obnd,
+      rptdetails = rptdetails)
+pptx:
+  figures:
+    # Figures are generated 1 per slide, here you need to 
+    # give the information about that slide master found in
+    # the onbrand template for your organization
+    master:   
+      name:       "content_text"      
+      title_ph:   "title"   
+      content_ph: "content_body"
+    # The figure dimensions here are take from the
+    # master slide and have the same units as those 
+    # specified in analysis
+    width:  9.5
+    height: 5.0
+  content:  
+    - figure: ind_plots
+    - figure: dv_vs_pred
+    - figure: dv_vs_ipred
+    - figure: res_vs_pred
+    - figure: res_vs_idv
+    - figure: prm_vs_iteration
+    - figure: absval_res_vs_pred
+docx:
+  figures:
+    landscape:
+      width:  8.0
+      height: 4.2
+    portrait:
+      width:  6.5
+      height: 6.0
+  content:
+    - text: 
+        text:  "Figures"
+        style: Heading_1
+    - figure: dv_vs_pred
+    - figure: ind_plots
+    - figure: dv_vs_ipred
+    - figure: res_vs_pred
+    - figure: res_vs_idv
+    - figure: prm_vs_iteration
+    - figure: absval_res_vs_pred
+    - text: 
+        text:  "Tables"
+        style: Heading_1
