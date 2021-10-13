@@ -7,7 +7,8 @@
 report_fit(
   obnd = NULL,
   fit = NULL,
-  rptyaml = system.file(package = "rptnlmixr", "templates", "report_fit.yaml")
+  rptyaml = system.file(package = "rptnlmixr", "templates", "report_fit.yaml"),
+  ph = NULL
 )
 }
 \arguments{
@@ -16,6 +17,11 @@ report_fit(
 \item{fit}{nlmixr fit object to be reported}
 
 \item{rptyaml}{yaml file containing the report elements and structure}
+
+\item{ph}{Manual placeholders, see \code{\link{yaml_read_fit}} for more
+details
+for example RUN may be "RUNN" in the yaml file. To overwrite this just
+provide \code{list(RUN="RUN_1")} (default: \code{NULL})}
 }
 \value{
 onbrand object with the report elements added

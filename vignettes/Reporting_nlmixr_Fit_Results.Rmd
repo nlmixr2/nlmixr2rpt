@@ -1,0 +1,182 @@
+---
+title: "Reporting `nlmixr` Fit Results"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reporting_nlmixr_Fit_Results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  messages  = FALSE,
+  echo      = FALSE,
+  warning   = FALSE,
+  eval      = FALSE,
+  collapse  = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+The purpose of `rptnlmixr` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
+
+
+# General workflow
+
+First we need an `nlmixr` fit object. We're going to load a fit example stored in this package:
+```{r, eval=TRUE, echo=TRUE}
+library(rptnlmixr)
+library(onbrand)  
+fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
+```
+
+Next we need to create `onbrand` report objects. This will create 
+
+```{r, eval=TRUE, echo=TRUE}
+obnd_pptx = read_template(
+  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.pptx"),
+  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+
+obnd_docx = read_template(
+  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.docx"),
+  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+```
+
+
+# General workflow
+
+
+# The yaml report file structure
+
+The core of `rptnlmixr` is the yaml reporting file. Below we outline each of the main sections and describe the expected elements in those sections.
+
+
+## `placeholders`
+
+You may wish create your report template with placeholders. For example if you want create a generic template for population PK analysis, it may be useful to label the figures generically. You can use this section to define placeholders that will be applied when the report is created. For example consider the yaml code here:
+
+```
+placeholders:
+  CMPD: Compound Name
+  CUNITS: Conc Units
+  OBJ: sprintf("%3g", fit.addProp.F$objf)
+```
+
+When you create the report you can label your y-axis generically such as:
+
+`"===CMPD== (===CUNITS===)"`
+
+But when the report is built, it will become:
+
+`"Compound Name (Conc Units)"`
+
+Notice that the `OBJ` placeholder contains R Code. By default the reporting process will try to evaluate the placeholders as R Code. If that fails it will revert back to the string supplied. If you run into problems you can quote your placeholder value with both double and single quotes. For example:
+
+```
+  ISSTR:"'ls()'"
+  ISCMD: ls()
+```
+
+The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return the contents of the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` argument to `report_fit`.
+
+Fields that support placeholders will be indicated by ^[PH]^
+
+## `parameters`  
+
+For certain reporting elements it may be better to present parameters differently than the parameter names being used in the model. To do this you can define how they are reported in the `parameters` section. You can define any parameters you want here whether they are present in the model or not. They will only be used if they are present. For tables in Word or PowerPoint you can specify the names using markdown (`md`), otherwise you can specify how they will be handled in text environments (`txt`). For example the intrinsic clearance may be called `lCLint` in the model. And you can specify it as:
+
+```
+parameters:
+  lCLint:    
+    md:  "CL~int~ (L/hr)"    
+    txt: "CLint (L/hr)"    
+```
+## `options`
+
+This section allows you to control general report options. Each element here can be either an explicit value or a piece of R code that will be evaluated. You can use placeholders here as well. The following options are supported with the expected data type in parentheses:
+
+* `output_dir`^[PH]^ - The location where figures will be generated (character)
+* `resolution` - Resolution of figures being generated (numeric)
+* `length_units` - Units to use when determining the width and height of figures (characters)
+
+## Building `figures` & `tables`
+
+Figures and table are defined in terms of evaluable R code. There are several object available in the environment that can be used when creating these report elements. The following objects will be defined:
+
+* `fid`          - current figure ID
+* `fit`          - nlmixr fit object
+* `height`       - figure height (figure environment only)
+* `length_units` - units for length and width below (figure environment only)
+* `obnd`         - onbrand object of the report document
+* `output_dir`   - directory where figures are stored
+* `resolution`   - resolution of the figure (figure environment only)
+* `rptdetails`   - result of reading in the report yaml file 
+* `rpttype`      - either "Word" or "PowerPoint" 
+* `width`        - figure width  (figure environment only)
+* `xpdb`         - xpose object created from xpose_data_nlmixr(fit) (figure  environment only) 
+
+## `figures` 
+
+The figure environment consists of figure IDs. These IDs are used again when defining the Word and PowerPoint report contents. Consider this example:
+
+```
+figures:
+  dv_vs_pred:
+    orientation: "portrait"
+    caption:     "dv_vs_pred caption"
+    title:       "dv_vs_pred title"
+    cmd: |-
+      p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
+      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
+      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+```
+
+It creates the figure with the id `dv_vs_pred`. It has the following elements:
+
+* `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
+* `caption` - ^[PH]^Figure caption in Word reports.
+* `title` - ^[PH]^Slide title when the figure is used in PowerPoint.
+* `cmd` - ^[PH]^Command to generate the figure.
+
+**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. 
+
+## `tables`
+
+## `pptx`
+
+## `docx`
+
+
+# Using report objects in RMarkdown
+
+
+# Customizing reports for your organization
+
+The reporting here is done using the `onbrand` package. This provides an abstraction layer to the `officer` package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or Styles for Word, then create an on brand mapping file. Then when you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the `onbrand` package. 
+
+## PowerPoint
+
+To create an `onbrand` PowerPoint template for your organization you will need the following master slide names define with the corresponding elements. 
+
+```{r, eval=TRUE, message=FALSE}
+fr = template_details(obnd_pptx)
+fr$ft
+```
+
+## Word
+
+Similarly, to create an `onbrand` Word template you will need to the following styles defined.
+
+```{r, eval=TRUE, message=FALSE}
+fr = template_details(obnd_docx)
+fr$ft
+```
+
+# Report configuration file `report_fit.yaml`
+```{r echo=FALSE, comment='', message=TRUE, eval=TRUE}
+fc = readLines(file.path(system.file(package="rptnlmixr"), "templates", "report_fit.yaml"))
+# Stripping out comments:
+fc = fc[!stringr::str_detect(fc, pattern="^\\s*#")]
+cat(fc, sep="\n")
+```

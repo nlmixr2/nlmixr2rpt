@@ -9,7 +9,8 @@ process_ph(str, rptdetails)
 \arguments{
 \item{str}{String to process}
 
-\item{rptdetails}{Object creating when reading in rptyaml file}
+\item{rptdetails}{Object creating when reading in rptyaml file
+(default: \code{NULL})}
 }
 \value{
 processed string

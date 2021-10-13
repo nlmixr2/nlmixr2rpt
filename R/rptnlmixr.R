@@ -25,6 +25,7 @@ report_fit <- function(obnd    = NULL,
   rptcont      = NULL
   rpttype      = "Unknown"
   rptfigfmt    = NULL
+  rpttabfmt    = NULL
   output_dir   = NULL
   resolution   = NULL
   length_units = NULL
@@ -57,6 +58,7 @@ report_fit <- function(obnd    = NULL,
   if(isgood){
   yamlrr = yaml_read_fit(obnd    = obnd, 
                          ph      = ph, 
+                         fit     = fit,
                          rptyaml = rptyaml)
     if(!yamlrr[["isgood"]]){
       isgood = FALSE
@@ -67,25 +69,26 @@ report_fit <- function(obnd    = NULL,
     rptdetails = yamlrr[["rptdetails"]]
     rpttype    = yamlrr[["rpttype"]]
     rptfigfmt  = yamlrr[["rptfigfmt"]]
+    rpttabfmt  = yamlrr[["rpttabfmt"]]
   }
 
   if(isgood){
     # Getting the output directory
-    res_fo = fetch_option(rptdetails=rptdetails, option="output_dir", verbose=FALSE)
+    res_fo = fetch_option(rptdetails=rptdetails, option="output_dir", fit=fit, verbose=FALSE)
     if(res_fo[["isgood"]]){
       output_dir = res_fo[["value"]]
     } else {
       isgood = FALSE
     }
     # Getting the figure resolutioin
-    res_fo = fetch_option(rptdetails=rptdetails, option="resolution")
+    res_fo = fetch_option(rptdetails=rptdetails, fit=fit, option="resolution")
     if(res_fo[["isgood"]]){
       resolution = res_fo[["value"]]
     } else {
       isgood = FALSE
     }
     # Getting the length units
-    res_fo = fetch_option(rptdetails=rptdetails, option="length_units")
+    res_fo = fetch_option(rptdetails=rptdetails, fit=fit, option="length_units")
     if(res_fo[["isgood"]]){
       length_units = res_fo[["value"]]
     } else {
@@ -99,7 +102,7 @@ report_fit <- function(obnd    = NULL,
     # Building Tables
     message("DEBUG: ---------------------------------------")
     message("DEBUG: Before tables")
-    #btres = build_tables(obnd=obnd, fit=fit, rptdetails=rptdetails)
+    btres = build_tables(obnd=obnd, fit=fit, rptdetails=rptdetails)
     message("DEBUG: after tables")
     message("DEBUG: ---------------------------------------")
     #------------------------
@@ -152,15 +155,11 @@ report_fit <- function(obnd    = NULL,
             rptele_orientation = bfres[["rptfigs"]][[rptele[["figure"]]]][["orientation"]]
           }
           # Table orientation:
-          # JMH Add for tables
-        
+          if("table"  %in% names(rptele)){
+            rptele_orientation = btres[["rpttabs"]][[rptele[["table"]]]][["orientation"]]
+          }
           # If the orientation in the report element is different from
-          # the current orientation we have to 
-          if("figure"  %in% names(rptele)){
-          if(rptele[["figure"]] == "res_vs_idv"){
-            #browser()
-          }
-          }
+          # the current orientation we have to change the orientation
           if(!is.null(rptele_orientation)){
             if(rptele_orientation != curr_orientation){
               # Wrapping up the current orientation
@@ -240,16 +239,26 @@ report_fit <- function(obnd    = NULL,
             for(fpage in 1:length(curr_fig[["figure"]])){
               obnd = onbrand::report_add_doc_content(obnd,
                 type     = "imagefile",
-                content  = list(image   = curr_fig[["figure"]][fpage],
-                                caption = curr_fig[["caption_proc"]],
-                                width   = curr_fig[["width"]],
-                                height  = curr_fig[["height"]]))
+                content  = list(image           = curr_fig[["figure"]][fpage],
+                                caption         = curr_fig[["caption_proc"]],
+                                caption_format  = "md",
+                                width           = curr_fig[["width"]],
+                                height          = curr_fig[["height"]]))
+
+              # adding breaks between figures of multipage figures
+              # between figures 1 & 2, 2 & 3,  ... n-1 & n
+              if(length(curr_fig[["figure"]])  > 1){
+                if(fpage < length(curr_fig[["figure"]])){
+                  obnd = onbrand::report_add_doc_content(obnd,
+                    type     = "break",
+                    content  = NULL)
+                }
+              }
               if(ele_ctr < length(rptcont)){
                 add_page_break = TRUE
               }
             }
           }
-        
           last_eletype = "figure"
         }
         #/figures
@@ -272,10 +281,64 @@ report_fit <- function(obnd    = NULL,
         #-----------------------------------
         # table
         if("table" %in% names(rptele)){
-          if(rpttype == "PowerPoint"){
+          # Pulling out the table
+          tid = rptele[["table"]]
+          if(tid %in% names(btres[["rpttabs"]])){
+            curr_tab = btres[["rpttabs"]][[tid]]
+          } else {
+            t_res        = mk_error_tab(c(paste0("The table id ", tid, " was not"), " defined in the yaml file tables section"))
+            curr_tab = list(orientation   = "portrait",
+                            isgood        = TRUE,
+                            cmd           = "",
+                            cmd_proc      = "",
+                            tmsgs         = "",
+                            caption       = "Error table does not exist",
+                            caption_proc  = "Error table does not exist",
+                            title         = "Error table does not exist",
+                            title_proc    = "Error table does not exist",
+                            table         = t_res)     
           }
-          if(rpttype == "Word"){
+          if("table" %in% names(rptele)){
+            if(rpttype == "PowerPoint"){
+              # Adding one slide per table
+              for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                elements = list()
+                # The title element is the table  caption:
+                elements[[rpttabfmt[["master"]][["title_ph"]]]] = 
+                  list( content      = curr_tab[["title_proc"]],
+                        type         = "text")
+                elements[[ rpttabfmt[["master"]][["content_ph"]]]] = 
+                    list( content      = curr_tab[["table"]][["ft"]][[tpage]],
+                          type         = "flextable_object")
+                # Adding the slide
+                obnd =onbrand::report_add_slide(obnd,
+                         template = rpttabfmt[["master"]][["name"]],
+                         elements = elements)
+              }
+            }
+            if(rpttype == "Word"){
+              for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                obnd =  onbrand::report_add_doc_content(obnd,
+                  type     = "flextable_object",
+                  content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
+                                  caption_format  = "md",
+                                  caption         = curr_tab[["caption_proc"]]))
+                # adding breaks between tables of multipage tables
+                # between tables 1 & 2, 2 & 3,  ... n-1 & n
+                if(length(curr_tab[["table"]][["ft"]])  > 1){
+                  if( tpage < length(curr_tab[["table"]][["ft"]])){
+                    obnd = onbrand::report_add_doc_content(obnd,
+                      type     = "break",
+                      content  = NULL)
+                  }
+                }
+              }
+              if(ele_ctr < length(rptcont)){
+                add_page_break = TRUE
+              }
+            }
           }
+          last_eletype = "table"
         }
         #/table
         #-----------------------------------
@@ -315,8 +378,6 @@ return(obnd)}
 #'(default: \code{NULL})
 #'@return processed string
 process_ph = function(str, rptdetails){
-
-
   if("placeholders" %in% names(rptdetails)){
     for(PHNAME in names(rptdetails[["placeholders"]])){
       str = stringr::str_replace_all(
@@ -332,6 +393,7 @@ str}
 #'@description Reads in the report yaml file and looks it to make sure it has all
 #'the necessary fields for the given report. 
 #'@param obnd onbrand report object to have report elements appended to
+#'@param fit nlmixr fit object to be reported
 #'@param rptyaml yaml file containing the report elements and structure
 #'@param ph Placeholders in the yaml file can be overwritten at runtime
 #'with a named list for example RUN may be "RUNN" in the yaml file. To 
@@ -343,14 +405,16 @@ str}
 #'   \item \code{"msgs"} - Vector of messages 
 #'   \item \code{"rpttype"} - Type of onbrand report ("Word" or "PowerPoint")
 #'   \item \code{"rptfigfmt"} - Default figure formatting (orientation and dimensions)
+#'   \item \code{"rpttabfmt"} - Default table formatting (orientation and dimensions)
 #'   \item \code{"rptdetails"} - Contents of the yaml file
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
-yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL){
+yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
   rptdetails = NULL
   rptfigfmt  = NULL
+  rpttabfmt  = NULL
   rpttype    = obnd[["rpttype"]]
   rptcont    = NULL
 
@@ -402,6 +466,22 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL){
         msgs = c(msgs, '    width:  9.5                 ')
         msgs = c(msgs, '    height: 5.0                 ')
       }
+      # Table formatting
+      if( !is.null(rptdetails[["pptx"]][["tables"]][["master"]][["name"]])          &
+          !is.null(rptdetails[["pptx"]][["tables"]][["master"]][["title_ph"]])      &
+          !is.null(rptdetails[["pptx"]][["tables"]][["master"]][["content_ph"]])){
+        rpttabfmt = rptdetails[["pptx"]][["tables"]]
+      } else {
+        isgood = FALSE
+        msgs = c(msgs, "Unable to find PowerPoint table formatting details in the yaml file.")
+        msgs = c(msgs, "The structure should look like this:")
+        msgs = c(msgs, 'pptx:                           ')
+        msgs = c(msgs, '  tables:                       ')
+        msgs = c(msgs, '    master:                     ')
+        msgs = c(msgs, '      name:        "content_text')
+        msgs = c(msgs, '      title_ph:    "title"      ')
+        msgs = c(msgs, '      contente_ph: "content_body')
+      }
     }
     if((rpttype =="Word") & ("docx" %in% names(rptdetails))){
       # Report content
@@ -439,7 +519,6 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL){
   # Processing manual placeholders specified at runtime
   if(!is.null(ph)){
     for(phname in names(ph)){
-
       # If the manual placeholder isnt present in the yaml file we
       # notify the user and flip the isgood flag
       if(is.null(rptdetails[["placeholders"]][[phname]])){
@@ -452,6 +531,17 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL){
     }
   }
 
+
+  # Now we attempt to evaulate the placeholders. This allows the user to 
+  # define the  
+
+  for(phname in names(rptdetails[["placeholders"]])){
+    phres = paste(as.character(eval_str(estr = rptdetails[["placeholders"]][[phname]],
+                                        fit  = fit)), collapse = ", ")
+    rptdetails[["placeholders"]][[phname]] = phres 
+  }
+
+
   if(!is.null(msgs)){
      msgs = c(msgs, paste0("yaml_read_fit()"))
      message(paste(msgs, collapse="\n"))
@@ -462,27 +552,40 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL){
               rptcont    = rptcont,
               rpttype    = rpttype,
               rptfigfmt  = rptfigfmt,
+              rpttabfmt  = rpttabfmt,
               rptdetails = rptdetails)
 
 return(res)}
 
+#'@export
+#'@title Evaluate R Code in String
+#'@description Attempts to evaluate a string as a chunk of R code
+#'applies it to strings. 
+#'@param estr     Object creating when reading in rptyaml file
+#'@param fit nlmixr fit object to be reported
+#'@return String containing the evaled as a character or the original string
+eval_str  <- function(estr="", fit=NULL){
 
-
+  res =
+    tryCatch(
+      {
+       ev_res = eval(parse(text=estr))
+       ev_res},
+     error = function(e) {
+      estr})
+  
+  return(res)}
 
 #'@export
 #'@title Fetch Analysis Options
 #'@description Fetches analysis options from the report yaml 
 #'applies it to strings. 
 #'@param rptdetails Object creating when reading in rptyaml file
-#'@param verbose Boolean variable when set to TRUE (default) messages will be
+#'@param option String containing the option to fetch (see below)
+#'@param fit nlmixr fit object to be reported
+#'@param verbose Boolean variable when set to \code{TRUE} (default) messages will be
 #'displayed on the terminal
-#'@param option String containing the option to fetch can be one of the
 #'following:
-#' \itemize{
-#'   \item \code{"output_dir} - Directory to place figures that are generated (default: \code{tempdir()})
-#'   \item \code{"resolution"} - Resolution of figure files (default: \code{300}) 
-#'   \item \code{"length_units"} - Units (default: \code{"in"}) 
-#' }
 #'@return List containing the following information about the output directory
 #' \itemize{
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
@@ -490,7 +593,13 @@ return(res)}
 #'   \item \code{"value"} - The value of the option or the default if not
 #'   specified
 #' }
-fetch_option  <- function(rptdetails, verbose=TRUE, option=NULL){
+#'@details The option can be one of the following (default: \code{NULL}):
+#' \itemize{
+#'   \item \code{"output_dir"} - Directory to place figures that are generated (default: \code{tempdir()})
+#'   \item \code{"resolution"} - Resolution of figure files (default: \code{300}) 
+#'   \item \code{"length_units"} - Units (default: \code{"in"}) 
+#' }
+fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   isgood        = TRUE
   msgs          = c()
   output_dir    = tempdir()
@@ -515,7 +624,7 @@ fetch_option  <- function(rptdetails, verbose=TRUE, option=NULL){
       # If we do find it we do placeholders substituion:
       od_cmd = process_ph(rptdetails[["options"]][["output_dir"]], rptdetails=rptdetails)
       # Then we try to eval that command
-      output_dir = eval(parse(text=od_cmd))
+      output_dir = as.character(eval_str(estr=od_cmd, fit=fit))
       # making sure the directory exists
       if(!dir.exists(output_dir)){
         # if it doesn't exist we try to create it:
@@ -535,7 +644,7 @@ fetch_option  <- function(rptdetails, verbose=TRUE, option=NULL){
       msgs = c(msgs, paste0("using ", resolution, " instead"))
     } else {
       # If we do find it we do placeholders substituion:
-      resolution = as.numeric(rptdetails[["options"]][["resolution"]])
+      resolution = as.numeric(eval_str(estr=rptdetails[["options"]][["resolution"]], fit=fit))
     }
     value = resolution 
   } else if(option == "length_units"){
@@ -546,7 +655,8 @@ fetch_option  <- function(rptdetails, verbose=TRUE, option=NULL){
       msgs = c(msgs, paste0("using ", length_units, " instead"))
     } else {
       # If we do find it we do placeholders substituion:
-      length_units = rptdetails[["options"]][["length_units"]]
+      length_units = eval_str(estr=rptdetails[["options"]][["length_units"]],
+                              fit=fit)
     }
     value = length_units
   } else {

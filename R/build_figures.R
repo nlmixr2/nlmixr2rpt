@@ -17,11 +17,18 @@
 #'   figure ids in the yaml file. It contains the elements from the yamle file
 #'   and the following elements:
 #'   \itemize{
-#'     \item \code{"figure"}       - ggplot object or the name of the file containing the figure
+#'     \item \code{"figure"}       - list of figure file names for the current fid
+#'     \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape") 
 #'     \item \code{"isgood"}       - Boolean variable indicating success or failure
-#'     \item \code{"msgs"}        - Vector of messages 
+#'     \item \code{"fmsgs"}        - Vector of messages 
+#'     \item \code{"cmd"}          - Original plot generation command 
 #'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
-#'     \item \code{"caption_proc"} - Caption after processing for placeholders
+#'     \item \code{"height"}       - Figure height
+#'     \item \code{"width"}        - Figure width 
+#'     \item \code{"caption"}      - Caption for Word
+#'     \item \code{"caption_proc"} - Caption for Word after processing for placeholders
+#'     \item \code{"title"}        - Slide title for PowerPoint
+#'     \item \code{"title_proc"}   - Slide title for PowerPoint after processing for placeholders
 #'   }
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages 

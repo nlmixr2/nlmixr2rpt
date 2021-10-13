@@ -1,24 +1,48 @@
 # Notes:
 #
-#
 # This controls default placeholders used in the figure and table labels,
 # captions, etc  below. The commands and other strings just need a
 # placeholder surrounded by === and that will be substituted for the
-# placeholder value
+# placeholder value. The placeholder value can be a string or R Code. The
+# underlying functions will attempt to evaluate them. If they evaluate
+# successfully, they will have the return value of that evaluation. Otherwise
+# the string will be kept as is. To force a string to be a string you need to
+# double quote it. So if you specify "'ls()'" you will just see that string.
+# If you specify ls() you will see the contents of the enviornment where the
+# string is evaluated
 placeholders:
   CMPD: Compound Name
   CUNITS: Conc Units
   TUNITS: Time Units
   RUN: RUNN
+  TEST: "'ls()'"
+  TEST2: ls()
+  OBJ: sprintf("%3g", fit.addProp.F$objf)
 parameters:
-  lKbBR:     "K~b,BR~"
-  lKbMU:     "K~b,MU~"  
-  lKbAD:     "K~b,AD~"    
-  lKbRB:     "K~b,RB~"   
-  lKbBO:     "K~b,BO~"     
-  lCLint:    "CL~int~ (L/hr)"    
-  add.err:   "Add Err"
-  prop.err:  "Prop Err"
+  lKbBR:     
+    md:  "K~b,BR~"
+    txt: "KbBR"
+  lKbMU:     
+    md:  "K~b,MU~"  
+    txt: "KbMU"  
+  lKbAD:     
+    md:  "K~b,AD~"    
+    txt: "KbAD"    
+  lKbRB:     
+    md:  "K~b,RB~"   
+    txt: "KbRB"   
+  lKbBO:     
+    md:  "K~b,BO~"     
+    txt: "KbBO"     
+  lCLint:    
+    md:  "CL~int~ (L/hr)"    
+    txt: "CLint (L/hr)"    
+  add.err:   
+    md:  "Add Err"
+    txt: "Add Err"
+  prop.err:  
+    md:  "Prop Err"
+    txt: "Prop Err"
 options:  
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
@@ -121,10 +145,10 @@ tables:
       obnd       = obnd,
       rptdetails = rptdetails)
 pptx:
+  # Tables and figures aree generated 1 per slide, here you need to give the
+  # information about that slide master found in the onbrand template for
+  # your organization
   figures:
-    # Figures are generated 1 per slide, here you need to 
-    # give the information about that slide master found in
-    # the onbrand template for your organization
     master:   
       name:       "content_text"      
       title_ph:   "title"   
@@ -134,7 +158,13 @@ pptx:
     # specified in analysis
     width:  9.5
     height: 5.0
+  tables:  
+    master:   
+      name:       "content_text"      
+      title_ph:   "title"   
+      content_ph: "content_body"
   content:  
+    - table: pest_table
     - figure: ind_plots
     - figure: dv_vs_pred
     - figure: dv_vs_ipred
@@ -164,3 +194,4 @@ docx:
     - text: 
         text:  "Tables"
         style: Heading_1
+    - table: pest_table

@@ -7,8 +7,28 @@
 #'@param rptdetails object creating when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
-#'@return list of tables objects with names taken from the tables element in
-#'the rptdetails object
+#'@return List containing the tables with the following structure:
+#' \itemize{
+#'   \item \code{"rpttabs"} - List of tables with names corresponding to the
+#'   table ids in the yaml file. It contains the elements from the yamle file
+#'   and the following elements:
+#'   \itemize{
+#'     \item \code{"table"}        - List of tables by table ID
+#'     \item \code{"orientation"}  - Table orientation ("portrait" or "landscape") 
+#'     \item \code{"isgood"}       - Boolean variable indicating success or failure
+#'     \item \code{"tmsgs"}        - Vector of messages 
+#'     \item \code{"cmd"}          - Original plot generation command 
+#'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
+#'     \item \code{"height"}       - Table height
+#'     \item \code{"width"}        - Table width 
+#'     \item \code{"caption"}      - Caption for Word
+#'     \item \code{"caption_proc"} - Caption for Word after processing for placeholders
+#'     \item \code{"title"}        - Slide title for PowerPoint
+#'     \item \code{"title_proc"}   - Slide title for PowerPoint after processing for placeholders
+#'   }
+#'   \item \code{"isgood"} - Boolean variable indicating success or failure
+#'   \item \code{"msgs"} - Vector of messages 
+#' }
 build_tables  <- function(obnd       = NULL, 
                           fit        = NULL, 
                           rptdetails = NULL,
@@ -107,7 +127,6 @@ build_tables  <- function(obnd       = NULL,
         }
 
 
-        browser()
         # Now we need to check the t_res to make sure it 
         # has the correct fields
         if(TISGOOD){
@@ -115,8 +134,38 @@ build_tables  <- function(obnd       = NULL,
           ft_found = FALSE
 
           #looking for either a data frame or a flextable
-
-
+          if("ft" %in% names(t_res)){
+            if(length(t_res[["ft"]]) >= 1){
+              # We start by indicating that flextables were found:
+              ft_found = TRUE
+              # Now we check each table to make sure it's a flextable
+              for(tnum in 1:length(t_res[["ft"]])){
+                if(!inherits(t_res[["ft"]][[tnum]], "flextable")){
+                  # If it's not a flextable we flip the found bit
+                  ft_found = FALSE
+                  tmsgs = c(tmsgs, paste("ft number", tnum, "should be a flextable but", class(t_res[["ft"]][[1]]), "was found."))
+                }
+              }
+            } else {
+              tmsgs = c(tmsgs, "ft found but empty")
+            }
+          }
+          if("df" %in% names(t_res)){
+            if(length(t_res[["df"]]) >= 1){
+              # We start by indicating that data.frames were found:
+              df_found = TRUE
+              # Now we check each table to make sure it's a data.frame
+              for(tnum in 1:length(t_res[["df"]])){
+                if(!inherits(t_res[["df"]][[tnum]], "data.frame")){
+                  # If it's not a dataframe we flip the found bit
+                  df_found = FALSE
+                  tmsgs = c(tmsgs, paste("df number", tnum, "should be a data.frame but", class(t_res[["df"]][[1]]), "was found."))
+                }
+              }
+            } else {
+              tmsgs = c(tmsgs, "df found but empty")
+            }
+          }
           # If we haven't found either we create an error
           if(!df_found &!ft_found){
             tmsgs = c(tmsgs, paste0("Error processing table id ", tid, "."))
@@ -125,10 +174,21 @@ build_tables  <- function(obnd       = NULL,
             tmsgs = c(tmsgs, paste0("  - ft: list of flextables for the table."))
             TISGOOD = FALSE
           }
-          
 
+
+          # If data.frames were found but flextables were not we just convert
+          # the data frame into a flextable
+          if(df_found &!ft_found){
+            ft_list = list()
+            tmsgs = c(tmsgs, paste("Converting data.frames to flextables"))
+            for(tnum in 1:length(t_res[["df"]])){
+              ft_list[[tnum]] = flextable::flextable(t_res[["df"]][[tnum]])
+              # Now we stick the flextable back in the results
+              t_res[["ft"]] = ft_list
+            }
+            ft_found = TRUE
+          }
         }
-
 
         # If we get to this point and the table isn't good then we generate 
         # a table holding any error information so it will be obvious 
@@ -184,7 +244,13 @@ btres}
 #'@param rptdetails object creating when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
-#'@return # JMH
+#'@return List with the following elements
+#'\itemize{
+#'  \item \code{"isgood"}  - Boolean variable indicating success or failure
+#'  \item \code{"msgs"}    - Vector of messages 
+#'  \item \code{"ft"}      - Parameter estimates as a `flextable` object 
+#'  \item \code{"df"}      - Parameter estimates as a `data.frame` 
+#'}
 gen_pest_table  <- function(obnd       = NULL, 
                             fit        = NULL, 
                             rptdetails = NULL,
@@ -200,10 +266,12 @@ gen_pest_table  <- function(obnd       = NULL,
     dplyr::mutate(Parameter = rownames(fex_df)) %>%
     dplyr::relocate(Parameter)
   for(rname in names(rptdetails$parameters)){
-    fex_df  = fex_df %>% 
-    dplyr::mutate(Parameter = ifelse(Parameter == rname, 
-                                     rptdetails$parameters[[rname]],
-                                     Parameter))
+    if(!is.null(rptdetails[["parameters"]][[rname]][["md"]])){
+      fex_df  = fex_df %>% 
+        dplyr::mutate(Parameter = ifelse(Parameter == rname, 
+                                         rptdetails[["parameters"]][[rname]][["md"]],
+                                         Parameter))
+      }
   }
 
   # Pulling out the default formating
@@ -244,5 +312,6 @@ mk_error_table <- function(msgs){
   #   xlab(NULL) + ylab(NULL)  + theme(axis.ticks = element_blank()) + 
   #   scale_x_continuous(labels = NULL, limits = c(0,1))        +
   #   scale_y_continuous(labels = NULL, limits = c(-1,0)) 
-  t_res = list(ft)
+  t_res = list()
+  t_res[[1]] = ft
 t_res}

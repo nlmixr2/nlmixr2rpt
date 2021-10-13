@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_figures.R
 \name{mk_error_fig}
 \alias{mk_error_fig}
-\title{Generates ggplot Object with Error Message}
+\title{Generates \code{ggplot} Object with Error Message}
 \usage{
 mk_error_fig(msgs)
 }

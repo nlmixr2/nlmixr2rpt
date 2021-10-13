@@ -17,8 +17,28 @@ build_tables(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 displayed on the terminal}
 }
 \value{
-list of tables objects with names taken from the tables element in
-the rptdetails object
+List containing the tables with the following structure:
+\itemize{
+\item \code{"rpttabs"} - List of tables with names corresponding to the
+table ids in the yaml file. It contains the elements from the yamle file
+and the following elements:
+\itemize{
+\item \code{"table"}        - List of tables by table ID
+\item \code{"orientation"}  - Table orientation ("portrait" or "landscape")
+\item \code{"isgood"}       - Boolean variable indicating success or failure
+\item \code{"tmsgs"}        - Vector of messages
+\item \code{"cmd"}          - Original plot generation command
+\item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
+\item \code{"height"}       - Table height
+\item \code{"width"}        - Table width
+\item \code{"caption"}      - Caption for Word
+\item \code{"caption_proc"} - Caption for Word after processing for placeholders
+\item \code{"title"}        - Slide title for PowerPoint
+\item \code{"title_proc"}   - Slide title for PowerPoint after processing for placeholders
+}
+\item \code{"isgood"} - Boolean variable indicating success or failure
+\item \code{"msgs"} - Vector of messages
+}
 }
 \description{
 Creates tables specified in a rptyaml file

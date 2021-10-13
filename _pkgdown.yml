@@ -1,0 +1,17 @@
+template:
+  params:
+    bootswatch: united
+reference:
+navbar:
+  left:
+  - text: Tutorials
+    icon: fas fa-chalkboard-teacher
+    menu:
+        - text: "Reporting nlmixr Fit Results"
+          href: articles/Reporting_nlmixr_fit_results.html
+  - text: "Functions"
+    icon: fas fa-hat-wizard
+    href: reference/index.html
+  - text: "News"
+    icon: fas fa-rss
+    href: news/index.html

@@ -4,12 +4,19 @@
 \alias{yaml_read_fit}
 \title{Reads and Checks \code{report_fit.yaml} File}
 \usage{
-yaml_read_fit(obnd = NULL, rptyaml = NULL)
+yaml_read_fit(obnd = NULL, rptyaml = NULL, ph = NULL, fit = NULL)
 }
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
 
 \item{rptyaml}{yaml file containing the report elements and structure}
+
+\item{ph}{Placeholders in the yaml file can be overwritten at runtime
+with a named list for example RUN may be "RUNN" in the yaml file. To
+overwrite this just provide \code{list(RUN="RUN_1")}
+(default: \code{NULL})}
+
+\item{fit}{nlmixr fit object to be reported}
 }
 \value{
 List containing the following information about the report
@@ -18,6 +25,7 @@ List containing the following information about the report
 \item \code{"msgs"} - Vector of messages
 \item \code{"rpttype"} - Type of onbrand report ("Word" or "PowerPoint")
 \item \code{"rptfigfmt"} - Default figure formatting (orientation and dimensions)
+\item \code{"rpttabfmt"} - Default table formatting (orientation and dimensions)
 \item \code{"rptdetails"} - Contents of the yaml file
 \item \code{"rptcont"} - Contents of the report to generate
 }
@@ -25,5 +33,4 @@ List containing the following information about the report
 \description{
 Reads in the report yaml file and looks it to make sure it has all
 the necessary fields for the given report.
-applies it to strings.
 }
