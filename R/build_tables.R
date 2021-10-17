@@ -276,9 +276,9 @@ gen_pest_table  <- function(obnd       = NULL,
   for(rname in names(rptdetails$parameters)){
     if(!is.null(rptdetails[["parameters"]][[rname]][["md"]])){
       fex_df  = fex_df %>%
-        dplyr::mutate(Parameter = ifelse(Parameter == rname,
-                                         rptdetails[["parameters"]][[rname]][["md"]],
-                                         Parameter))
+        dplyr::mutate("Parameter" = ifelse(.data[["Parameter"]] == rname,
+                                           rptdetails[["parameters"]][[rname]][["md"]],
+                                          .data[["Parameter"]]))
       }
   }
 
