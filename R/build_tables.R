@@ -14,23 +14,23 @@
 #'   and the following elements:
 #'   \itemize{
 #'     \item \code{"table"}        - List of tables by table ID
-#'     \item \code{"orientation"}  - Table orientation ("portrait" or "landscape") 
+#'     \item \code{"orientation"}  - Table orientation ("portrait" or "landscape")
 #'     \item \code{"isgood"}       - Boolean variable indicating success or failure
-#'     \item \code{"tmsgs"}        - Vector of messages 
-#'     \item \code{"cmd"}          - Original plot generation command 
+#'     \item \code{"tmsgs"}        - Vector of messages
+#'     \item \code{"cmd"}          - Original plot generation command
 #'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
 #'     \item \code{"height"}       - Table height
-#'     \item \code{"width"}        - Table width 
+#'     \item \code{"width"}        - Table width
 #'     \item \code{"caption"}      - Caption for Word
 #'     \item \code{"caption_proc"} - Caption for Word after processing for placeholders
 #'     \item \code{"title"}        - Slide title for PowerPoint
 #'     \item \code{"title_proc"}   - Slide title for PowerPoint after processing for placeholders
 #'   }
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
-#'   \item \code{"msgs"} - Vector of messages 
+#'   \item \code{"msgs"} - Vector of messages
 #' }
-build_tables  <- function(obnd       = NULL, 
-                          fit        = NULL, 
+build_tables  <- function(obnd       = NULL,
+                          fit        = NULL,
                           rptdetails = NULL,
                           verbose    = TRUE){
 
@@ -86,7 +86,7 @@ build_tables  <- function(obnd       = NULL,
       for(tid in names(rptdetails[["tables"]])){
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]
-        # Initializing information about the current table  
+        # Initializing information about the current table
         tmsgs = c(paste("table id:", tid))
         TISGOOD = TRUE
         t_res   = NULL
@@ -119,9 +119,9 @@ build_tables  <- function(obnd       = NULL,
             t_res = tcres[["t_res"]]
           } else {
             # Otherwise we capture erro information here:
-            tmsgs = c(tmsgs, 
-            "Unable to generate table", 
-            "command run:", 
+            tmsgs = c(tmsgs,
+            "Unable to generate table",
+            "command run:",
             tinfo[["cmd_proc"]],
             paste(" -> call:   ", toString(tcres[["error"]][["call"]])),
             paste(" -> message:", toString(tcres[["error"]][["message"]])))
@@ -135,7 +135,7 @@ build_tables  <- function(obnd       = NULL,
         }
 
 
-        # Now we need to check the t_res to make sure it 
+        # Now we need to check the t_res to make sure it
         # has the correct fields
         if(TISGOOD){
           df_found = FALSE
@@ -198,8 +198,8 @@ build_tables  <- function(obnd       = NULL,
           }
         }
 
-        # If we get to this point and the table isn't good then we generate 
-        # a table holding any error information so it will be obvious 
+        # If we get to this point and the table isn't good then we generate
+        # a table holding any error information so it will be obvious
         # something went wrong for the user when they look at the final report
 
         if(!TISGOOD){
@@ -210,18 +210,18 @@ build_tables  <- function(obnd       = NULL,
         # the yaml file
         rpttabs[[tid]] = tinfo
 
-        # Store the stauts of the table    
+        # Store the stauts of the table
         rpttabs[[tid]][["isgood"]] = TISGOOD
 
         # Now we append any messages generated
         rpttabs[[tid]][["msgs"]] = tmsgs
 
-        # Now we append the table  
+        # Now we append the table
         rpttabs[[tid]][["table"]] = t_res
 
 
       }
-    
+
     } else {
       isgood = FALSE
       msgs   = c(msgs, "No tables found in rptdetails")
@@ -239,7 +239,7 @@ build_tables  <- function(obnd       = NULL,
     rpttabs = rpttabs,
     isgood  = isgood,
     msgsg   = msgs)
-    
+
 
 btres}
 
@@ -255,12 +255,12 @@ btres}
 #'@return List with the following elements
 #'\itemize{
 #'  \item \code{"isgood"}  - Boolean variable indicating success or failure
-#'  \item \code{"msgs"}    - Vector of messages 
-#'  \item \code{"ft"}      - Parameter estimates as a `flextable` object 
-#'  \item \code{"df"}      - Parameter estimates as a `data.frame` 
+#'  \item \code{"msgs"}    - Vector of messages
+#'  \item \code{"ft"}      - Parameter estimates as a `flextable` object
+#'  \item \code{"df"}      - Parameter estimates as a `data.frame`
 #'}
-gen_pest_table  <- function(obnd       = NULL, 
-                            fit        = NULL, 
+gen_pest_table  <- function(obnd       = NULL,
+                            fit        = NULL,
                             rptdetails = NULL,
                             verbose    = TRUE){
   isgood = TRUE
@@ -271,12 +271,12 @@ gen_pest_table  <- function(obnd       = NULL,
 
   # Adding parameter names:
   fex_df = fex_df %>%
-    dplyr::mutate(Parameter = rownames(fex_df)) %>%
-    dplyr::relocate(Parameter)
+    dplyr::mutate("Parameter" = rownames(fex_df)) %>%
+    dplyr::relocate(.data[["Parameter"]])
   for(rname in names(rptdetails$parameters)){
     if(!is.null(rptdetails[["parameters"]][[rname]][["md"]])){
-      fex_df  = fex_df %>% 
-        dplyr::mutate(Parameter = ifelse(Parameter == rname, 
+      fex_df  = fex_df %>%
+        dplyr::mutate(Parameter = ifelse(Parameter == rname,
                                          rptdetails[["parameters"]][[rname]][["md"]],
                                          Parameter))
       }
@@ -290,15 +290,15 @@ gen_pest_table  <- function(obnd       = NULL,
     fex_ft = fex_ft %>%
     flextable::compose(
       j     = "Parameter",
-      i     = match(pstr, fex_df$Parameter), 
-      part  = "body",                                                     
+      i     = match(pstr, fex_df$Parameter),
+      part  = "body",
       value = c(onbrand::md_to_oo(pstr, dft_body)$oo))
   }
 
   fex_ft = flextable::autofit(fex_ft)
 
   res = list(isgood = isgood,
-             msgs   = msgs, 
+             msgs   = msgs,
              ft     = list(fex_ft),
              df     = list(fex_df))
 res}
@@ -307,7 +307,7 @@ res}
 #'@title Generates a `flextable` Object with Error Message
 #'@description Takes a vector of messages and returns a `flextable` object with the
 #'text in the table. This can be used in automated table generation to
-#'cascade an error message to the end user. 
+#'cascade an error message to the end user.
 #'@param msgs Vector of error messages
 #'@return list with a single `flextable` object
 mk_error_tab <- function(msgs){

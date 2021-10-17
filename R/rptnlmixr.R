@@ -15,8 +15,8 @@
 #'provide \code{list(RUN="RUN_1")} (default: \code{NULL})
 #'@param rptyaml yaml file containing the report elements and structure
 #'@return onbrand object with the report elements added
-report_fit <- function(obnd    = NULL, 
-                       fit     = NULL, 
+report_fit <- function(obnd    = NULL,
+                       fit     = NULL,
                        rptyaml= system.file(package="rptnlmixr","templates", "report_fit.yaml"),
                        ph      = NULL){
   isgood       = TRUE
@@ -56,15 +56,15 @@ report_fit <- function(obnd    = NULL,
 
   # reading the yaml file
   if(isgood){
-  yamlrr = yaml_read_fit(obnd    = obnd, 
-                         ph      = ph, 
+  yamlrr = yaml_read_fit(obnd    = obnd,
+                         ph      = ph,
                          fit     = fit,
                          rptyaml = rptyaml)
     if(!yamlrr[["isgood"]]){
       isgood = FALSE
     }
 
-    # Defining the pieces locally here. 
+    # Defining the pieces locally here.
     rptcont    = yamlrr[["rptcont"]]
     rptdetails = yamlrr[["rptdetails"]]
     rpttype    = yamlrr[["rpttype"]]
@@ -109,7 +109,7 @@ report_fit <- function(obnd    = NULL,
     # These are the allowed report elements for each document type
     pptx_allowed = c("figure", "table")
     docx_allowed = c("figure", "table", "text")
-    # These are the default values for controlling orientation 
+    # These are the default values for controlling orientation
     curr_orientation    = "portrait"
     last_eletype        = "None"
     ele_ctr             = 1
@@ -157,17 +157,17 @@ report_fit <- function(obnd    = NULL,
               obnd = onbrand::report_add_doc_content(obnd,
                 type     = "section",
                 content  = list(section_type  =curr_orientation))
-            
+
               # Setting the current orientation to the rptele_orientation
               curr_orientation = rptele_orientation
-            
+
               # We also set add_page_break to FALSE since the
               # orientation change will cause a page break
               add_page_break   = FALSE
 
               # Triggering a wrap up at the end of the document
-              wrap_up_orientation = TRUE  
-            
+              wrap_up_orientation = TRUE
+
             }
           }
           # Page breaks can be triggered by figures and tables below but will
@@ -176,7 +176,7 @@ report_fit <- function(obnd    = NULL,
             obnd = onbrand::report_add_doc_content(obnd,
               type     = "break",
               content  = NULL)
-          }   
+          }
           add_page_break   = FALSE
         }
         #-----------------------------------
@@ -188,13 +188,13 @@ report_fit <- function(obnd    = NULL,
             curr_fig = bfres[["rptfigs"]][[fid]]
           } else {
             # This happens when the user specifies a figure that
-            # has not been defined. 
+            # has not been defined.
             p_res        = mk_error_fig(c(paste0("The figure id ", fid, " was not"), " defined in the yaml file figures section"))
             fig_file     = file.path(output_dir, paste0(fid, "-", rpttype, ".png"))
-            png(width    = 4,        height = 4,      units = length_units, 
+            grDevices::png(width    = 4,        height = 4,      units = length_units,
                 filename = fig_file, res    = resolution)
             print(p_res)
-            dev.off()
+            grDevices::dev.off()
             curr_fig = list(orientation   = "portrait",
                             isgood        = TRUE,
                             cmd           = "",
@@ -206,18 +206,18 @@ report_fit <- function(obnd    = NULL,
                             caption_proc  = "Error figure does not exist",
                             title         = "Error figure does not exist",
                             title_proc    = "Error figure does not exist",
-                            figure        = fig_file)     
+                            figure        = fig_file)
           }
           if(rpttype == "PowerPoint"){
-            # For each figure defined by fid we add all the pages 
+            # For each figure defined by fid we add all the pages
             # one slide at a time:
             for(fpage in 1:length(curr_fig[["figure"]])){
               elements = list()
               # The title element is the figure caption:
-              elements[[rptfigfmt[["master"]][["title_ph"]]]] = 
+              elements[[rptfigfmt[["master"]][["title_ph"]]]] =
                 list( content      = curr_fig[["title_proc"]],
                       type         = "text")
-              elements[[ rptfigfmt[["master"]][["content_ph"]]]] = 
+              elements[[ rptfigfmt[["master"]][["content_ph"]]]] =
                   list( content      = curr_fig[["figure"]][[fpage]],
                         type         = "imagefile")
               # Adding the slide
@@ -266,9 +266,9 @@ report_fit <- function(obnd    = NULL,
               message(paste0('A "text" report element must contain both text and style fields'))
             }
           }
-          last_eletype = "text"   
+          last_eletype = "text"
         }
-        #/text    
+        #/text
         #-----------------------------------
         # table
         if("table" %in% names(rptele)){
@@ -287,7 +287,7 @@ report_fit <- function(obnd    = NULL,
                             caption_proc  = "Error table does not exist",
                             title         = "Error table does not exist",
                             title_proc    = "Error table does not exist",
-                            table         = t_res)     
+                            table         = t_res)
           }
           if("table" %in% names(rptele)){
             if(rpttype == "PowerPoint"){
@@ -295,10 +295,10 @@ report_fit <- function(obnd    = NULL,
               for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
                 elements = list()
                 # The title element is the table  caption:
-                elements[[rpttabfmt[["master"]][["title_ph"]]]] = 
+                elements[[rpttabfmt[["master"]][["title_ph"]]]] =
                   list( content      = curr_tab[["title_proc"]],
                         type         = "text")
-                elements[[ rpttabfmt[["master"]][["content_ph"]]]] = 
+                elements[[ rpttabfmt[["master"]][["content_ph"]]]] =
                     list( content      = curr_tab[["table"]][["ft"]][[tpage]],
                           type         = "flextable_object")
                 # Adding the slide
@@ -361,9 +361,9 @@ return(obnd)}
 
 
 #'@export
-#'@title Substitutes Placehodlers in Strings 
-#'@description Takes placeholder information from the rptyaml file and 
-#'applies it to strings. 
+#'@title Substitutes Placehodlers in Strings
+#'@description Takes placeholder information from the rptyaml file and
+#'applies it to strings.
 #'@param str String to process
 #'@param rptdetails Object creating when reading in rptyaml file
 #'(default: \code{NULL})
@@ -380,20 +380,20 @@ process_ph = function(str, rptdetails){
 str}
 
 #'@export
-#'@title Reads and Checks `report_fit.yaml` File       
+#'@title Reads and Checks `report_fit.yaml` File
 #'@description Reads in the report yaml file and looks it to make sure it has all
-#'the necessary fields for the given report. 
+#'the necessary fields for the given report.
 #'@param obnd onbrand report object to have report elements appended to
 #'@param fit nlmixr fit object to be reported
 #'@param rptyaml yaml file containing the report elements and structure
 #'@param ph Placeholders in the yaml file can be overwritten at runtime
-#'with a named list for example RUN may be "RUNN" in the yaml file. To 
-#'overwrite this just provide \code{list(RUN="RUN_1")} 
+#'with a named list for example RUN may be "RUNN" in the yaml file. To
+#'overwrite this just provide \code{list(RUN="RUN_1")}
 #'(default: \code{NULL})
 #'@return List containing the following information about the report
 #' \itemize{
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
-#'   \item \code{"msgs"} - Vector of messages 
+#'   \item \code{"msgs"} - Vector of messages
 #'   \item \code{"rpttype"} - Type of onbrand report ("Word" or "PowerPoint")
 #'   \item \code{"rptfigfmt"} - Default figure formatting (orientation and dimensions)
 #'   \item \code{"rpttabfmt"} - Default table formatting (orientation and dimensions)
@@ -523,13 +523,13 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, fit=NULL){
   }
 
 
-  # Now we attempt to evaulate the placeholders. This allows the user to 
-  # define the  
+  # Now we attempt to evaulate the placeholders. This allows the user to
+  # define the
 
   for(phname in names(rptdetails[["placeholders"]])){
     phres = paste(as.character(eval_str(estr = rptdetails[["placeholders"]][[phname]],
                                         fit  = fit)), collapse = ", ")
-    rptdetails[["placeholders"]][[phname]] = phres 
+    rptdetails[["placeholders"]][[phname]] = phres
   }
 
 
@@ -563,13 +563,13 @@ eval_str  <- function(estr="", fit=NULL){
        ev_res},
      error = function(e) {
       estr})
-  
+
   return(res)}
 
 #'@export
 #'@title Fetch Analysis Options
-#'@description Fetches analysis options from the report yaml 
-#'applies it to strings. 
+#'@description Fetches analysis options from the report yaml
+#'applies it to strings.
 #'@param rptdetails Object creating when reading in rptyaml file
 #'@param option String containing the option to fetch (see below)
 #'@param fit nlmixr fit object to be reported
@@ -579,15 +579,15 @@ eval_str  <- function(estr="", fit=NULL){
 #'@return List containing the following information about the output directory
 #' \itemize{
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
-#'   \item \code{"msgs"} - Vector of messages 
+#'   \item \code{"msgs"} - Vector of messages
 #'   \item \code{"value"} - The value of the option or the default if not
 #'   specified
 #' }
 #'@details The option can be one of the following (default: \code{NULL}):
 #' \itemize{
 #'   \item \code{"output_dir"} - Directory to place figures that are generated (default: \code{tempdir()})
-#'   \item \code{"resolution"} - Resolution of figure files (default: \code{300}) 
-#'   \item \code{"length_units"} - Units (default: \code{"in"}) 
+#'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
+#'   \item \code{"length_units"} - Units (default: \code{"in"})
 #' }
 fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   isgood        = TRUE
@@ -637,7 +637,7 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
       # If we do find it we do placeholders substituion:
       resolution = as.numeric(eval_str(estr=rptdetails[["options"]][["resolution"]], fit=fit))
     }
-    value = resolution 
+    value = resolution
   } else if(option == "length_units"){
     if(is.null(rptdetails[["options"]][["length_units"]])){
       msgs = c(msgs, "rptdetails does not contain a length_units specification")

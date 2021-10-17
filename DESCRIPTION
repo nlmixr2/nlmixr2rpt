@@ -17,6 +17,7 @@ Imports:
   flextable,
   ggforce,
   ggplot2,
+  grDevices,
   onbrand,
   stringr,
   xpose,

@@ -1,4 +1,5 @@
 #'@import ggplot2
+#'@import grDevices
 #'@import xpose
 #'@import xpose.nlmixr
 #'@import stringr
@@ -176,10 +177,10 @@ build_figures <- function(obnd       = NULL,
             figure   = c(fig_file)
 
             # dumping the figure to a file
-            png(width    = width,    height = height, units = length_units,
+            grDevices::png(width    = width,    height = height, units = length_units,
                 filename = fig_file, res    = resolution)
             suppressMessages( print(p_res, page=fpage))
-            dev.off()
+            grDevices::dev.off()
           } else {
             # This will create a figure for each page
             # page so that they can be accessed individually
@@ -189,10 +190,10 @@ build_figures <- function(obnd       = NULL,
               figure   = c(figure, fig_file)
 
               # dumping the figure to a file
-              png(width    = width,    height = height, units = length_units,
+              grDevices::png(width    = width,    height = height, units = length_units,
                   filename = fig_file, res    = resolution)
               suppressMessages( print(p_res, page=fpage))
-              dev.off()
+              grDevices::dev.off()
             }
           }
         } else if(is.character(p_res)){
