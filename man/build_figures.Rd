@@ -7,11 +7,11 @@
 build_figures(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 }
 \arguments{
-\item{obnd}{onbrand report object to have report elements appended to}
+\item{obnd}{\code{onbrand} report object to have report elements appended to}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{\code{nlmixr} fit object to be reported}
 
-\item{rptdetails}{Object creating when reading in rptyaml file}
+\item{rptdetails}{Object created  when reading in rptyaml file}
 
 \item{verbose}{Boolean variable when set to TRUE (default) messages will be
 displayed on the terminal}
@@ -20,8 +20,7 @@ displayed on the terminal}
 List containing the figures with the following structure:
 \itemize{
 \item \code{"rptfigs"} - List of figures with names corresponding to the
-figure ids in the yaml file. It contains the elements from the yamle file
-and the following elements:
+figure ids in the yaml file. Each figure ID contains the following elements:
 \itemize{
 \item \code{"figure"}       - list of figure file names for the current fid
 \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape")

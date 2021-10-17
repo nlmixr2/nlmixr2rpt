@@ -69,6 +69,14 @@ build_tables  <- function(obnd       = NULL,
     } else {
       isgood = FALSE
     }
+    # Getting any user defined preamble code
+    res_fo = fetch_option(rptdetails=rptdetails, option="preamble")
+    if(res_fo[["isgood"]]){
+      preamble_str = res_fo[["value"]]
+      eval(parse(text=preamble_str))
+    } else {
+      isgood = FALSE
+    }
   }
 
 
@@ -302,16 +310,10 @@ res}
 #'cascade an error message to the end user. 
 #'@param msgs Vector of error messages
 #'@return list with a single `flextable` object
-mk_error_table <- function(msgs){
-  browser()
-  ft = NULL
-  # t_res = ggplot()+annotate("text", 
-  #                  hjust= 0, vjust=1,  
-  #                  x=0, y=0, 
-  #                  label = paste(msgs, collapse="\n")) + 
-  #   xlab(NULL) + ylab(NULL)  + theme(axis.ticks = element_blank()) + 
-  #   scale_x_continuous(labels = NULL, limits = c(0,1))        +
-  #   scale_y_continuous(labels = NULL, limits = c(-1,0)) 
+mk_error_tab <- function(msgs){
+  df = data.frame(Error=paste(msgs, collapse="\n"))
+  ft = flextable::flextable(df) %>%
+       flextable::autofit()
   t_res = list()
-  t_res[[1]] = ft
+  t_res[["ft"]][[1]] = ft
 t_res}

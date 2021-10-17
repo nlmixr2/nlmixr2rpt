@@ -2,14 +2,14 @@
 title: "Reporting `nlmixr` Fit Results"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Reporting_nlmixr_Fit_Results}
+  %\VignetteIndexEntry{Reporting `nlmixr` Fit Results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  messages  = FALSE,
+  message   = FALSE,
   echo      = FALSE,
   warning   = FALSE,
   eval      = FALSE,
@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction
+# Introduction <img src="rptnlmixr_hex.png" align="right" height="138.5" border="0px" />
+
 The purpose of `rptnlmixr` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
 
 
@@ -31,7 +32,7 @@ library(onbrand)
 fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
 ```
 
-Next we need to create `onbrand` report objects. This will create 
+Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).
 
 ```{r, eval=TRUE, echo=TRUE}
 obnd_pptx = read_template(
@@ -43,14 +44,38 @@ obnd_docx = read_template(
   mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
 ```
 
+Next we will add the report elements to the report objects using the `report_fit()` function. This function can be used with both types of report. The contents will be different depending on the document type.  
 
-# General workflow
+```{r, eval=FALSE, echo=TRUE}
+obnd_pptx = report_fit(
+  fit     = fit, 
+  obnd    = obnd_pptx)
 
+obnd_docx = report_fit(
+  fit     = fit, 
+  obnd    = obnd_docx)
+```
+
+This function will append the report elements for the supplied fit object to the supplied report. If you have multiple fit objects they can added sequentially. You can also add other report content using the `onbrand` and `officer` functions. Once you're done then you just need to save the reports:
+
+```{r, eval=FALSE, echo=TRUE}
+save_report(obnd_pptx, "report.pptx")
+save_report(obnd_docx, "report.docx")
+```
+
+
+The contents of each report type is defined in a yaml file. The commands above use the default value found in the `rptnlmixr` package. To customize the report elements you can make a copy of the file in your current working directory:
+
+```{r, eval=FALSE, echo=TRUE}
+file.copy(system.file(package="rptnlmixr", "templates", "report_fit.yaml"), 
+          "my_report.yaml")
+```
+
+Then you can edit the `my_report.yaml` file and when you call `report_fit()` provide this yaml file as the `rptyaml` argument. The following section will describe the element of the yaml report format.
 
 # The yaml report file structure
 
 The core of `rptnlmixr` is the yaml reporting file. Below we outline each of the main sections and describe the expected elements in those sections.
-
 
 ## `placeholders`
 
@@ -78,9 +103,9 @@ Notice that the `OBJ` placeholder contains R Code. By default the reporting proc
   ISCMD: ls()
 ```
 
-The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return the contents of the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` argument to `report_fit`.
+The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return the contents of the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` argument to `report_fit()`.
 
-Fields that support placeholders will be indicated by ^[PH]^
+**Note:** Fields that support placeholders will be indicated by ^[PH]^
 
 ## `parameters`  
 
@@ -94,11 +119,14 @@ parameters:
 ```
 ## `options`
 
-This section allows you to control general report options. Each element here can be either an explicit value or a piece of R code that will be evaluated. You can use placeholders here as well. The following options are supported with the expected data type in parentheses:
+This section allows you to control general report options. Each element here can
+be either an explicit value or a piece of R code that will be evaluated. The
+following options are supported with the expected data type in parentheses:
 
 * `output_dir`^[PH]^ - The location where figures will be generated (character)
 * `resolution` - Resolution of figures being generated (numeric)
 * `length_units` - Units to use when determining the width and height of figures (characters)
+* `preamble` - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)
 
 ## Building `figures` & `tables`
 
@@ -118,7 +146,7 @@ Figures and table are defined in terms of evaluable R code. There are several ob
 
 ## `figures` 
 
-The figure environment consists of figure IDs. These IDs are used again when defining the Word and PowerPoint report contents. Consider this example:
+The figures section consists of figure IDs. These IDs are used again when defining the Word and PowerPoint report contents. Consider this example:
 
 ```
 figures:
@@ -127,33 +155,147 @@ figures:
     caption:     "dv_vs_pred caption"
     title:       "dv_vs_pred title"
     cmd: |-
+      library(xpose)
+      library(ggplot2)
       p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
       xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
 ```
 
-It creates the figure with the id `dv_vs_pred`. It has the following elements:
+It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 
 * `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
 * `caption` - ^[PH]^Figure caption in Word reports.
 * `title` - ^[PH]^Slide title when the figure is used in PowerPoint.
 * `cmd` - ^[PH]^Command to generate the figure.
 
-**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. 
+**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. You should also include any libraries you want to use at the top to ensure the functions are available to you. 
 
 ## `tables`
 
-## `pptx`
+Tables behave similarly to figures. In the tables section you create a table ID with the following options specified.
+
+* `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
+* `caption` - ^[PH]^Table caption in Word reports.
+* `title` - ^[PH]^Slide title when the table is used in PowerPoint.
+* `cmd` - ^[PH]^Command to generate the table.
+
+This example will create a table of the parameter estimates.
+
+```
+tables:
+  pest_table: 
+    orientation: "portrait"  
+    caption:     "Parameter Estimates"
+    title:       "Parameter Estimates"   
+    cmd: |- 
+      t_res <- gen_pest_table(
+      fit        = fit, 
+      obnd       = obnd,
+      rptdetails = rptdetails)
+```
+
+**Note:** When the `cmd` is evaluated it needs to create a variable called `t_res`. This a list which can contain the following elements:
+
+* `df` - List of data frames containing the tabular information.
+* `ft` - List of flextables containing the tabular information
+
+If you only supply the data frames list element, they will be converted into flextables internally. Flextables will span multiple pages automatically. If you prefer to have a caption on each page you can split the tables manually into multiple data frames/flextables. The reporting functionality is written to support table spanning multiple pages. If you define a separate table for each page you need to add those as sequential list elements to the `df` and `ft` elements. For example:
+
+```
+t_res$df = list()
+t_res$df[[1]] = data.frame()
+t_res$df[[2]] = data.frame()
+etc
+```
+
+or
+
+```
+t_res$ft = list()
+t_res$ft[[1]] = flextable::flextable() 
+t_res$ft[[2]] = flextable::flextable() 
+etc
+```
+
+If you only have a single table or if you want it to span multiple pages automatically you simply specify the first element listed above (e.g. `t_res$df[[1]]`).
+
+## `pptx` 
+
+This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the `figures` and `tables` sections contain the `onbrand` slide master names (`"content_text"`) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (`"title"`) must be specified as well as the placeholder name for the content (`"content_body"`). Figures for powerpoint reports must be generated in the dimensions of the placeholder, so it is important that the `width` and `height` elements are specified in the units defined in `"length_units"` above.
+
+```  
+pptx:
+  figures:
+    master:   
+      name:       "content_text"      
+      title_ph:   "title"   
+      content_ph: "content_body"
+    width:  9.5
+    height: 5.0
+  tables:  
+    master:   
+      name:       "content_text"      
+      title_ph:   "title"   
+      content_ph: "content_body"
+```
+
+The actual content is specified in the `content` section. This is a list of keywords followed by a value. The `table` keyword should be followed by a table ID defined in the `tables` section. Similarly the `figure` keyworld should be followed by a figure ID defined in the `figures` section:
+
+```
+  content:  
+    - table: pest_table
+    - figure: ind_plots
+    - figure: dv_vs_pred
+    - figure: dv_vs_ipred
+    - figure: res_vs_pred
+    - figure: res_vs_idv
+    - figure: prm_vs_iteration
+    - figure: absval_res_vs_pred
+```
+
 
 ## `docx`
 
+This section starts with general information about word documents. The `figures` section defines the height and width of figures for both `landscape` and `portrait` orientations. Again the units here are defined in `length_units` above.  
 
-# Using report objects in RMarkdown
+```
+docx:
+  figures:
+    landscape:
+      width:  8.0
+      height: 4.2
+    portrait:
+      width:  6.5
+      height: 6.0
+```
 
+Just like with PowerPoint the content is defined in the `content` section. This
+can be defined as a `figure` or a `table` the same as in PowerPoint. Content can
+also include text elements as well. Just specify the `onbrand` style to control
+general formatting.
+
+```
+  content:
+    - text: 
+        text:  "Figures"
+        style: Heading_1
+    - figure: dv_vs_pred
+    - figure: ind_plots
+    - figure: dv_vs_ipred
+    - figure: res_vs_pred
+    - figure: res_vs_idv
+    - figure: prm_vs_iteration
+    - figure: absval_res_vs_pred
+    - text: 
+        text:  "Tables"
+        style: Heading_1
+    - table: pest_table
+```
 
 # Customizing reports for your organization
 
-The reporting here is done using the `onbrand` package. This provides an abstraction layer to the `officer` package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or Styles for Word, then create an on brand mapping file. Then when you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the `onbrand` package. 
+The reporting here is done using the `onbrand` package. This provides an abstraction layer to the `officer` package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or styles for Word, then create an on brand mapping file. Then when you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the `onbrand` package. 
 
 ## PowerPoint
 
@@ -166,7 +308,7 @@ fr$ft
 
 ## Word
 
-Similarly, to create an `onbrand` Word template you will need to the following styles defined.
+Similarly, to create an `onbrand` Word template you will need to the following `onbrand` styles defined.
 
 ```{r, eval=TRUE, message=FALSE}
 fr = template_details(obnd_docx)

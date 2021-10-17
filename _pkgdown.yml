@@ -1,14 +1,38 @@
 template:
   params:
-    bootswatch: united
+#   bootswatch: united
+    bootswatch: flatly
 reference:
+- title: "Workflow"
+  desc: "Appending fit results to reports"
+- contents:
+  - report_fit
+  - yaml_read_fit
+  - gen_pest_table
+- title: "Accessing report elements"
+  desc: "Accessing figures and tables outside of the report worflow"
+- contents:
+  - yaml_read_fit
+  - build_figures
+  - build_tables
+- title: "Under the hood"
+  desc: "Internal-ish and helper functions"
+- contents:
+  - mk_error_fig
+  - mk_error_tab
+  - eval_str
+  - process_ph
+  - fetch_option
+  - fetch_fdim
 navbar:
   left:
   - text: Tutorials
     icon: fas fa-chalkboard-teacher
     menu:
         - text: "Reporting nlmixr Fit Results"
-          href: articles/Reporting_nlmixr_fit_results.html
+          href: articles/Reporting_nlmixr_Fit_Results.html
+        - text: "Accessing Figures and Tables"
+          href: articles/Accessing_Figures_and_Tables.html
   - text: "Functions"
     icon: fas fa-hat-wizard
     href: reference/index.html

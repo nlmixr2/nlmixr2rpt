@@ -15,6 +15,5 @@ eval_str(estr = "", fit = NULL)
 String containing the evaled as a character or the original string
 }
 \description{
-Attempts to evaluate a string as a chunk of R code
-applies it to strings.
+Attempts to evaluate a string as a chunk of R code.
 }

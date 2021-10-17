@@ -100,19 +100,10 @@ report_fit <- function(obnd    = NULL,
   if(isgood){
     #------------------------
     # Building Tables
-    message("DEBUG: ---------------------------------------")
-    message("DEBUG: Before tables")
     btres = build_tables(obnd=obnd, fit=fit, rptdetails=rptdetails)
-    message("DEBUG: after tables")
-    message("DEBUG: ---------------------------------------")
     #------------------------
     # Building Figures
-    message("DEBUG: ---------------------------------------")
-    message("DEBUG: Before figures")
     bfres = build_figures(obnd=obnd, fit=fit, rptdetails=rptdetails)
-    message("DEBUG: after figures")
-    message("DEBUG: ---------------------------------------")
-
     #------------------------
     # Appending results to the open report
     # These are the allowed report elements for each document type
@@ -559,8 +550,7 @@ return(res)}
 
 #'@export
 #'@title Evaluate R Code in String
-#'@description Attempts to evaluate a string as a chunk of R code
-#'applies it to strings. 
+#'@description Attempts to evaluate a string as a chunk of R code.
 #'@param estr     Object creating when reading in rptyaml file
 #'@param fit nlmixr fit object to be reported
 #'@return String containing the evaled as a character or the original string
@@ -606,6 +596,7 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   resolution    = 300
   value         = NULL
   length_units  = "in"
+  preamble      = NULL
 
 
   if(is.null(option)){
@@ -659,6 +650,11 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
                               fit=fit)
     }
     value = length_units
+  } else if(option == "preamble"){
+    if(!is.null(rptdetails[["options"]][["preamble"]])){
+      preamble = rptdetails[["options"]][["preamble"]]
+    }
+    value = preamble
   } else {
     msgs = c(msgs, paste0("Unknown option: ", option))
 

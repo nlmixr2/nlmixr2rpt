@@ -9,7 +9,7 @@ fetch_fdim(obnd = NULL, fid = NULL, fdim = "width", rptdetails = NULL)
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
 
-\item{fid}{Figure id used in the figures section of the yaml file}
+\item{fid}{Figure ID used in the figures section of the yaml file}
 
 \item{fdim}{Dimension to fetch either "width" or "height"}
 

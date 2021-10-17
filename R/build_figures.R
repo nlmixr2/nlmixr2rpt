@@ -1,4 +1,5 @@
 #'@import ggplot2
+#'@import xpose
 #'@import xpose.nlmixr
 #'@import stringr
 #'@importFrom ggforce n_pages
@@ -6,32 +7,31 @@
 #'@export
 #'@title Generates Figures for an `nlmixr` Report
 #'@description Creates figures specified in a rptyaml file
-#'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr fit object to be reported
-#'@param rptdetails Object creating when reading in rptyaml file
+#'@param obnd `onbrand` report object to have report elements appended to
+#'@param fit `nlmixr` fit object to be reported
+#'@param rptdetails Object created  when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
 #'@return List containing the figures with the following structure:
 #' \itemize{
 #'   \item \code{"rptfigs"} - List of figures with names corresponding to the
-#'   figure ids in the yaml file. It contains the elements from the yamle file
-#'   and the following elements:
+#'   figure ids in the yaml file. Each figure ID contains the following elements:
 #'   \itemize{
 #'     \item \code{"figure"}       - list of figure file names for the current fid
-#'     \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape") 
+#'     \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape")
 #'     \item \code{"isgood"}       - Boolean variable indicating success or failure
-#'     \item \code{"fmsgs"}        - Vector of messages 
-#'     \item \code{"cmd"}          - Original plot generation command 
+#'     \item \code{"fmsgs"}        - Vector of messages
+#'     \item \code{"cmd"}          - Original plot generation command
 #'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
 #'     \item \code{"height"}       - Figure height
-#'     \item \code{"width"}        - Figure width 
+#'     \item \code{"width"}        - Figure width
 #'     \item \code{"caption"}      - Caption for Word
 #'     \item \code{"caption_proc"} - Caption for Word after processing for placeholders
 #'     \item \code{"title"}        - Slide title for PowerPoint
 #'     \item \code{"title_proc"}   - Slide title for PowerPoint after processing for placeholders
 #'   }
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
-#'   \item \code{"msgs"} - Vector of messages 
+#'   \item \code{"msgs"} - Vector of messages
 #' }
 build_figures <- function(obnd       = NULL,
                           fit        = NULL,
@@ -89,6 +89,14 @@ build_figures <- function(obnd       = NULL,
     } else {
       isgood = FALSE
     }
+    # Getting any user defined preamble code
+    res_fo = fetch_option(rptdetails=rptdetails, option="preamble")
+    if(res_fo[["isgood"]]){
+      preamble_str = res_fo[["value"]]
+      eval(parse(text=preamble_str))
+    } else {
+      isgood = FALSE
+    }
   }
 
   if(isgood){
@@ -136,9 +144,9 @@ build_figures <- function(obnd       = NULL,
 
           } else {
             # Otherwise we capture erro information here:
-            fmsgs = c(fmsgs, 
-            "Unable to generate figure", 
-            "command run:", 
+            fmsgs = c(fmsgs,
+            "Unable to generate figure",
+            "command run:",
             finfo[["cmd_proc"]],
             paste(" -> call:   ", toString(tcres[["error"]][["call"]])),
             paste(" -> message:", toString(tcres[["error"]][["message"]])))
@@ -168,7 +176,7 @@ build_figures <- function(obnd       = NULL,
             figure   = c(fig_file)
 
             # dumping the figure to a file
-            png(width    = width,    height = height, units = length_units, 
+            png(width    = width,    height = height, units = length_units,
                 filename = fig_file, res    = resolution)
             suppressMessages( print(p_res, page=fpage))
             dev.off()
@@ -179,9 +187,9 @@ build_figures <- function(obnd       = NULL,
               # creating and storing the output file name:
               fig_file =  file.path(output_dir, paste0(fid, "-", fpage,"-", rpttype, ".png"))
               figure   = c(figure, fig_file)
-              
+
               # dumping the figure to a file
-              png(width    = width,    height = height, units = length_units, 
+              png(width    = width,    height = height, units = length_units,
                   filename = fig_file, res    = resolution)
               suppressMessages( print(p_res, page=fpage))
               dev.off()
@@ -209,7 +217,7 @@ build_figures <- function(obnd       = NULL,
 
         # Type of figure
         rptfigs[[fid]][["height"]] = height
-        rptfigs[[fid]][["width"]]  = width 
+        rptfigs[[fid]][["width"]]  = width
       }
     } else {
       isgood = FALSE
@@ -238,26 +246,26 @@ return(bfres)}
 #'@title Generates `ggplot` Object with Error Message
 #'@description Takes a vector of messages and returns a ggplot object with the
 #'text in the figure. This can be used in automated figure generation to
-#'cascade an error message to the end user. 
+#'cascade an error message to the end user.
 #'@param msgs Vector of error messages
 #'@return ggplot object
 mk_error_fig  <- function(msgs){
-  p_res = ggplot()+annotate("text", 
-                   hjust= 0, vjust=1,  
-                   x=0, y=0, 
-                   label = paste(msgs, collapse="\n")) + 
-    xlab(NULL) + ylab(NULL)  + theme(axis.ticks = element_blank()) + 
+  p_res = ggplot()+annotate("text",
+                   hjust= 0, vjust=1,
+                   x=0, y=0,
+                   label = paste(msgs, collapse="\n")) +
+    xlab(NULL) + ylab(NULL)  + theme(axis.ticks = element_blank()) +
     scale_x_continuous(labels = NULL, limits = c(0,1))        +
-    scale_y_continuous(labels = NULL, limits = c(-1,0)) 
+    scale_y_continuous(labels = NULL, limits = c(-1,0))
 
 p_res}
 
 #'@export
 #'@title Gets Figure Dimensions
 #'@description For a given figure id and report type this will pull out the
-#'dimensions of the figure. 
+#'dimensions of the figure.
 #'@param obnd onbrand report object to have report elements appended to
-#'@param fid Figure id used in the figures section of the yaml file
+#'@param fid Figure ID used in the figures section of the yaml file
 #'@param rptdetails Object creating when reading in rptyaml file
 #'@param fdim Dimension to fetch either "width" or "height"
 #'@return ggplot object
@@ -272,17 +280,17 @@ fetch_fdim  <- function(obnd       = NULL,
 
   if(fid %in% names(rptdetails[["figures"]])){
     finfo = rptdetails[["figures"]][[fid]]
-    
-    # Getting the orientation 
+
+    # Getting the orientation
     orientation = "portrait"
     if("orientation" %in% names(finfo)){
       orientation = finfo[["orientation"]]
     }
-    
+
     # Getting the height and width defaults:
     if(rpttype == "PowerPoint"){
       res    = rptdetails[["pptx"]][["figures"]][[fdim]]
-    } 
+    }
     if(rpttype == "Word"){
       res    = rptdetails[["docx"]][["figures"]][[orientation]][[fdim]]
     }
@@ -291,3 +299,4 @@ fetch_fdim  <- function(obnd       = NULL,
     message("fetch_fdim()")
   }
 res}
+

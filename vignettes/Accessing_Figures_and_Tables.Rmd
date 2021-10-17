@@ -1,0 +1,91 @@
+---
+title: "Accessing Figures and Tables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Accessing Figures and Tables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message   = FALSE,
+  echo      = FALSE,
+  warning   = FALSE,
+  eval      = FALSE,
+  collapse  = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction <img src="rptnlmixr_hex.png" align="right" height="138.5" border="0px" />
+
+When you create the `report_fit.yaml` file you have defined figures and tables for reporting. However you may want to reuse these report objects outside of Word and PowerPoint. For example you may want to use them inside of Shiny Apps or in RMarkdown document. This vignette outlines how you can build the objects outside of the `rptnlmixr` workflow. 
+
+# Creating figures and tables
+
+First we need to load the appropriate libraries. We need the `onbrand` library because the tables and figures are generated based on the type of report. Specifically default figure dimensions will change based on the report type. Here we initialize an empty Word report with onbrand. The report type is extracted from this object in the functions below.
+
+```{r, eval=TRUE, echo=TRUE}
+library(rptnlmixr)
+library(onbrand)  
+
+obnd = read_template(
+  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.docx"),
+  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+```
+
+You should have an `nlmixr` fit object from your own analysis. We will load an example from this package.
+
+```{r, eval=TRUE, echo=TRUE}
+fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
+```
+
+Next we read in the yaml file using `yaml_read_fit()`. Below we are using a stripped down example for testing. The contents of the yaml file are stored in the `rptdetails` list element that is returned.
+
+```{r, eval=TRUE, echo=TRUE}
+rptdetails = yaml_read_fit(
+  obnd    = obnd,
+  rptyaml = system.file(package="rptnlmixr", "examples", "report_fit_test.yaml"),
+  fit     = fit)$rptdetails
+```
+
+Now we can use the `rptdetails` object we just created to create the figures and tables using the `build_figures()` and `build_tables()` functions respectively. 
+
+```{r, eval=TRUE, echo=TRUE, results=FALSE, warning=FALSE}
+
+bfres = build_figures(obnd       = obnd,
+                      fit        = fit, 
+                      rptdetails = rptdetails)
+
+btres = build_tables(obnd        = obnd,
+                      fit        = fit, 
+                      rptdetails = rptdetails)
+```
+# Using report objects in RMarkdown
+
+You can look at the help for the two build functions above. Each of the objects they create should contain all of the information about figures and tables defined in the `report_fit.yaml` file. To access a figure you just need to specify the figure ID. For example the path and title of the figure containing the  `dv_vs_pred` figure can be found here:
+```{r, eval=TRUE, echo=TRUE, results=FALSE, warning=FALSE}
+fig_path  = bfres$rptfigs$dv_vs_pred$figure[[1]]
+fig_title = bfres$rptfigs$dv_vs_pred$title_proc
+```
+
+And you can include them in RMarkdown using the following:
+
+```{r, eval=FALSE, echo=TRUE, results=FALSE, warning=FALSE}
+![`r fig_title`](`r fig_path`){width=80%}
+```
+
+![`r fig_title`](`r fig_path`){width=80%}
+
+Tables are used in a similiar fashion. This code will extract the flextable object and title for the `pest_table`. Then it attaches the title as a caption and displays it below.
+
+```{r, eval=TRUE, echo=TRUE, results=TRUE,  warning=FALSE}
+tab_ft    = btres$rpttabs$pest_table$table$ft[[1]]
+tab_title = btres$rpttabs$pest_table$title_proc
+tab_ft = flextable::set_caption(tab_ft, caption = tab_title)
+
+tab_ft
+```

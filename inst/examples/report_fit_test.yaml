@@ -12,8 +12,8 @@
 # string is evaluated
 placeholders:
   CMPD: Compound Name
-  CUNITS: Conc Units
-  TUNITS: Time Units
+  CUNITS: ng/ml
+  TUNITS: days
   RUN: RUNN
   TEST: "'ls()'"
   TEST2: ls()
@@ -90,52 +90,12 @@ figures:
       p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
       xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  dv_vs_ipred:
+  bad_figure:
     orientation: "portrait"
-    caption:     "dv_vs_ipred caption"
-    title:       "dv_vs_ipred title"
+    caption:     "Bad figure designed to fail"
+    title:       "Bad figure designed to fail"
     cmd: |-
-      p_res <- dv_vs_ipred(xpdb, caption=NULL, title=NULL) +
-      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
-      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  res_vs_pred:
-    orientation: "portrait"
-    caption:     "res_vs_pred caption"
-    title:       "res_vs_pred title"
-    cmd: |-
-       p_res <- res_vs_pred(xpdb, caption=NULL, title=NULL) +
-       xlab("Conditional Weighted Residuals") +
-       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  res_vs_idv:
-    orientation: "landscape"
-    caption:     "res_vs_idv caption"
-    title:       "res_vs_idv title"
-    cmd: |-
-      p_res <- res_vs_idv(xpdb, caption=NULL, title=NULL) +
-      xlab("Conditional Weighted Residuals") +
-      ylab("Time (===TUNITS===)")
-  prm_vs_iteration:
-    orientation: "landscape"
-    caption:     "prm_vs_iteration caption"
-    title:       "prm_vs_iteration title"
-    cmd: |-
-      p_res <- prm_vs_iteration(xpdb, caption=NULL, title=NULL)
-  absval_res_vs_pred:
-    orientation: "landscape"
-    caption:     "absval_res_vs_idv caption"
-    title:       "absval_res_vs_idv title"
-    cmd: |-
-      p_res <- absval_res_vs_pred(xpdb, res = 'IWRES', caption=NULL, title=NULL) +
-      xlab("Time (===TUNITS===)")
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
-  ind_plots:
-    orientation: "landscape"
-    caption:     "ind_plots caption"
-    title:       "ind_plots title"
-    cmd: |-
-      p_res <- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  +
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
-      xlab("Time (===TUNITS===)")
+      bad_figure_command
 tables:
   # Here we list all the tables to be generated
   pest_table:
@@ -147,6 +107,12 @@ tables:
       fit        = fit,
       obnd       = obnd,
       rptdetails = rptdetails)
+  bad_table:
+    orientation: "portrait"
+    caption:     "Bad table designed to fail"
+    title:       "Bad table designed to fail"
+    cmd: |-
+      bad_table_command
 pptx:
   # Tables and figures aree generated 1 per slide, here you need to give the
   # information about that slide master found in the onbrand template for
@@ -168,13 +134,8 @@ pptx:
       content_ph: "content_body"
   content:
     - table: pest_table
-    - figure: ind_plots
+    - table: bad_table
     - figure: dv_vs_pred
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
-    - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
 docx:
   figures:
     landscape:
@@ -188,13 +149,9 @@ docx:
         text:  "Figures"
         style: Heading_1
     - figure: dv_vs_pred
-    - figure: ind_plots
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
-    - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
+    - figure: bad_figure
     - text:
         text:  "Tables"
         style: Heading_1
     - table: pest_table
+    - table: bad_table
