@@ -4,3 +4,6 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+build_custom.R
+README.Rmd
+LICENSE

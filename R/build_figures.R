@@ -129,11 +129,20 @@ build_figures <- function(obnd       = NULL,
           if("title" %in% names(finfo)){
             finfo[["title_proc"]] = process_ph(finfo[["title"]],rptdetails=rptdetails)
           }
+
+          # This will attempt to build the figure and trap any errors that are
+          # encountered
           tcres =
             tryCatch(
               {
                # Evaulating the figure generation code
                suppressMessages(eval(parse(text=finfo[["cmd_proc"]])))
+               # Some errors don't show up until the figures are built
+               # while saving. This will force ggplot objects to be built
+               # and trap any errors to be passed on to the user. 
+               if(is.ggplot(p_res)){
+                 ggplot2::ggplot_build(p_res)
+               }
               list(isgood=TRUE, p_res=p_res)},
              error = function(e) {
               list(isgood=FALSE, error=e)})
