@@ -232,7 +232,7 @@ report_fit <- function(obnd    = NULL,
                 type     = "imagefile",
                 content  = list(image           = curr_fig[["figure"]][fpage],
                                 caption         = curr_fig[["caption_proc"]],
-                                caption_format  = "md",
+                                caption_format  = curr_fig[["caption_format"]], 
                                 width           = curr_fig[["width"]],
                                 height          = curr_fig[["height"]]))
 
@@ -312,7 +312,7 @@ report_fit <- function(obnd    = NULL,
                 obnd =  onbrand::report_add_doc_content(obnd,
                   type     = "flextable_object",
                   content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                  caption_format  = "md",
+                                  caption_format  = curr_fig[["caption_format"]], 
                                   caption         = curr_tab[["caption_proc"]]))
                 # adding breaks between tables of multipage tables
                 # between tables 1 & 2, 2 & 3,  ... n-1 & n

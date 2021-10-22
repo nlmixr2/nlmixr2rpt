@@ -1,9 +1,9 @@
 #'@import ggplot2
 #'@import grDevices
 #'@import xpose
-#'@import xpose.nlmixr
 #'@import stringr
 #'@importFrom ggforce n_pages
+#'@importFrom xpose.nlmixr xpose_data_nlmixr
 
 #'@export
 #'@title Generates Figures for an `nlmixr` Report
@@ -100,6 +100,11 @@ build_figures <- function(obnd       = NULL,
     }
   }
 
+
+  # Caption format information
+  allowed_cap_fmts = c("md", "text")
+  cap_fmt_def = "text"
+
   if(isgood){
     if("figures" %in% names(rptdetails)){
       # Creating the xpdb object for xpose figures:
@@ -116,6 +121,19 @@ build_figures <- function(obnd       = NULL,
         fmsgs = c(paste("figure id:", fid))
         FISGOOD = TRUE
         p_res   = NULL
+
+
+        # Figuring out the caption format
+        if("caption_format" %in% names(finfo)){
+          if(finfo[["caption_format"]] %in% allowed_cap_fmts){
+            caption_format = finfo[["caption_format"]]
+          } else {
+            fmsgs = c(fmsgs, paste("unknown caption format:", finfo[["caption_format"]]))
+            caption_format = cap_fmt_def
+          }
+        } else {
+          caption_format = cap_fmt_def
+        }
 
         # If we have a cmd field we try to evaluate that
         if("cmd" %in% names(finfo)){
@@ -212,10 +230,12 @@ build_figures <- function(obnd       = NULL,
           }
         }
 
+        # Storing the caption format for alter use
+        finfo[["caption_format"]] = caption_format
+
         # We carry forward the figure info from
         # the yaml file
         rptfigs[[fid]] = finfo
-
         # Store the stauts of the figurej
         rptfigs[[fid]][["isgood"]] = FISGOOD
 

@@ -79,6 +79,9 @@ build_tables  <- function(obnd       = NULL,
     }
   }
 
+  # Caption format information
+  allowed_cap_fmts = c("md", "text")
+  cap_fmt_def = "text"
 
   if(isgood){
     if("tables" %in% names(rptdetails)){
@@ -90,6 +93,18 @@ build_tables  <- function(obnd       = NULL,
         tmsgs = c(paste("table id:", tid))
         TISGOOD = TRUE
         t_res   = NULL
+
+        # Figuring out the caption format
+        if("caption_format" %in% names(tinfo)){
+          if(tinfo[["caption_format"]] %in% allowed_cap_fmts){
+            caption_format = tinfo[["caption_format"]]
+          } else {
+            fmsgs = c(fmsgs, paste("unknown caption format:", tinfo[["caption_format"]]))
+            caption_format = cap_fmt_def
+          }
+        } else {
+          caption_format = cap_fmt_def
+        }
 
         # If we have a cmd field we try to evaluate that
         if("cmd" %in% names(tinfo)){
@@ -206,6 +221,9 @@ build_tables  <- function(obnd       = NULL,
           t_res = mk_error_tab(tmsgs)
         }
 
+        # Storing the caption format for alter use
+        tinfo[["caption_format"]] = caption_format
+
         # We carry forward the table info from
         # the yaml file
         rpttabs[[tid]] = tinfo
@@ -218,10 +236,7 @@ build_tables  <- function(obnd       = NULL,
 
         # Now we append the table
         rpttabs[[tid]][["table"]] = t_res
-
-
       }
-
     } else {
       isgood = FALSE
       msgs   = c(msgs, "No tables found in rptdetails")
@@ -269,17 +284,24 @@ gen_pest_table  <- function(obnd       = NULL,
   # Pulling out the data frame with the parameter estimates:
   fex_df = fit$par.fixed
 
+  # If there is no Parameter column we add it here
+  if(!("Parameter" %in% names(fex_df))){
+    fex_df = fex_df %>%
+      dplyr::mutate("Parameter" = rownames(fex_df)) %>%
+      dplyr::relocate(.data[["Parameter"]])
+  }
+
   # Adding parameter names:
-  fex_df = fex_df %>%
-    dplyr::mutate("Parameter" = rownames(fex_df)) %>%
-    dplyr::relocate(.data[["Parameter"]])
-  for(rname in names(rptdetails$parameters)){
+  for(rname in rownames(fex_df)){
     if(!is.null(rptdetails[["parameters"]][[rname]][["md"]])){
-      fex_df  = fex_df %>%
-        dplyr::mutate("Parameter" = ifelse(.data[["Parameter"]] == rname,
-                                           rptdetails[["parameters"]][[rname]][["md"]],
-                                          .data[["Parameter"]]))
+      fex_df[rname, "Parameter"] = rptdetails[["parameters"]][[rname]][["md"]]
+    } else {
+      # If there is no value for the current parameter name we 
+      # replace it with the row name
+      if( fex_df[rname, "Parameter"] == ""){
+        fex_df[rname, "Parameter"] = rname
       }
+    } 
   }
 
   # Pulling out the default formating

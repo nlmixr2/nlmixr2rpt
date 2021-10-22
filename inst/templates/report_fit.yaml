@@ -17,23 +17,8 @@ placeholders:
   RUN: RUNN
   TEST: "'ls()'"
   TEST2: ls()
-  OBJ: sprintf("%3g", fit.addProp.F$objf)
+  OBJ: sprintf("%3g", fit$objf)
 parameters:
-  lKbBR:
-    md:  "K~b,BR~"
-    txt: "KbBR"
-  lKbMU:
-    md:  "K~b,MU~"
-    txt: "KbMU"
-  lKbAD:
-    md:  "K~b,AD~"
-    txt: "KbAD"
-  lKbRB:
-    md:  "K~b,RB~"
-    txt: "KbRB"
-  lKbBO:
-    md:  "K~b,BO~"
-    txt: "KbBO"
   lCLint:
     md:  "CL~int~ (L/hr)"
     txt: "CLint (L/hr)"

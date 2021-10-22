@@ -85,7 +85,7 @@ You may wish create your report template with placeholders. For example if you w
 placeholders:
   CMPD: Compound Name
   CUNITS: Conc Units
-  OBJ: sprintf("%3g", fit.addProp.F$objf)
+  OBJ: sprintf("%3g", fit$objf)
 ```
 
 When you create the report you can label your y-axis generically such as:
@@ -151,9 +151,10 @@ The figures section consists of figure IDs. These IDs are used again when defini
 ```
 figures:
   dv_vs_pred:
-    orientation: "portrait"
-    caption:     "dv_vs_pred caption"
-    title:       "dv_vs_pred title"
+    orientation:    "portrait"
+    caption:        "dv_vs_pred caption"
+    caption_format: "text"
+    title:          "dv_vs_pred title"
     cmd: |-
       library(xpose)
       library(ggplot2)
@@ -165,9 +166,10 @@ figures:
 It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 
 * `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
-* `caption` - ^[PH]^Figure caption in Word reports.
-* `title` - ^[PH]^Slide title when the figure is used in PowerPoint.
-* `cmd` - ^[PH]^Command to generate the figure.
+* `caption`^[PH]^ - Figure caption in Word reports.
+* `caption_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
+* `title`^[PH]^ - Slide title when the figure is used in PowerPoint.
+* `cmd`^[PH]^ - Command to generate the figure.
 
 **Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. You should also include any libraries you want to use at the top to ensure the functions are available to you. 
 
@@ -176,18 +178,20 @@ It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 Tables behave similarly to figures. In the tables section you create a table ID with the following options specified.
 
 * `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
-* `caption` - ^[PH]^Table caption in Word reports.
-* `title` - ^[PH]^Slide title when the table is used in PowerPoint.
-* `cmd` - ^[PH]^Command to generate the table.
+* `caption`^[PH]^ - Table caption in Word reports.
+* `caption_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
+* `title`^[PH]^ - Slide title when the table is used in PowerPoint.
+* `cmd`^[PH]^ - Command to generate the table.
 
 This example will create a table of the parameter estimates.
 
 ```
 tables:
   pest_table: 
-    orientation: "portrait"  
-    caption:     "Parameter Estimates"
-    title:       "Parameter Estimates"   
+    orientation:    "portrait"  
+    caption:        "Parameter Estimates"
+    caption_format: "Parameter Estimates"
+    title:          "Parameter Estimates"   
     cmd: |- 
       t_res <- gen_pest_table(
       fit        = fit, 
