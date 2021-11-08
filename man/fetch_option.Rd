@@ -35,6 +35,5 @@ The option can be one of the following (default: \code{NULL}):
 \itemize{
 \item \code{"output_dir"} - Directory to place figures that are generated (default: \code{tempdir()})
 \item \code{"resolution"} - Resolution of figure files (default: \code{300})
-\item \code{"length_units"} - Units (default: \code{"in"})
 }
 }

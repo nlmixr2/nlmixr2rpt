@@ -125,7 +125,6 @@ following options are supported with the expected data type in parentheses:
 
 * `output_dir`^[PH]^ - The location where figures will be generated (character)
 * `resolution` - Resolution of figures being generated (numeric)
-* `length_units` - Units to use when determining the width and height of figures (characters)
 * `preamble` - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)
 
 ## Building `figures` & `tables`
@@ -133,15 +132,14 @@ following options are supported with the expected data type in parentheses:
 Figures and table are defined in terms of evaluable R code. There are several object available in the environment that can be used when creating these report elements. The following objects will be defined:
 
 * `fid`          - current figure ID
-* `fit`          - nlmixr fit object
-* `height`       - figure height (figure environment only)
-* `length_units` - units for length and width below (figure environment only)
+* `fit`          - `nlmixr` fit object
+* `height`       - figure height in inches (figure environment only)
 * `obnd`         - onbrand object of the report document
 * `output_dir`   - directory where figures are stored
 * `resolution`   - resolution of the figure (figure environment only)
 * `rptdetails`   - result of reading in the report yaml file 
 * `rpttype`      - either "Word" or "PowerPoint" 
-* `width`        - figure width  (figure environment only)
+* `width`        - figure width in inches (figure environment only)
 * `xpdb`         - xpose object created from xpose_data_nlmixr(fit) (figure  environment only) 
 
 ## `figures` 
@@ -226,7 +224,7 @@ If you only have a single table or if you want it to span multiple pages automat
 
 ## `pptx` 
 
-This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the `figures` and `tables` sections contain the `onbrand` slide master names (`"content_text"`) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (`"title"`) must be specified as well as the placeholder name for the content (`"content_body"`). Figures for powerpoint reports must be generated in the dimensions of the placeholder, so it is important that the `width` and `height` elements are specified in the units defined in `"length_units"` above.
+This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the `figures` and `tables` sections contain the `onbrand` slide master names (`"content_text"`) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (`"title"`) must be specified as well as the placeholder name for the content (`"content_body"`). Figures for powerpoint reports must be generated in the dimensions of the placeholder, so it is important that the `width` and `height` elements are specified in inches.
 
 ```  
 pptx:
@@ -261,7 +259,7 @@ The actual content is specified in the `content` section. This is a list of keyw
 
 ## `docx`
 
-This section starts with general information about word documents. The `figures` section defines the height and width of figures for both `landscape` and `portrait` orientations. Again the units here are defined in `length_units` above.  
+This section starts with general information about word documents. The `figures` section defines the height and width of figures for both `landscape` and `portrait` orientations. Again the units here are inches.
 
 ```
 docx:

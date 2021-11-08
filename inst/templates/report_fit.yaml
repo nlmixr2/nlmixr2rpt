@@ -31,7 +31,6 @@ parameters:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  length_units: "in"
   preamble: |-
     library("ggplot2")
     library("xpose")
@@ -49,7 +48,6 @@ options:
 #  fid          - current figure ID
 #  fit          - nlmixr fit object
 #  height       - figure height (figure enviornment only)
-#  length_units - units for length and width below (figure enviornment only)
 #  obnd         - onbrand object of the report document
 #  output_dir   - directory where figures are stored
 #  resolution   - resolution of the figure (figure environment only)

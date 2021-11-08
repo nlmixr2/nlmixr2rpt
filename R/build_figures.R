@@ -44,7 +44,6 @@ build_figures <- function(obnd       = NULL,
   bfres        = list()
   output_dir   = NULL
   resolution   = NULL
-  length_units = NULL
   rpttype      = "Unknown"
 
 
@@ -80,13 +79,6 @@ build_figures <- function(obnd       = NULL,
     res_fo = fetch_option(rptdetails=rptdetails, option="resolution")
     if(res_fo[["isgood"]]){
       resolution = res_fo[["value"]]
-    } else {
-      isgood = FALSE
-    }
-    # Getting the length units
-    res_fo = fetch_option(rptdetails=rptdetails, option="length_units")
-    if(res_fo[["isgood"]]){
-      length_units = res_fo[["value"]]
     } else {
       isgood = FALSE
     }
@@ -204,7 +196,7 @@ build_figures <- function(obnd       = NULL,
             figure   = c(fig_file)
 
             # dumping the figure to a file
-            grDevices::png(width    = width,    height = height, units = length_units,
+            grDevices::png(width    = width,    height = height, units = "in",
                 filename = fig_file, res    = resolution)
             suppressMessages( print(p_res, page=fpage))
             grDevices::dev.off()
@@ -217,7 +209,7 @@ build_figures <- function(obnd       = NULL,
               figure   = c(figure, fig_file)
 
               # dumping the figure to a file
-              grDevices::png(width    = width,    height = height, units = length_units,
+              grDevices::png(width    = width,    height = height, units = "in",
                   filename = fig_file, res    = resolution)
               suppressMessages( print(p_res, page=fpage))
               grDevices::dev.off()

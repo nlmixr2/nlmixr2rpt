@@ -28,7 +28,6 @@ parameters:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  length_units: "in"
   preamble: |-
     library("ggplot2")
     library("xpose")

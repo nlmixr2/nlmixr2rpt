@@ -28,7 +28,6 @@ report_fit <- function(obnd    = NULL,
   rpttabfmt    = NULL
   output_dir   = NULL
   resolution   = NULL
-  length_units = NULL
 
   #------------------------
   # Checking user input
@@ -84,13 +83,6 @@ report_fit <- function(obnd    = NULL,
     res_fo = fetch_option(rptdetails=rptdetails, fit=fit, option="resolution")
     if(res_fo[["isgood"]]){
       resolution = res_fo[["value"]]
-    } else {
-      isgood = FALSE
-    }
-    # Getting the length units
-    res_fo = fetch_option(rptdetails=rptdetails, fit=fit, option="length_units")
-    if(res_fo[["isgood"]]){
-      length_units = res_fo[["value"]]
     } else {
       isgood = FALSE
     }
@@ -191,7 +183,7 @@ report_fit <- function(obnd    = NULL,
             # has not been defined.
             p_res        = mk_error_fig(c(paste0("The figure id ", fid, " was not"), " defined in the yaml file figures section"))
             fig_file     = file.path(output_dir, paste0(fid, "-", rpttype, ".png"))
-            grDevices::png(width    = 4,        height = 4,      units = length_units,
+            grDevices::png(width    = 4,        height = 4,      units = "in",
                 filename = fig_file, res    = resolution)
             print(p_res)
             grDevices::dev.off()
@@ -587,7 +579,6 @@ eval_str  <- function(estr="", fit=NULL){
 #' \itemize{
 #'   \item \code{"output_dir"} - Directory to place figures that are generated (default: \code{tempdir()})
 #'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
-#'   \item \code{"length_units"} - Units (default: \code{"in"})
 #' }
 fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   isgood        = TRUE
@@ -595,7 +586,6 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   output_dir    = tempdir()
   resolution    = 300
   value         = NULL
-  length_units  = "in"
   preamble      = NULL
 
 
@@ -638,18 +628,6 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
       resolution = as.numeric(eval_str(estr=rptdetails[["options"]][["resolution"]], fit=fit))
     }
     value = resolution
-  } else if(option == "length_units"){
-    if(is.null(rptdetails[["options"]][["length_units"]])){
-      msgs = c(msgs, "rptdetails does not contain a length_units specification")
-      msgs = c(msgs, "options:")
-      msgs = c(msgs, paste0('  length_units: "in" '))
-      msgs = c(msgs, paste0("using ", length_units, " instead"))
-    } else {
-      # If we do find it we do placeholders substituion:
-      length_units = eval_str(estr=rptdetails[["options"]][["length_units"]],
-                              fit=fit)
-    }
-    value = length_units
   } else if(option == "preamble"){
     if(!is.null(rptdetails[["options"]][["preamble"]])){
       preamble = rptdetails[["options"]][["preamble"]]

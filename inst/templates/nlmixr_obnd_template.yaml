@@ -113,7 +113,7 @@ rpptx:
       font.family:           Helvetica
       vertical.align:        baseline
       shading.color:         transparent
-    Table:   
+    Table:
       color:                 black
       font.size:             12
       bold:                  FALSE
@@ -142,20 +142,41 @@ rdocx:
     Table:                     Table Grid
     Table_Caption:             table title
     Figure_Caption:            graphic title
+    Notes:                     Notes
   doc_def:
     Text:                      Normal
     Table:                     Table
     Table_Caption:             Table_Caption
     Figure_Caption:            Figure_Caption
+    Notes:                     Notes
   formatting:
-    Table_Caption_Location:    top
+    separator:                 ","
+    Table_Order:
+      - table
+      - notes
+      - caption
     Table_Caption_Label_Pre:   "Table "
     Table_Caption_Label_Post:  ". "
-    Figure_Caption_Location:   bottom
+    Figure_Order:
+      - figure
+      - notes
+      - caption
     Figure_Caption_Label_Pre:  "Figure "
     Figure_Caption_Label_Post: ". "
     Figure_Width:              6.0
     Figure_Height:             5.0
+    Figure_Seq_Id:             "Figure"
+    Figure_Number: |-
+      list(officer::run_autonum(pre_label  = "",
+                                seq_id     = Caption_Seq_Id,
+                                post_label = "",
+                                start_at   = Caption_Start_At))
+    Table_Seq_Id:              "Table"
+    Table_Number: |-
+      list(officer::run_autonum(pre_label  = "",
+                                seq_id     = Caption_Seq_Id,
+                                post_label = "",
+                                start_at   = Caption_Start_At))
   md_def:
     # For each style above you need a default specification here. You will
     # also need the 'default' specification, generally just a copy of Normal
@@ -177,6 +198,15 @@ rdocx:
       font.family:           Helvetica
       vertical.align:        baseline
       shading.color:         transparent
+    Notes:
+      color:                  black
+      font.size:              10
+      bold:                   FALSE
+      italic:                 FALSE
+      underlined:             FALSE
+      font.family:            Ariel
+      vertical.align:         baseline
+      shading.color:          transparent
     Normal:
       color:                  black
       font.size:              12
