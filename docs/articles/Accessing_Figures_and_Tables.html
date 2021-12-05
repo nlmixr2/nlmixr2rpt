@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rptnlmixr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -79,7 +81,7 @@
 
       
 
-      </header><script src="Accessing_Figures_and_Tables_files/header-attrs-2.11/header-attrs.js"></script><link href="Accessing_Figures_and_Tables_files/tabwid-1.0.0/tabwid.css" rel="stylesheet">
+      </header><link href="Accessing_Figures_and_Tables_files/tabwid-1.0.0/tabwid.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -93,31 +95,30 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction <img src="rptnlmixr_hex.png" align="right" height="138.5" border="0px">
+<div class="section level1">
+<h1 id="introduction">Introduction <img src="../../../../../Google%20Drive/rptnlmixr/github/rptnlmixr/articles/rptnlmixr_hex.png" align="right" height="138.5" border="0px"><a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h1>
 <p>When you create the <code>report_fit.yaml</code> file you have defined figures and tables for reporting. However you may want to reuse these report objects outside of Word and PowerPoint. For example you may want to use them inside of Shiny Apps or in RMarkdown document. This vignette outlines how you can build the objects outside of the <code>rptnlmixr</code> workflow.</p>
 </div>
-<div id="creating-figures-and-tables" class="section level1">
-<h1 class="hasAnchor">
-<a href="#creating-figures-and-tables" class="anchor"></a>Creating figures and tables</h1>
+<div class="section level1">
+<h1 id="creating-figures-and-tables">Creating figures and tables<a class="anchor" aria-label="anchor" href="#creating-figures-and-tables"></a>
+</h1>
 <p>First we need to load the appropriate libraries. We need the <code>onbrand</code> library because the tables and figures are generated based on the type of report. Specifically default figure dimensions will change based on the report type. Here we initialize an empty Word report with onbrand. The report type is extracted from this object in the functions below.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">rptnlmixr</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/">onbrand</a></span><span class="op">)</span>  
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">rptnlmixr</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/" class="external-link">onbrand</a></span><span class="op">)</span>  
 
-<span class="va">obnd</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html">read_template</a></span><span class="op">(</span>
-  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.docx"</span><span class="op">)</span>,
-  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">obnd</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html" class="external-link">read_template</a></span><span class="op">(</span>
+  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.docx"</span><span class="op">)</span>,
+  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>You should have an <code>nlmixr</code> fit object from your own analysis. We will load an example from this package.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"examples"</span>, <span class="st">"fit.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"examples"</span>, <span class="st">"fit.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Next we read in the yaml file using <code><a href="../reference/yaml_read_fit.html">yaml_read_fit()</a></code>. Below we are using a stripped down example for testing. The contents of the yaml file are stored in the <code>rptdetails</code> list element that is returned.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">rptdetails</span> <span class="op">=</span> <span class="fu"><a href="../reference/yaml_read_fit.html">yaml_read_fit</a></span><span class="op">(</span>
   obnd    <span class="op">=</span> <span class="va">obnd</span>,
-  rptyaml <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"examples"</span>, <span class="st">"report_fit_test.yaml"</span><span class="op">)</span>,
+  rptyaml <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"rptnlmixr"</span>, <span class="st">"examples"</span>, <span class="st">"report_fit_test.yaml"</span><span class="op">)</span>,
   fit     <span class="op">=</span> <span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">rptdetails</span></code></pre></div>
 <p>Now we can use the <code>rptdetails</code> object we just created to create the figures and tables using the <code><a href="../reference/build_figures.html">build_figures()</a></code> and <code><a href="../reference/build_tables.html">build_tables()</a></code> functions respectively.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -130,9 +131,9 @@
                       fit        <span class="op">=</span> <span class="va">fit</span>, 
                       rptdetails <span class="op">=</span> <span class="va">rptdetails</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="using-report-objects-in-rmarkdown" class="section level1">
-<h1 class="hasAnchor">
-<a href="#using-report-objects-in-rmarkdown" class="anchor"></a>Using report objects in RMarkdown</h1>
+<div class="section level1">
+<h1 id="using-report-objects-in-rmarkdown">Using report objects in RMarkdown<a class="anchor" aria-label="anchor" href="#using-report-objects-in-rmarkdown"></a>
+</h1>
 <p>You can look at the help for the two build functions above. Each of the objects they create should contain all of the information about figures and tables defined in the <code>report_fit.yaml</code> file. To access a figure you just need to specify the figure ID. For example the path and title of the figure containing the <code>dv_vs_pred</code> figure can be found here:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fig_path</span>  <span class="op">=</span> <span class="va">bfres</span><span class="op">$</span><span class="va">rptfigs</span><span class="op">$</span><span class="va">dv_vs_pred</span><span class="op">$</span><span class="va">figure</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
@@ -140,16 +141,16 @@
 <p>And you can include them in RMarkdown using the following:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span>[<span class="st">`</span><span class="at">r fig_title</span><span class="st">`</span>](<span class="st">`</span><span class="at">r fig_path</span><span class="st">`</span>){width<span class="ot">=</span><span class="dv">80</span>%}</span></code></pre></div>
 <div class="figure">
-<img src="../../../../../../../private/var/folders/xs/3gst8jln2q3c_01y4cg1rqp00000gn/T/Rtmp2B9pfP/RUNN/dv_vs_pred-Word.png" style="width:80.0%" alt=""><p class="caption">dv_vs_pred title</p>
+<img src="../../../../../../../private/var/folders/xs/3gst8jln2q3c_01y4cg1rqp00000gn/T/Rtmp1pWR7G/RUNN/dv_vs_pred-Word.png" style="width:80.0%" alt=""><p class="caption">dv_vs_pred title</p>
 </div>
 <p>Tables are used in a similiar fashion. This code will extract the flextable object and title for the <code>pest_table</code>. Then it attaches the title as a caption and displays it below.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tab_ft</span>    <span class="op">=</span> <span class="va">btres</span><span class="op">$</span><span class="va">rpttabs</span><span class="op">$</span><span class="va">pest_table</span><span class="op">$</span><span class="va">table</span><span class="op">$</span><span class="va">ft</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
 <span class="va">tab_title</span> <span class="op">=</span> <span class="va">btres</span><span class="op">$</span><span class="va">rpttabs</span><span class="op">$</span><span class="va">pest_table</span><span class="op">$</span><span class="va">title_proc</span>
-<span class="va">tab_ft</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/set_caption.html">set_caption</a></span><span class="op">(</span><span class="va">tab_ft</span>, caption <span class="op">=</span> <span class="va">tab_title</span><span class="op">)</span>
+<span class="va">tab_ft</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/set_caption.html" class="external-link">set_caption</a></span><span class="op">(</span><span class="va">tab_ft</span>, caption <span class="op">=</span> <span class="va">tab_title</span><span class="op">)</span>
 
 <span class="va">tab_ft</span></code></pre></div>
-<template id="8e4092a8-394e-4010-b364-4f21561eaa9e"><style>
+<template id="685e0f5f-d239-4570-b21d-df35b7267960"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -185,99 +186,99 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-77cd712e{}.cl-77c7c1d4{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-77c7c1fc{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-77c7c206{font-family:'Helvetica';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-77c7d28c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-77c80266{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80270{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80271{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80272{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8027a{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8027b{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8027c{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8027d{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80284{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80285{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80286{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8028e{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8028f{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80290{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80298{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c80299{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8029a{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c8029b{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802a2{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802a3{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802a4{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802a5{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802ac{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802ad{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802b6{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802b7{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802b8{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802b9{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802c0{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802c1{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802c2{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802c3{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802ca{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802cb{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-77c802cc{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-77cd712e">
+<style>.cl-ef92a11c{}.cl-ef8bf75e{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-ef8bf79a{font-family:'Helvetica';font-size:12pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-ef8bf79b{font-family:'Helvetica';font-size:7.2pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;top:3.6pt;}.cl-ef8c127a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-ef8c4ac4{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ac5{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ace{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4acf{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ad0{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ad8{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ad9{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ada{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4adb{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ae2{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4ae3{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4aec{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4aed{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4af6{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4af7{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4af8{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b00{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b01{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b02{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b0a{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b0b{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b0c{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b14{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b15{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b16{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b1e{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b1f{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b28{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b29{width:84.1pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b2a{width:74.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b32{width:74.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b33{width:54.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b34{width:52.9pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b35{width:172.2pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ef8c4b3c{width:51.7pt;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-ef92a11c">
 <caption class="Table Caption">
 <p>Parameter Estimates</p>
 </caption>
 <thead><tr style="overflow-wrap:break-word;">
-<td class="cl-77c802c2"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">Parameter</span></p></td>
-<td class="cl-77c802cc"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">Est.</span></p></td>
-<td class="cl-77c802c3"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">SE</span></p></td>
-<td class="cl-77c802ca"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">%RSE</span></p></td>
-<td class="cl-77c802cb"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">Back-transformed(95%CI)</span></p></td>
-<td class="cl-77c802c1"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">BSV(CV%)</span></p></td>
-<td class="cl-77c802c0"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">Shrink(SD)%</span></p></td>
+<td class="cl-ef8c4b32"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">Parameter</span></p></td>
+<td class="cl-ef8c4b3c"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">Est.</span></p></td>
+<td class="cl-ef8c4b33"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">SE</span></p></td>
+<td class="cl-ef8c4b34"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">%RSE</span></p></td>
+<td class="cl-ef8c4b35"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">Back-transformed(95%CI)</span></p></td>
+<td class="cl-ef8c4b2a"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">BSV(CV%)</span></p></td>
+<td class="cl-ef8c4b29"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">Shrink(SD)%</span></p></td>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c80266"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">lKbBR</span></p></td>
-<td class="cl-77c8027a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">4.79</span></p></td>
-<td class="cl-77c8027c"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.0983</span></p></td>
-<td class="cl-77c80272"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2.05</span></p></td>
-<td class="cl-77c80271"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">120 (98.9, 145)</span></p></td>
-<td class="cl-77c8027b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80270"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4ac4"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">lKbBR</span></p></td>
+<td class="cl-ef8c4ad0"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">4.79</span></p></td>
+<td class="cl-ef8c4ad9"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.0983</span></p></td>
+<td class="cl-ef8c4acf"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2.05</span></p></td>
+<td class="cl-ef8c4ace"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">120 (98.9, 145)</span></p></td>
+<td class="cl-ef8c4ad8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4ac5"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c80266"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">lKbMU</span></p></td>
-<td class="cl-77c8027a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">-8.56</span></p></td>
-<td class="cl-77c8027c"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.513</span></p></td>
-<td class="cl-77c80272"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">5.99</span></p></td>
-<td class="cl-77c80271"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.000192 (7.01e-05, 0.000524)</span></p></td>
-<td class="cl-77c8027b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80270"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4ac4"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">lKbMU</span></p></td>
+<td class="cl-ef8c4ad0"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">-8.56</span></p></td>
+<td class="cl-ef8c4ad9"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.513</span></p></td>
+<td class="cl-ef8c4acf"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">5.99</span></p></td>
+<td class="cl-ef8c4ace"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.000192 (7.01e-05, 0.000524)</span></p></td>
+<td class="cl-ef8c4ad8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4ac5"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c80266"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">lKbAD</span></p></td>
-<td class="cl-77c8027a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">-0.462</span></p></td>
-<td class="cl-77c8027c"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.0521</span></p></td>
-<td class="cl-77c80272"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">11.3</span></p></td>
-<td class="cl-77c80271"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.63 (0.569, 0.698)</span></p></td>
-<td class="cl-77c8027b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80270"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4ac4"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">lKbAD</span></p></td>
+<td class="cl-ef8c4ad0"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">-0.462</span></p></td>
+<td class="cl-ef8c4ad9"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.0521</span></p></td>
+<td class="cl-ef8c4acf"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">11.3</span></p></td>
+<td class="cl-ef8c4ace"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.63 (0.569, 0.698)</span></p></td>
+<td class="cl-ef8c4ad8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4ac5"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c8028f"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">CL</span><span class="cl-77c7c206">int</span><span class="cl-77c7c1fc"> (L/hr)</span></p></td>
-<td class="cl-77c8028e"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">19.6</span></p></td>
-<td class="cl-77c80286"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2.28</span></p></td>
-<td class="cl-77c8027d"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">11.7</span></p></td>
-<td class="cl-77c80284"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">3.14e+08 (3.6e+06, 2.75e+10)</span></p></td>
-<td class="cl-77c80290"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">3.43</span></p></td>
-<td class="cl-77c80285"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">99.3%&gt;</span></p></td>
+<td class="cl-ef8c4aed"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">CL</span><span class="cl-ef8bf79b">int</span><span class="cl-ef8bf79a"> (L/hr)</span></p></td>
+<td class="cl-ef8c4aec"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">19.6</span></p></td>
+<td class="cl-ef8c4ae3"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2.28</span></p></td>
+<td class="cl-ef8c4ada"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">11.7</span></p></td>
+<td class="cl-ef8c4adb"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">3.14e+08 (3.6e+06, 2.75e+10)</span></p></td>
+<td class="cl-ef8c4af6"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">3.43</span></p></td>
+<td class="cl-ef8c4ae2"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">99.3%&gt;</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c80266"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">lKbBO</span></p></td>
-<td class="cl-77c8027a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.702</span></p></td>
-<td class="cl-77c8027c"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.0835</span></p></td>
-<td class="cl-77c80272"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">11.9</span></p></td>
-<td class="cl-77c80271"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2.02 (1.71, 2.38)</span></p></td>
-<td class="cl-77c8027b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80270"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4ac4"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">lKbBO</span></p></td>
+<td class="cl-ef8c4ad0"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.702</span></p></td>
+<td class="cl-ef8c4ad9"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.0835</span></p></td>
+<td class="cl-ef8c4acf"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">11.9</span></p></td>
+<td class="cl-ef8c4ace"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2.02 (1.71, 2.38)</span></p></td>
+<td class="cl-ef8c4ad8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4ac5"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c80266"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">lKbRB</span></p></td>
-<td class="cl-77c8027a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2</span></p></td>
-<td class="cl-77c8027c"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">0.0773</span></p></td>
-<td class="cl-77c80272"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">3.87</span></p></td>
-<td class="cl-77c80271"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">7.36 (6.33, 8.57)</span></p></td>
-<td class="cl-77c8027b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80270"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4ac4"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">lKbRB</span></p></td>
+<td class="cl-ef8c4ad0"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2</span></p></td>
+<td class="cl-ef8c4ad9"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">0.0773</span></p></td>
+<td class="cl-ef8c4acf"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">3.87</span></p></td>
+<td class="cl-ef8c4ace"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">7.36 (6.33, 8.57)</span></p></td>
+<td class="cl-ef8c4ad8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4ac5"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c802a4"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">add.err</span></p></td>
-<td class="cl-77c8029b"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">7.27</span></p></td>
-<td class="cl-77c802a3"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"></span></p></td>
-<td class="cl-77c80298"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"></span></p></td>
-<td class="cl-77c802a2"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">7.27</span></p></td>
-<td class="cl-77c8029a"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c80299"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4b0b"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">add.err</span></p></td>
+<td class="cl-ef8c4b01"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">7.27</span></p></td>
+<td class="cl-ef8c4b0a"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"></span></p></td>
+<td class="cl-ef8c4af7"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"></span></p></td>
+<td class="cl-ef8c4b02"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">7.27</span></p></td>
+<td class="cl-ef8c4b00"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4af8"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-77c802ad"><p class="cl-77c7d28c"><span class="cl-77c7c1fc">Prop Err</span></p></td>
-<td class="cl-77c802b7"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2.44</span></p></td>
-<td class="cl-77c802a5"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"></span></p></td>
-<td class="cl-77c802b6"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"></span></p></td>
-<td class="cl-77c802ac"><p class="cl-77c7d28c"><span class="cl-77c7c1d4">2.44</span></p></td>
-<td class="cl-77c802b9"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
-<td class="cl-77c802b8"><p class="cl-77c7d28c"><span class="cl-77c7c1d4"> </span></p></td>
+<td class="cl-ef8c4b15"><p class="cl-ef8c127a"><span class="cl-ef8bf79a">Prop Err</span></p></td>
+<td class="cl-ef8c4b1e"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2.44</span></p></td>
+<td class="cl-ef8c4b0c"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"></span></p></td>
+<td class="cl-ef8c4b16"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"></span></p></td>
+<td class="cl-ef8c4b14"><p class="cl-ef8c127a"><span class="cl-ef8bf75e">2.44</span></p></td>
+<td class="cl-ef8c4b28"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
+<td class="cl-ef8c4b1f"><p class="cl-ef8c127a"><span class="cl-ef8bf75e"> </span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="1a6e9c7d-2d03-43f5-b044-ebe180602666"></div>
+</div></template><div class="flextable-shadow-host" id="39ccfbb3-8dda-457e-b1d6-47dcc3a179c0"></div>
 <script>
-var dest = document.getElementById("1a6e9c7d-2d03-43f5-b044-ebe180602666");
-var template = document.getElementById("8e4092a8-394e-4010-b364-4f21561eaa9e");
+var dest = document.getElementById("39ccfbb3-8dda-457e-b1d6-47dcc3a179c0");
+var template = document.getElementById("685e0f5f-d239-4570-b21d-df35b7267960");
 var caption = template.content.querySelector("caption");
 if(caption) {
   caption.style.cssText = "display:block;text-align:center;";
@@ -303,11 +304,13 @@ fantome.appendChild(templateContent);
 
 
       <footer><div class="copyright">
-  <p>Developed by John Harrold.</p>
+  <p></p>
+<p>Developed by John Harrold.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -315,6 +318,8 @@ fantome.appendChild(templateContent);
 
   
 
+
+  
 
   </body>
 </html>

@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rptnlmixr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
       </span>
     </div>
 
@@ -81,36 +83,35 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rptnlmixr-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rptnlmixr-" class="anchor"></a>rptnlmixr <img src="reference/figures/rptnlmixr_hex.png" align="right" height="138.5">
+<div class="section level1">
+<div class="page-header"><h1 id="rptnlmixr-">rptnlmixr <img src="reference/figures/rptnlmixr_hex.png" align="right" height="138.5"><a class="anchor" aria-label="anchor" href="#rptnlmixr-"></a>
 </h1></div>
 <!-- badges: start -->
 
 <p>Templated Word and PowerPoint reporting for <code>nlmixr</code></p>
-<div id="overview" class="section level2">
-<h2 class="hasAnchor">
-<a href="#overview" class="anchor"></a>Overview</h2>
+<div class="section level2">
+<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
+</h2>
 <p>The purpose of this package is to automate the reporting of analyses performed in the <code>nlmixr</code> package in both PowerPoint and Word. This is accomplished with a yaml file that contains specifications for report elements (figures and tables) as well as the contents of Word and PowerPoint documents. Internal templates for both the documents and the report yaml file are included. These can be customized: The format of the document templates can be customized for your organization by using the <code>onbrand</code> package. The report contents can be customized by creating a copy of the included yaml file and modifying it to suite your needs (see the vignette below).</p>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>Then you can install <code>rptnlmixr</code> from CRAN</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rptnlmixr"</span><span class="op">)</span> </code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rptnlmixr"</span><span class="op">)</span> </code></pre></div>
 <p>Or install the development version from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#install.packages("devtools") </span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"john-harrold/rptnlmixr"</span><span class="op">)</span></code></pre></div>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"john-harrold/rptnlmixr"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="getting-started" class="section level2">
-<h2 class="hasAnchor">
-<a href="#getting-started" class="anchor"></a>Getting Started</h2>
-<p>Browse through the <a href="https://rptnlmixr.ubiquity.tools/">documentation</a> and check out the vignette:</p>
+<div class="section level2">
+<h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a>
+</h2>
+<p>Browse through the <a href="https://rptnlmixr.ubiquity.tools/" class="external-link">documentation</a> and check out the vignette:</p>
 <ul>
-<li><a href="https://rptnlmixr.ubiquity.tools/articles/Reportin_nlmixr_Fit_Results.html">Reporting <code>nlmixr</code> Fit Results</a></li>
-<li><a href="https://rptnmlixr.ubiquity.tools/articles/Accessing_Figures_and_Tables.html">Accessing Figures and Tables</a></li>
+<li><a href="https://rptnlmixr.ubiquity.tools/articles/Reportin_nlmixr_Fit_Results.html" class="external-link">Reporting <code>nlmixr</code> Fit Results</a></li>
+<li><a href="https://rptnmlixr.ubiquity.tools/articles/Accessing_Figures_and_Tables.html" class="external-link">Accessing Figures and Tables</a></li>
 </ul>
 </div>
 </div>
@@ -118,34 +119,46 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;=2)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>John Harrold <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2052-4373" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing rptnlmixr</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/john-harrold/rptnlmixr/actions"><img src="https://github.com/john-harrold/rptnlmixr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li>John Harrold <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0003-2052-4373" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/john-harrold/rptnlmixr/actions" class="external-link"><img src="https://github.com/john-harrold/rptnlmixr/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by John Harrold.</p>
+  <p></p>
+<p>Developed by John Harrold.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -153,6 +166,8 @@
 
   
 
+
+  
 
   </body>
 </html>
