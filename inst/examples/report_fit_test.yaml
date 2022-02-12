@@ -77,6 +77,12 @@ figures:
     title:       "Bad figure designed to fail"
     cmd: |-
       bad_figure_command
+  skip_figure: 
+    orientation: "portrait"
+    caption:     "Bad figure designed to fail"
+    title:       "Bad figure designed to fail"
+    cmd: |-
+      p_res <- NA
 tables:
   # Here we list all the tables to be generated
   pest_table:
@@ -94,6 +100,12 @@ tables:
     title:       "Bad table designed to fail"
     cmd: |-
       bad_table_command
+  skip_table:
+    orientation: "portrait"
+    caption:     "Bad table designed to fail"
+    title:       "Bad table designed to fail"
+    cmd: |-
+      t_res <- NA
 pptx:
   # Tables and figures aree generated 1 per slide, here you need to give the
   # information about that slide master found in the onbrand template for

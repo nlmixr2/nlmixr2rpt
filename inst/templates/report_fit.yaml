@@ -1,5 +1,3 @@
-# Notes:
-#
 # This controls default placeholders used in the figure and table labels,
 # captions, etc  below. The commands and other strings just need a
 # placeholder surrounded by === and that will be substituted for the
@@ -86,9 +84,13 @@ figures:
     caption:     "res_vs_pred caption"
     title:       "res_vs_pred title"
     cmd: |-
+      if("CWRES" %in% names(fit)){
        p_res <- res_vs_pred(xpdb, caption=NULL, title=NULL) +
        xlab("Conditional Weighted Residuals") +
        ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+      } else {
+        p_res <- NA
+      }
   res_vs_idv:
     orientation: "landscape"
     caption:     "res_vs_idv caption"
@@ -119,8 +121,20 @@ figures:
       p_res <- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  +
       ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
       xlab("Time (===TUNITS===)")
+  skip_figure:
+    orientation: "landscape"
+    caption:     "ind_plots caption"
+    title:       "ind_plots title"
+    cmd: |-
+      p_res <- NA
 tables:
   # Here we list all the tables to be generated
+  skip_table:
+    orientation: "portrait"
+    caption:     "Parameter Estimates"
+    title:       "Parameter Estimates"
+    cmd: |-
+      t_res <- NA
   pest_table:
     orientation: "portrait"
     caption:     "Parameter Estimates"
@@ -151,6 +165,7 @@ pptx:
       content_ph: "content_body"
   content:
     - table: pest_table
+    - table: skip_table
     - figure: ind_plots
     - figure: dv_vs_pred
     - figure: dv_vs_ipred
@@ -158,6 +173,7 @@ pptx:
     - figure: res_vs_idv
     - figure: prm_vs_iteration
     - figure: absval_res_vs_pred
+    - figure: skip_figure        
 docx:
   figures:
     landscape:

@@ -149,54 +149,54 @@ build_tables  <- function(obnd       = NULL,
           tmsgs = c(tmsgs, "No 'cmd' field found")
         }
 
-
-        # Now we need to check the t_res to make sure it
-        # has the correct fields
         if(TISGOOD){
-          df_found = FALSE
-          ft_found = FALSE
-
-          #looking for either a data frame or a flextable
-          if("ft" %in% names(t_res)){
-            if(length(t_res[["ft"]]) >= 1){
-              # We start by indicating that flextables were found:
-              ft_found = TRUE
-              # Now we check each table to make sure it's a flextable
-              for(tnum in 1:length(t_res[["ft"]])){
-                if(!inherits(t_res[["ft"]][[tnum]], "flextable")){
-                  # If it's not a flextable we flip the found bit
-                  ft_found = FALSE
-                  tmsgs = c(tmsgs, paste("ft number", tnum, "should be a flextable but", class(t_res[["ft"]][[1]]), "was found."))
+        if(!is.na(t_res)){
+          # Now we need to check the t_res to make sure it
+          # has the correct fields
+            df_found = FALSE
+            ft_found = FALSE
+            #looking for either a data frame or a flextable
+            if("ft" %in% names(t_res)){
+              if(length(t_res[["ft"]]) >= 1){
+                # We start by indicating that flextables were found:
+                ft_found = TRUE
+                # Now we check each table to make sure it's a flextable
+                for(tnum in 1:length(t_res[["ft"]])){
+                  if(!inherits(t_res[["ft"]][[tnum]], "flextable")){
+                    # If it's not a flextable we flip the found bit
+                    ft_found = FALSE
+                    tmsgs = c(tmsgs, paste("ft number", tnum, "should be a flextable but", class(t_res[["ft"]][[1]]), "was found."))
+                  }
                 }
+              } else {
+                tmsgs = c(tmsgs, "ft found but empty")
               }
-            } else {
-              tmsgs = c(tmsgs, "ft found but empty")
             }
-          }
-          if("df" %in% names(t_res)){
-            if(length(t_res[["df"]]) >= 1){
-              # We start by indicating that data.frames were found:
-              df_found = TRUE
-              # Now we check each table to make sure it's a data.frame
-              for(tnum in 1:length(t_res[["df"]])){
-                if(!inherits(t_res[["df"]][[tnum]], "data.frame")){
-                  # If it's not a dataframe we flip the found bit
-                  df_found = FALSE
-                  tmsgs = c(tmsgs, paste("df number", tnum, "should be a data.frame but", class(t_res[["df"]][[1]]), "was found."))
+            if("df" %in% names(t_res)){
+              if(length(t_res[["df"]]) >= 1){
+                # We start by indicating that data.frames were found:
+                df_found = TRUE
+                # Now we check each table to make sure it's a data.frame
+                for(tnum in 1:length(t_res[["df"]])){
+                  if(!inherits(t_res[["df"]][[tnum]], "data.frame")){
+                    # If it's not a dataframe we flip the found bit
+                    df_found = FALSE
+                    tmsgs = c(tmsgs, paste("df number", tnum, "should be a data.frame but", class(t_res[["df"]][[1]]), "was found."))
+                  }
                 }
+              } else {
+                tmsgs = c(tmsgs, "df found but empty")
               }
-            } else {
-              tmsgs = c(tmsgs, "df found but empty")
             }
-          }
-          # If we haven't found either we create an error
-          if(!df_found &!ft_found){
-            tmsgs = c(tmsgs, paste0("Error processing table id ", tid, "."))
-            tmsgs = c(tmsgs, paste0("t_res must contain at least one of the follwoing fields:"))
-            tmsgs = c(tmsgs, paste0("  - df: list of data frames for the table."))
-            tmsgs = c(tmsgs, paste0("  - ft: list of flextables for the table."))
-            TISGOOD = FALSE
-          }
+            # If we haven't found either we create an error
+            if(!df_found &!ft_found){
+              tmsgs = c(tmsgs, paste0("Error processing table id ", tid, "."))
+              tmsgs = c(tmsgs, paste0("t_res must contain at least one of the follwoing fields:"))
+              tmsgs = c(tmsgs, paste0("  - df: list of data frames for the table."))
+              tmsgs = c(tmsgs, paste0("  - ft: list of flextables for the table."))
+              TISGOOD = FALSE
+            }
+        }
 
 
           # If data.frames were found but flextables were not we just convert
@@ -211,14 +211,14 @@ build_tables  <- function(obnd       = NULL,
             }
             ft_found = TRUE
           }
-        }
 
-        # If we get to this point and the table isn't good then we generate
-        # a table holding any error information so it will be obvious
-        # something went wrong for the user when they look at the final report
-
-        if(!TISGOOD){
-          t_res = mk_error_tab(tmsgs)
+          # If we get to this point and the table isn't good then we generate
+          # a table holding any error information so it will be obvious
+          # something went wrong for the user when they look at the final report
+          
+          if(!TISGOOD){
+            t_res = mk_error_tab(tmsgs)
+          }
         }
 
         # Storing the caption format for alter use

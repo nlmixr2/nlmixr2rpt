@@ -161,7 +161,6 @@ build_figures <- function(obnd       = NULL,
           if(tcres[["isgood"]]){
             # If everything worked out we just return the result
             p_res = tcres[["p_res"]]
-
           } else {
             # Otherwise we capture erro information here:
             fmsgs = c(fmsgs,
@@ -215,6 +214,9 @@ build_figures <- function(obnd       = NULL,
               grDevices::dev.off()
             }
           }
+        } else if(is.na(p_res)){
+          # Figure was set to NA to skip
+          figure = p_res
         } else if(is.character(p_res)){
           #JMH test this with a vector of image files
           if(file.exists(p_res)){

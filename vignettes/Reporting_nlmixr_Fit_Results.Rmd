@@ -103,7 +103,7 @@ Notice that the `OBJ` placeholder contains R Code. By default the reporting proc
   ISCMD: ls()
 ```
 
-The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return the contents of the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` argument to `report_fit()`.
+The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return a list of the objects in the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` (placeholder) argument to `report_fit()`.
 
 **Note:** Fields that support placeholders will be indicated by ^[PH]^
 
@@ -129,7 +129,7 @@ following options are supported with the expected data type in parentheses:
 
 ## Building `figures` & `tables`
 
-Figures and table are defined in terms of evaluable R code. There are several object available in the environment that can be used when creating these report elements. The following objects will be defined:
+Figures and tables are defined in terms of R code that will be evaluated. There are several objects available in the environment that can be used when creating these report elements. The following objects will be defined:
 
 * `fid`          - current figure ID
 * `fit`          - `nlmixr` fit object
@@ -169,7 +169,7 @@ It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 * `title`^[PH]^ - Slide title when the figure is used in PowerPoint.
 * `cmd`^[PH]^ - Command to generate the figure.
 
-**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. You should also include any libraries you want to use at the top to ensure the functions are available to you. 
+**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. If you want to conditionally skip the reporting of a figure, you can instead set the value of `p_res` to `NA`. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want to use at the top to ensure the functions are available to you. 
 
 ## `tables`
 
@@ -222,9 +222,11 @@ etc
 
 If you only have a single table or if you want it to span multiple pages automatically you simply specify the first element listed above (e.g. `t_res$df[[1]]`).
 
+If you want to conditionally skip the generation of a table, simply set `t_res` to `NA`. Like with figures above, this will signal to the reporting functions that you do not want to generate this table for the current fit object. It will also prevent the generation of a build error.
+
 ## `pptx` 
 
-This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the `figures` and `tables` sections contain the `onbrand` slide master names (`"content_text"`) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (`"title"`) must be specified as well as the placeholder name for the content (`"content_body"`). Figures for powerpoint reports must be generated in the dimensions of the placeholder, so it is important that the `width` and `height` elements are specified in inches.
+This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the `figures` and `tables` sections contain the `onbrand` slide master names (`"content_text"`) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (`"title"`) must be specified as well as the placeholder name for the content (`"content_body"`). Figures for PowerPoint reports must be generated in the dimensions of the placeholder, so it is important that the `width` and `height` elements are specified in inches.
 
 ```  
 pptx:

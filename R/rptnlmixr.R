@@ -203,38 +203,46 @@ report_fit <- function(obnd    = NULL,
           if(rpttype == "PowerPoint"){
             # For each figure defined by fid we add all the pages
             # one slide at a time:
-            for(fpage in 1:length(curr_fig[["figure"]])){
-              elements = list()
-              # The title element is the figure caption:
-              elements[[rptfigfmt[["master"]][["title_ph"]]]] =
-                list( content      = curr_fig[["title_proc"]],
-                      type         = "text")
-              elements[[ rptfigfmt[["master"]][["content_ph"]]]] =
-                  list( content      = curr_fig[["figure"]][[fpage]],
-                        type         = "imagefile")
-              # Adding the slide
-              obnd =onbrand::report_add_slide(obnd,
-                       template = rptfigfmt[["master"]][["name"]],
-                       elements = elements)
+            if(is.na(curr_fig[["figure"]])){
+              message("Skipping figure: ", fid, " (NA found, not generated)")
+            } else {
+              for(fpage in 1:length(curr_fig[["figure"]])){
+                elements = list()
+                # The title element is the figure caption:
+                elements[[rptfigfmt[["master"]][["title_ph"]]]] =
+                  list( content      = curr_fig[["title_proc"]],
+                        type         = "text")
+                elements[[ rptfigfmt[["master"]][["content_ph"]]]] =
+                    list( content      = curr_fig[["figure"]][[fpage]],
+                          type         = "imagefile")
+                # Adding the slide
+                obnd =onbrand::report_add_slide(obnd,
+                         template = rptfigfmt[["master"]][["name"]],
+                         elements = elements)
+              }
             }
           }
           if(rpttype == "Word"){
-            for(fpage in 1:length(curr_fig[["figure"]])){
-              obnd = onbrand::report_add_doc_content(obnd,
-                type     = "imagefile",
-                content  = list(image           = curr_fig[["figure"]][fpage],
-                                caption         = curr_fig[["caption_proc"]],
-                                caption_format  = curr_fig[["caption_format"]], 
-                                width           = curr_fig[["width"]],
-                                height          = curr_fig[["height"]]))
+            if(is.na(curr_fig[["figure"]])){
+              message("Skipping figure: ", fid, " (NA found, not generated)")
+            } else {
+              for(fpage in 1:length(curr_fig[["figure"]])){
+                obnd = onbrand::report_add_doc_content(obnd,
+                  type     = "imagefile",
+                  content  = list(image           = curr_fig[["figure"]][fpage],
+                                  caption         = curr_fig[["caption_proc"]],
+                                  caption_format  = curr_fig[["caption_format"]], 
+                                  width           = curr_fig[["width"]],
+                                  height          = curr_fig[["height"]]))
 
-              # adding breaks between figures of multipage figures
-              # between figures 1 & 2, 2 & 3,  ... n-1 & n
-              if(length(curr_fig[["figure"]])  > 1){
-                if(fpage < length(curr_fig[["figure"]])){
-                  obnd = onbrand::report_add_doc_content(obnd,
-                    type     = "break",
-                    content  = NULL)
+                # adding breaks between figures of multipage figures
+                # between figures 1 & 2, 2 & 3,  ... n-1 & n
+                if(length(curr_fig[["figure"]])  > 1){
+                  if(fpage < length(curr_fig[["figure"]])){
+                    obnd = onbrand::report_add_doc_content(obnd,
+                      type     = "break",
+                      content  = NULL)
+                  }
                 }
               }
               if(ele_ctr < length(rptcont)){
@@ -283,36 +291,44 @@ report_fit <- function(obnd    = NULL,
           }
           if("table" %in% names(rptele)){
             if(rpttype == "PowerPoint"){
-              # Adding one slide per table
-              for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
-                elements = list()
-                # The title element is the table  caption:
-                elements[[rpttabfmt[["master"]][["title_ph"]]]] =
-                  list( content      = curr_tab[["title_proc"]],
-                        type         = "text")
-                elements[[ rpttabfmt[["master"]][["content_ph"]]]] =
-                    list( content      = curr_tab[["table"]][["ft"]][[tpage]],
-                          type         = "flextable_object")
-                # Adding the slide
-                obnd =onbrand::report_add_slide(obnd,
-                         template = rpttabfmt[["master"]][["name"]],
-                         elements = elements)
+              if(is.na(curr_tab[["table"]])){
+                message("Skipping table: ", tid, " (NA found, not generated)")
+              } else {
+                # Adding one slide per table
+                for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                  elements = list()
+                  # The title element is the table  caption:
+                  elements[[rpttabfmt[["master"]][["title_ph"]]]] =
+                    list( content      = curr_tab[["title_proc"]],
+                          type         = "text")
+                  elements[[ rpttabfmt[["master"]][["content_ph"]]]] =
+                      list( content      = curr_tab[["table"]][["ft"]][[tpage]],
+                            type         = "flextable_object")
+                  # Adding the slide
+                  obnd =onbrand::report_add_slide(obnd,
+                           template = rpttabfmt[["master"]][["name"]],
+                           elements = elements)
+                }
               }
             }
             if(rpttype == "Word"){
-              for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
-                obnd =  onbrand::report_add_doc_content(obnd,
-                  type     = "flextable_object",
-                  content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                  caption_format  = curr_fig[["caption_format"]], 
-                                  caption         = curr_tab[["caption_proc"]]))
-                # adding breaks between tables of multipage tables
-                # between tables 1 & 2, 2 & 3,  ... n-1 & n
-                if(length(curr_tab[["table"]][["ft"]])  > 1){
-                  if( tpage < length(curr_tab[["table"]][["ft"]])){
-                    obnd = onbrand::report_add_doc_content(obnd,
-                      type     = "break",
-                      content  = NULL)
+              if(is.na(curr_tab[["table"]])){
+                message("Skipping table: ", tid, " (NA found, not generated)")
+              } else {
+                for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                  obnd =  onbrand::report_add_doc_content(obnd,
+                    type     = "flextable_object",
+                    content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
+                                    caption_format  = curr_fig[["caption_format"]], 
+                                    caption         = curr_tab[["caption_proc"]]))
+                  # adding breaks between tables of multipage tables
+                  # between tables 1 & 2, 2 & 3,  ... n-1 & n
+                  if(length(curr_tab[["table"]][["ft"]])  > 1){
+                    if( tpage < length(curr_tab[["table"]][["ft"]])){
+                      obnd = onbrand::report_add_doc_content(obnd,
+                        type     = "break",
+                        content  = NULL)
+                    }
                   }
                 }
               }
