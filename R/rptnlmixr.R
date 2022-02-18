@@ -4,11 +4,11 @@
 
 
 #'@export
-#'@title Report `nlmixr` Fit Results to PowerPoint and Word
-#'@description Appends `nlmixr` fit results to an onbrand report object with the
+#'@title Report `nlmixr2` Fit Results to PowerPoint and Word
+#'@description Appends `nlmixr2` fit results to an onbrand report object with the
 #'content and format of the report in the supplied yaml file
 #'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@param ph Manual placeholders, see \code{\link{yaml_read_fit}} for more
 #'details
 #'for example RUN may be "RUNN" in the yaml file. To overwrite this just
@@ -17,7 +17,7 @@
 #'@return onbrand object with the report elements added
 report_fit <- function(obnd    = NULL,
                        fit     = NULL,
-                       rptyaml= system.file(package="rptnlmixr","templates", "report_fit.yaml"),
+                       rptyaml= system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
                        ph      = NULL){
   isgood       = TRUE
   msgs         = c()
@@ -231,7 +231,7 @@ report_fit <- function(obnd    = NULL,
                   type     = "imagefile",
                   content  = list(image           = curr_fig[["figure"]][fpage],
                                   caption         = curr_fig[["caption_proc"]],
-                                  caption_format  = curr_fig[["caption_format"]], 
+                                  caption_format  = curr_fig[["caption_format"]],
                                   width           = curr_fig[["width"]],
                                   height          = curr_fig[["height"]]))
 
@@ -319,7 +319,7 @@ report_fit <- function(obnd    = NULL,
                   obnd =  onbrand::report_add_doc_content(obnd,
                     type     = "flextable_object",
                     content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                    caption_format  = curr_fig[["caption_format"]], 
+                                    caption_format  = curr_fig[["caption_format"]],
                                     caption         = curr_tab[["caption_proc"]]))
                   # adding breaks between tables of multipage tables
                   # between tables 1 & 2, 2 & 3,  ... n-1 & n
@@ -392,7 +392,7 @@ str}
 #'@description Reads in the report yaml file and looks it to make sure it has all
 #'the necessary fields for the given report.
 #'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@param rptyaml yaml file containing the report elements and structure
 #'@param ph Placeholders in the yaml file can be overwritten at runtime
 #'with a named list for example RUN may be "RUNN" in the yaml file. To
@@ -560,7 +560,7 @@ return(res)}
 #'@title Evaluate R Code in String
 #'@description Attempts to evaluate a string as a chunk of R code.
 #'@param estr     Object creating when reading in rptyaml file
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@return String containing the evaled as a character or the original string
 eval_str  <- function(estr="", fit=NULL){
 
@@ -580,7 +580,7 @@ eval_str  <- function(estr="", fit=NULL){
 #'applies it to strings.
 #'@param rptdetails Object creating when reading in rptyaml file
 #'@param option String containing the option to fetch (see below)
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@param verbose Boolean variable when set to \code{TRUE} (default) messages will be
 #'displayed on the terminal
 #'following:

@@ -2,14 +2,14 @@
 % Please edit documentation in R/build_tables.R
 \name{gen_pest_table}
 \alias{gen_pest_table}
-\title{Makes \code{nlmixr} Parameter Estimate Table for Reporting}
+\title{Makes \code{nlmixr2} Parameter Estimate Table for Reporting}
 \usage{
 gen_pest_table(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 }
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 
 \item{rptdetails}{object creating when reading in rptyaml file}
 

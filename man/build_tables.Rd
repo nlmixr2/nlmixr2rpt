@@ -2,14 +2,14 @@
 % Please edit documentation in R/build_tables.R
 \name{build_tables}
 \alias{build_tables}
-\title{Generates Tables  for an \code{nlmixr} Report}
+\title{Generates Tables  for an \code{nlmixr2} Report}
 \usage{
 build_tables(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 }
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 
 \item{rptdetails}{object creating when reading in rptyaml file}
 

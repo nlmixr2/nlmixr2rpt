@@ -9,7 +9,7 @@ eval_str(estr = "", fit = NULL)
 \arguments{
 \item{estr}{Object creating when reading in rptyaml file}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 }
 \value{
 String containing the evaled as a character or the original string

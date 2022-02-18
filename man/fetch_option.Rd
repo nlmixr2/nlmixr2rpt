@@ -11,7 +11,7 @@ fetch_option(rptdetails, option = NULL, fit = NULL, verbose = TRUE)
 
 \item{option}{String containing the option to fetch (see below)}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 
 \item{verbose}{Boolean variable when set to \code{TRUE} (default) messages will be
 displayed on the terminal

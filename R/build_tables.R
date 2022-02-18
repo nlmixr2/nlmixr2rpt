@@ -1,9 +1,9 @@
 #'@importFrom flextable flextable
 #'@export
-#'@title Generates Tables  for an `nlmixr` Report
+#'@title Generates Tables  for an `nlmixr2` Report
 #'@description Creates tables specified in a rptyaml file
 #'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@param rptdetails object creating when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
@@ -215,7 +215,7 @@ build_tables  <- function(obnd       = NULL,
           # If we get to this point and the table isn't good then we generate
           # a table holding any error information so it will be obvious
           # something went wrong for the user when they look at the final report
-          
+
           if(!TISGOOD){
             t_res = mk_error_tab(tmsgs)
           }
@@ -260,10 +260,10 @@ btres}
 
 
 #'@export
-#'@title Makes `nlmixr` Parameter Estimate Table for Reporting
+#'@title Makes `nlmixr2` Parameter Estimate Table for Reporting
 #'@description Generates a flextable containting the parameter estimates.
 #'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr fit object to be reported
+#'@param fit nlmixr2 fit object to be reported
 #'@param rptdetails object creating when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
@@ -296,12 +296,12 @@ gen_pest_table  <- function(obnd       = NULL,
     if(!is.null(rptdetails[["parameters"]][[rname]][["md"]])){
       fex_df[rname, "Parameter"] = rptdetails[["parameters"]][[rname]][["md"]]
     } else {
-      # If there is no value for the current parameter name we 
+      # If there is no value for the current parameter name we
       # replace it with the row name
       if( fex_df[rname, "Parameter"] == ""){
         fex_df[rname, "Parameter"] = rname
       }
-    } 
+    }
   }
 
   # Pulling out the default formating

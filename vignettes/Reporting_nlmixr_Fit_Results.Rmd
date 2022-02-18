@@ -18,30 +18,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction <img src="rptnlmixr_hex.png" align="right" width="138.5" border="0px" />
+# Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" />
 
-The purpose of `rptnlmixr` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
+The purpose of `nlmixr2rpt` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
 
 
 # General workflow
 
 First we need an `nlmixr` fit object. We're going to load a fit example stored in this package:
 ```{r, eval=TRUE, echo=TRUE}
-library(rptnlmixr)
+library(nlmixr2rpt)
 library(onbrand)  
-fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
 ```
 
 Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).
 
 ```{r, eval=TRUE, echo=TRUE}
 obnd_pptx = read_template(
-  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.pptx"),
-  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
 
 obnd_docx = read_template(
-  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.docx"),
-  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
 ```
 
 Next we will add the report elements to the report objects using the `report_fit()` function. This function can be used with both types of report. The contents will be different depending on the document type.  
@@ -64,10 +64,10 @@ save_report(obnd_docx, "report.docx")
 ```
 
 
-The contents of each report type is defined in a yaml file. The commands above use the default value found in the `rptnlmixr` package. To customize the report elements you can make a copy of the file in your current working directory:
+The contents of each report type is defined in a yaml file. The commands above use the default value found in the `nlmixr2rpt` package. To customize the report elements you can make a copy of the file in your current working directory:
 
 ```{r, eval=FALSE, echo=TRUE}
-file.copy(system.file(package="rptnlmixr", "templates", "report_fit.yaml"), 
+file.copy(system.file(package="nlmixr2rpt", "templates", "report_fit.yaml"), 
           "my_report.yaml")
 ```
 
@@ -75,7 +75,7 @@ Then you can edit the `my_report.yaml` file and when you call `report_fit()` pro
 
 # The yaml report file structure
 
-The core of `rptnlmixr` is the yaml reporting file. Below we outline each of the main sections and describe the expected elements in those sections.
+The core of `nlmixr2rpt` is the yaml reporting file. Below we outline each of the main sections and describe the expected elements in those sections.
 
 ## `placeholders`
 
@@ -321,7 +321,7 @@ fr$ft
 
 # Report configuration file `report_fit.yaml`
 ```{r echo=FALSE, comment='', message=TRUE, eval=TRUE}
-fc = readLines(file.path(system.file(package="rptnlmixr"), "templates", "report_fit.yaml"))
+fc = readLines(file.path(system.file(package="nlmixr2rpt"), "templates", "report_fit.yaml"))
 # Stripping out comments:
 fc = fc[!stringr::str_detect(fc, pattern="^\\s*#")]
 cat(fc, sep="\n")

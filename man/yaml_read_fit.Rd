@@ -16,7 +16,7 @@ with a named list for example RUN may be "RUNN" in the yaml file. To
 overwrite this just provide \code{list(RUN="RUN_1")}
 (default: \code{NULL})}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 }
 \value{
 List containing the following information about the report

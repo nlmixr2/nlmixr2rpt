@@ -1,5 +1,5 @@
 library(testthat)
-library(rptnlmixr)
+library(nlmixr2rpt)
 library(onbrand)
 
-test_check("rptnlmixr")
+test_check("nlmixr2rpt")

@@ -1,9 +1,9 @@
-fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
 #--------------
 test_that("Default PowerPoint Report",{
   obnd_pptx = read_template(
-    template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.pptx"),
-    mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+    template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+    mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
 
 
   invisible(capture.output(
@@ -14,8 +14,8 @@ test_that("Default PowerPoint Report",{
 
 test_that("Default Word Report",{
   obnd_docx = read_template(
-    template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.docx"),
-    mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+    template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+    mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
 
   invisible(capture.output(
   obnd_docx = report_fit(

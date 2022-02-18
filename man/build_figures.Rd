@@ -2,14 +2,14 @@
 % Please edit documentation in R/build_figures.R
 \name{build_figures}
 \alias{build_figures}
-\title{Generates Figures for an \code{nlmixr} Report}
+\title{Generates Figures for an \code{nlmixr2} Report}
 \usage{
 build_figures(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 }
 \arguments{
 \item{obnd}{\code{onbrand} report object to have report elements appended to}
 
-\item{fit}{\code{nlmixr} fit object to be reported}
+\item{fit}{\code{nlmixr2} fit object to be reported}
 
 \item{rptdetails}{Object created  when reading in rptyaml file}
 

@@ -1,12 +1,12 @@
-Package: rptnlmixr
-Title: Templated Word and PowerPoint Reporting of `nlmixr` Fitting Results
+Package: nlmixr2rpt
+Title: Templated Word and PowerPoint Reporting of `nlmixr2` Fitting Results
 Version: 0.0.1
 Authors@R: c(person("John", "Harrold",
                      role    = c("aut", "cre"),
                      email   = "john.m.harrold@gmail.com",
                      comment = c(ORCID="0000-0003-2052-4373")))
 Maintainer: John Harrold <john.m.harrold@gmail.com>
-Description: This allows you to generate reporting workflows around `nlmixr` analyses with outputs in Word and PowerPoint. You can specify figures, tables and report structure in a user-definable yaml file. Also you can use the internal functions to access the figures and tables to allow their including in other outputs (e.g. RMarkdown).
+Description: This allows you to generate reporting workflows around `nlmixr2` analyses with outputs in Word and PowerPoint. You can specify figures, tables and report structure in a user-definable yaml file. Also you can use the internal functions to access the figures and tables to allow their including in other outputs (e.g. RMarkdown).
 License: GPL (>=2)
 Encoding: UTF-8
 LazyData: FALSE
@@ -20,6 +20,7 @@ Imports:
   grDevices,
   onbrand,
   stringr,
+  nlmixr2,
   xpose,
   xpose.nlmixr,
   yaml

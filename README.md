@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rptnlmixr <img src="man/figures/rptnlmixr_hex.png" align="right" width="138.5" />
+# nlmixr2rpt <img src="man/figures/nlmixr2rpt_hex.png" align="right" width="138.5" />
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/john-harrold/rptnlmixr/workflows/R-CMD-check/badge.svg)](https://github.com/john-harrold/rptnlmixr/actions)
+[![R-CMD-check](https://github.com/john-harrold/nlmixr2rpt/workflows/R-CMD-check/badge.svg)](https://github.com/john-harrold/nlmixr2rpt/actions)
 <!---
-[![CRAN checks](https://cranchecks.info/badges/summary/rptnlmixr)](https://cran.r-project.org/web/checks/check_results_rptnlmixr.html)
+[![CRAN checks](https://cranchecks.info/badges/summary/nlmixr2rpt)](https://cran.r-project.org/web/checks/check_results_nlmixr2rpt.html)
 --> <!-- badges: end -->
 
 Templated Word and PowerPoint reporting for `nlmixr`
@@ -27,25 +27,25 @@ a copy of the included yaml file and modifying it to suite your needs
 
 ## Installation
 
-Then you can install `rptnlmixr` from CRAN
+Then you can install `nlmixr2rpt` from CRAN
 
 ``` r
-install.packages("rptnlmixr") 
+install.packages("nlmixr2rpt") 
 ```
 
 Or install the development version from GitHub:
 
 ``` r
 #install.packages("devtools") 
-devtools::install_github("john-harrold/rptnlmixr")
+devtools::install_github("john-harrold/nlmixr2rpt")
 ```
 
 ## Getting Started
 
-Browse through the [documentation](https://rptnlmixr.ubiquity.tools/)
+Browse through the [documentation](https://nlmixr2rpt.ubiquity.tools/)
 and check out the vignette:
 
 -   [Reporting `nlmixr` Fit
-    Results](https://rptnlmixr.ubiquity.tools/articles/Reportin_nlmixr_Fit_Results.html)
+    Results](https://nlmixr2rpt.ubiquity.tools/articles/Reportin_nlmixr_Fit_Results.html)
 -   [Accessing Figures and
-    Tables](https://rptnmlixr.ubiquity.tools/articles/Accessing_Figures_and_Tables.html)
+    Tables](https://nmlixr2rpt.ubiquity.tools/articles/Accessing_Figures_and_Tables.html)

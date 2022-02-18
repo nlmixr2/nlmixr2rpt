@@ -20,27 +20,27 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction <img src="rptnlmixr_hex.png" align="right" width="138.5" border="0px" />
+# Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" />
 
-When you create the `report_fit.yaml` file you have defined figures and tables for reporting. However you may want to reuse these report objects outside of Word and PowerPoint. For example you may want to use them inside of Shiny Apps or in RMarkdown document. This vignette outlines how you can build the objects outside of the `rptnlmixr` workflow. 
+When you create the `report_fit.yaml` file you have defined figures and tables for reporting. However you may want to reuse these report objects outside of Word and PowerPoint. For example you may want to use them inside of Shiny Apps or in RMarkdown document. This vignette outlines how you can build the objects outside of the `nlmixr2rpt` workflow. 
 
 # Creating figures and tables
 
 First we need to load the appropriate libraries. We need the `onbrand` library because the tables and figures are generated based on the type of report. Specifically default figure dimensions will change based on the report type. Here we initialize an empty Word report with onbrand. The report type is extracted from this object in the functions below.
 
 ```{r, eval=TRUE, echo=TRUE}
-library(rptnlmixr)
+library(nlmixr2rpt)
 library(onbrand)  
 
 obnd = read_template(
-  template = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.docx"),
-  mapping  = system.file(package="rptnlmixr", "templates","nlmixr_obnd_template.yaml"))
+  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
 ```
 
-You should have an `nlmixr` fit object from your own analysis. We will load an example from this package.
+You should have an `nlmixr2` fit object from your own analysis. We will load an example from this package.
 
 ```{r, eval=TRUE, echo=TRUE}
-fit = readRDS(system.file(package="rptnlmixr", "examples", "fit.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
 ```
 
 Next we read in the yaml file using `yaml_read_fit()`. Below we are using a stripped down example for testing. The contents of the yaml file are stored in the `rptdetails` list element that is returned.
@@ -48,7 +48,7 @@ Next we read in the yaml file using `yaml_read_fit()`. Below we are using a stri
 ```{r, eval=TRUE, echo=TRUE}
 rptdetails = yaml_read_fit(
   obnd    = obnd,
-  rptyaml = system.file(package="rptnlmixr", "examples", "report_fit_test.yaml"),
+  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
   fit     = fit)$rptdetails
 ```
 

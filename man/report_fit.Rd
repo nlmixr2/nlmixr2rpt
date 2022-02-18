@@ -2,19 +2,19 @@
 % Please edit documentation in R/rptnlmixr.R
 \name{report_fit}
 \alias{report_fit}
-\title{Report \code{nlmixr} Fit Results to PowerPoint and Word}
+\title{Report \code{nlmixr2} Fit Results to PowerPoint and Word}
 \usage{
 report_fit(
   obnd = NULL,
   fit = NULL,
-  rptyaml = system.file(package = "rptnlmixr", "templates", "report_fit.yaml"),
+  rptyaml = system.file(package = "nlmixr2rpt", "templates", "report_fit.yaml"),
   ph = NULL
 )
 }
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
 
-\item{fit}{nlmixr fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported}
 
 \item{rptyaml}{yaml file containing the report elements and structure}
 
@@ -27,6 +27,6 @@ provide \code{list(RUN="RUN_1")} (default: \code{NULL})}
 onbrand object with the report elements added
 }
 \description{
-Appends \code{nlmixr} fit results to an onbrand report object with the
+Appends \code{nlmixr2} fit results to an onbrand report object with the
 content and format of the report in the supplied yaml file
 }

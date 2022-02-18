@@ -6,10 +6,10 @@
 #'@importFrom xpose.nlmixr xpose_data_nlmixr
 
 #'@export
-#'@title Generates Figures for an `nlmixr` Report
+#'@title Generates Figures for an `nlmixr2` Report
 #'@description Creates figures specified in a rptyaml file
 #'@param obnd `onbrand` report object to have report elements appended to
-#'@param fit `nlmixr` fit object to be reported
+#'@param fit `nlmixr2` fit object to be reported
 #'@param rptdetails Object created  when reading in rptyaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
@@ -149,7 +149,7 @@ build_figures <- function(obnd       = NULL,
                suppressMessages(eval(parse(text=finfo[["cmd_proc"]])))
                # Some errors don't show up until the figures are built
                # while saving. This will force ggplot objects to be built
-               # and trap any errors to be passed on to the user. 
+               # and trap any errors to be passed on to the user.
                if(is.ggplot(p_res)){
                  ggplot2::ggplot_build(p_res)
                }
