@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction <img src="rptnlmixr_hex.png" align="right" height="138.5" border="0px" />
+# Introduction <img src="rptnlmixr_hex.png" align="right" width="138.5" border="0px" />
 
 When you create the `report_fit.yaml` file you have defined figures and tables for reporting. However you may want to reuse these report objects outside of Word and PowerPoint. For example you may want to use them inside of Shiny Apps or in RMarkdown document. This vignette outlines how you can build the objects outside of the `rptnlmixr` workflow. 
 

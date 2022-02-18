@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# rptnlmixr <img src="man/figures/rptnlmixr_hex.png" align="right" height="138.5" />
+# rptnlmixr <img src="man/figures/rptnlmixr_hex.png" align="right" width="138.5" />
 
 <!-- badges: start -->
 

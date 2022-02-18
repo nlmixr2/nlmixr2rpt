@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# rptnlmixr <img src="man/figures/rptnlmixr_hex.png" align="right" height="138.5" />
+# rptnlmixr <img src="man/figures/rptnlmixr_hex.png" align="right" width="138.5" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/john-harrold/rptnlmixr/workflows/R-CMD-check/badge.svg)](https://github.com/john-harrold/rptnlmixr/actions)

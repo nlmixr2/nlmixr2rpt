@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Introduction <img src="rptnlmixr_hex.png" align="right" height="138.5" border="0px" />
+# Introduction <img src="rptnlmixr_hex.png" align="right" width="138.5" border="0px" />
 
 The purpose of `rptnlmixr` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
 
