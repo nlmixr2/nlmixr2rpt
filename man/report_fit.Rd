@@ -19,9 +19,9 @@ report_fit(
 \item{rptyaml}{yaml file containing the report elements and structure}
 
 \item{ph}{Manual placeholders, see \code{\link{yaml_read_fit}} for more
-details
-for example RUN may be "RUNN" in the yaml file. To overwrite this just
-provide \code{list(RUN="RUN_1")} (default: \code{NULL})}
+details.
+For example the run number may be "RUNN" in the yaml file. To overwrite this just
+provide \code{list(RUNN="RUN_1")} (default: \code{NULL})}
 }
 \value{
 onbrand object with the report elements added

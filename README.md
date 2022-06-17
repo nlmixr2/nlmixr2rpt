@@ -10,12 +10,12 @@
 [![CRAN checks](https://cranchecks.info/badges/summary/nlmixr2rpt)](https://cran.r-project.org/web/checks/check_results_nlmixr2rpt.html)
 --> <!-- badges: end -->
 
-Templated Word and PowerPoint reporting for `nlmixr`
+Templated Word and PowerPoint reporting for `nlmixr2`
 
 ## Overview
 
 The purpose of this package is to automate the reporting of analyses
-performed in the `nlmixr` package in both PowerPoint and Word. This is
+performed in the `nlmixr2` package in both PowerPoint and Word. This is
 accomplished with a yaml file that contains specifications for report
 elements (figures and tables) as well as the contents of Word and
 PowerPoint documents. Internal templates for both the documents and the

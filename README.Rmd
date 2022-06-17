@@ -22,11 +22,11 @@ knitr::opts_chunk$set(
 -->
 <!-- badges: end -->
 
-Templated Word and PowerPoint reporting for `nlmixr`
+Templated Word and PowerPoint reporting for `nlmixr2`
 
 ## Overview
 
-The purpose of this package is to automate the reporting of analyses performed in the `nlmixr` package in both PowerPoint and Word. This is accomplished with a yaml file that contains specifications for report elements (figures and tables) as well as the contents of Word and PowerPoint documents. Internal templates for both the documents and the report yaml file are included. These can be customized: The format of the document templates can be customized for your organization by using the `onbrand` package. The report contents can be customized by creating a copy of the included yaml file and modifying it to suite your needs (see the vignette below). 
+The purpose of this package is to automate the reporting of analyses performed in the `nlmixr2` package in both PowerPoint and Word. This is accomplished with a yaml file that contains specifications for report elements (figures and tables) as well as the contents of Word and PowerPoint documents. Internal templates for both the documents and the report yaml file are included. These can be customized: The format of the document templates can be customized for your organization by using the `onbrand` package. The report contents can be customized by creating a copy of the included yaml file and modifying it to suite your needs (see the vignette below). 
 
 ## Installation
 

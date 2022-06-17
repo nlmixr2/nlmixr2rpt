@@ -149,12 +149,12 @@ build_tables  <- function(obnd       = NULL,
           tmsgs = c(tmsgs, "No 'cmd' field found")
         }
 
+        df_found = FALSE
+        ft_found = FALSE
         if(TISGOOD){
         if(!is.na(t_res)){
           # Now we need to check the t_res to make sure it
           # has the correct fields
-            df_found = FALSE
-            ft_found = FALSE
             #looking for either a data frame or a flextable
             if("ft" %in% names(t_res)){
               if(length(t_res[["ft"]]) >= 1){

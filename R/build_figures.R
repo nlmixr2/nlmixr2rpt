@@ -3,7 +3,7 @@
 #'@import xpose
 #'@import stringr
 #'@importFrom ggforce n_pages
-#'@importFrom xpose.nlmixr xpose_data_nlmixr
+#'@importFrom xpose.nlmixr2 xpose_data_nlmixr
 
 #'@export
 #'@title Generates Figures for an `nlmixr2` Report
@@ -100,7 +100,7 @@ build_figures <- function(obnd       = NULL,
   if(isgood){
     if("figures" %in% names(rptdetails)){
       # Creating the xpdb object for xpose figures:
-      xpdb <- xpose.nlmixr::xpose_data_nlmixr(fit)
+      xpdb <- xpose.nlmixr2::xpose_data_nlmixr(fit)
       for(fid in names(rptdetails[["figures"]])){
         # Pulling out the current figure information:
         finfo = rptdetails[["figures"]][[fid]]

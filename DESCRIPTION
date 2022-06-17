@@ -22,7 +22,7 @@ Imports:
   stringr,
   nlmixr2,
   xpose,
-  xpose.nlmixr,
+  xpose.nlmixr2,
   yaml
 Suggests: 
     rmarkdown,

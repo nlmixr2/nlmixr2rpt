@@ -1,8 +1,8 @@
 ---
-title: "Reporting `nlmixr` Fit Results"
+title: "Reporting `nlmixr2` Fit Results"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Reporting `nlmixr` Fit Results}
+  %\VignetteIndexEntry{Reporting `nlmixr2` Fit Results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,16 +20,16 @@ knitr::opts_chunk$set(
 
 # Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" />
 
-The purpose of `nlmixr2rpt` is to automate reporting of `nlmixr` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.  
+The purpose of `nlmixr2rpt` is to automate reporting of `nlmixr2` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation code, and general content for Word and PowerPoint files.  
 
 
 # General workflow
 
-First we need an `nlmixr` fit object. We're going to load a fit example stored in this package:
+First we need an `nlmixr2` fit object. We're going to load a fit example stored in this package:
 ```{r, eval=TRUE, echo=TRUE}
 library(nlmixr2rpt)
 library(onbrand)  
-fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit_focei.rds"))
 ```
 
 Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).
@@ -132,7 +132,7 @@ following options are supported with the expected data type in parentheses:
 Figures and tables are defined in terms of R code that will be evaluated. There are several objects available in the environment that can be used when creating these report elements. The following objects will be defined:
 
 * `fid`          - current figure ID
-* `fit`          - `nlmixr` fit object
+* `fit`          - `nlmixr2` fit object
 * `height`       - figure height in inches (figure environment only)
 * `obnd`         - onbrand object of the report document
 * `output_dir`   - directory where figures are stored
