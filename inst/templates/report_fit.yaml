@@ -17,9 +17,9 @@ placeholders:
   TEST2: ls()
   OBJ: sprintf("%3g", fit$objf)
 parameters:
-  lCLint:
-    md:  "CL~int~ (L/hr)"
-    txt: "CLint (L/hr)"
+  log_CIRC0:
+    md:  "log(CIRC~0~)"
+    txt: "log(CIRC0)"
   add.err:
     md:  "Add Err"
     txt: "Add Err"
@@ -29,9 +29,28 @@ parameters:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  preamble: |-
+  # JMH updte vignette to account for having preambels for both the figure and
+  # table environments. Also to account for making the xpdb object in the
+  # figure preamble
+  figenv_preamble: |-
+    # Loading required libraries
     library("ggplot2")
     library("xpose")
+    library("ggforce")
+    library("ggPMX")   
+    # Creating the xpdb object for xpose figures:
+    xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
+# Uncomment to add a preamble to the table environment
+# tabenv_preamble: |-
+#   library("somethign")
+  ggPMX:
+   #dvid:     NULL
+   #conts:    NULL
+   #cats:     NULL
+   #strats:   NULL
+   #endpoint: NULL
+   #settings: NULL
+    vpc:      TRUE
 #------
 # Both figures and tables are generated based on user defined commands. These
 # will be depdendnt on input data (e.g., nlmixr fit object), default
@@ -60,67 +79,87 @@ options:
 #    multiple figures that will be treated as paginated).
 #  - ggplot object (this can be a single figure or a paginated figure)
 #
-
 figures:
   # Here we list all figures to be generated.
-  dv_vs_pred:
+  dv_vs_pred_ipred:
     orientation: "portrait"
-    caption:     "dv_vs_pred caption"
-    title:       "dv_vs_pred title"
+    caption:     "Observed vs Predicted"
+    title:       "Observed vs Predicted"
     cmd: |-
-      p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
-      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
-      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  dv_vs_ipred:
+      # Population prediction  
+      p_pred <- dv_vs_pred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
+      ggtitle("===CMPD=== (===CUNITS===)") +
+      ylab("Observed") +
+      xlab("Population Predicted") +
+      theme_light()
+      yrange = layer_scales(p_pred)$y$range$range
+      xrange = layer_scales(p_pred)$x$range$range
+      lb = min(c(yrange,xrange))
+      ub = max(c(yrange,xrange))
+      p_pred = p_pred + xlim(c(lb, ub)) + ylim(c(lb,ub))
+
+      ## Individual prediction  
+      p_ipred <- dv_vs_ipred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
+      ggtitle("===CMPD=== (===CUNITS===)") +
+      coord_fixed()+
+      ylab("Observed") +
+      xlab("Individual Predicted") +
+      theme_light()
+      yrange = layer_scales(p_ipred)$y$range$range
+      xrange = layer_scales(p_ipred)$x$range$range
+      lb = min(c(yrange,xrange))
+      ub = max(c(yrange,xrange))
+      p_ipred = p_ipred + xlim(c(lb, ub)) + ylim(c(lb,ub))
+      # Combining figures
+      p_res <- ggpubr::ggarrange(p_pred, p_ipred, ncol=2, nrow=1 )
+      #p_res = p_pred
+  res_vs_pred_idv:
     orientation: "portrait"
-    caption:     "dv_vs_ipred caption"
-    title:       "dv_vs_ipred title"
-    cmd: |-
-      p_res <- dv_vs_ipred(xpdb, caption=NULL, title=NULL) +
-      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
-      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  res_vs_pred:
-    orientation: "portrait"
-    caption:     "res_vs_pred caption"
-    title:       "res_vs_pred title"
+    caption:     "CWRES vs Pred and Time"
+    title:       "CWRES vs Pred and Time"
     cmd: |-
       if("CWRES" %in% names(fit)){
-       p_res <- res_vs_pred(xpdb, caption=NULL, title=NULL) +
-       xlab("Conditional Weighted Residuals") +
-       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+        p_pred <- res_vs_pred(xpdb, caption=NULL, title=NULL, res="CWRES") +
+        ggtitle("===CMPD=== (===CUNITS===)") +
+        ylab("CWRES") +
+        xlab("Population Predicted") +
+        theme_light()
+        
+        p_idv  <- res_vs_idv(xpdb, caption=NULL, title=NULL, res="CWRES") +
+        ggtitle("Time (===CUNITS===)") +
+        ylab("CWRES") +
+        xlab("Time (===TUNITS===)") +
+        theme_light()
+
+        p_res <- ggpubr::ggarrange(p_pred, p_idv, ncol=2, nrow=1 )
       } else {
         p_res <- NA
       }
-  res_vs_idv:
-    orientation: "landscape"
-    caption:     "res_vs_idv caption"
-    title:       "res_vs_idv title"
-    cmd: |-
-      p_res <- res_vs_idv(xpdb, caption=NULL, title=NULL) +
-      xlab("Conditional Weighted Residuals") +
-      ylab("Time (===TUNITS===)")
   prm_vs_iteration:
     orientation: "landscape"
-    caption:     "prm_vs_iteration caption"
-    title:       "prm_vs_iteration title"
+    caption:     "SAEM Stabilization"
+    title:       "SAEM Stabilization"
     cmd: |-
       p_res <- prm_vs_iteration(xpdb, caption=NULL, title=NULL)
-  absval_res_vs_pred:
-    orientation: "landscape"
-    caption:     "absval_res_vs_idv caption"
-    title:       "absval_res_vs_idv title"
-    cmd: |-
-      p_res <- absval_res_vs_pred(xpdb, res = 'IWRES', caption=NULL, title=NULL) +
-      xlab("Time (===TUNITS===)")
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
   ind_plots:
     orientation: "landscape"
-    caption:     "ind_plots caption"
-    title:       "ind_plots title"
+    caption:     "Individual and population prediction overlay"
+    title:       "Individual and population prediction overlay"
     cmd: |-
       p_res <- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  +
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
-      xlab("Time (===TUNITS===)")
+      ylab(" ===CMPD=== (===CUNITS===)") +
+      xlab("Time (===TUNITS===)")  +
+      theme_light()
+# vpc:        
+#   orientation: "landscape"
+#   caption:     "VPC"
+#   title:       "VPC"
+#   cmd: |-
+#
+#     p_res <- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  +
+#     ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)") +
+#     xlab("Time (===TUNITS===)")  +
+#     theme_light()
   skip_figure:
     orientation: "landscape"
     caption:     "ind_plots caption"
@@ -167,13 +206,10 @@ pptx:
     - table: pest_table
     - table: skip_table
     - figure: ind_plots
-    - figure: dv_vs_pred
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
+    - figure: dv_vs_pred_ipred
+    - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
-    - figure: skip_figure        
+    - figure: skip_figure
 docx:
   figures:
     landscape:
@@ -186,13 +222,11 @@ docx:
     - text:
         text:  "Figures"
         style: Heading_1
-    - figure: dv_vs_pred
     - figure: ind_plots
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
+    - figure: dv_vs_pred_ipred
+    - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
+    - figure: skip_figure
     - text:
         text:  "Tables"
         style: Heading_1

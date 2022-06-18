@@ -10,15 +10,12 @@
 #'@param obnd onbrand report object to have report elements appended to
 #'@param fit nlmixr2 fit object to be reported
 #'@param ph Manual placeholders, see \code{\link{yaml_read_fit}} for more
-#'details.
-#'For example the run number may be "RUNN" in the yaml file. To overwrite this just
-#'provide \code{list(RUNN="RUN_1")} (default: \code{NULL})
 #'@param rptyaml yaml file containing the report elements and structure
 #'@return onbrand object with the report elements added
-report_fit <- function(obnd    = NULL,
-                       fit     = NULL,
-                       rptyaml= system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
-                       ph      = NULL){
+report_fit <- function(obnd      = NULL,
+                       fit       = NULL,
+                       ph        = NULL,
+                       rptyaml   = system.file(package="nlmixr2rpt","templates", "report_fit.yaml")){
   isgood       = TRUE
   msgs         = c()
   rptdetails   = NULL
@@ -319,7 +316,7 @@ report_fit <- function(obnd    = NULL,
                   obnd =  onbrand::report_add_doc_content(obnd,
                     type     = "flextable_object",
                     content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                    caption_format  = curr_fig[["caption_format"]],
+                                    caption_format  = curr_tab[["caption_format"]],
                                     caption         = curr_tab[["caption_proc"]]))
                   # adding breaks between tables of multipage tables
                   # between tables 1 & 2, 2 & 3,  ... n-1 & n
@@ -597,12 +594,13 @@ eval_str  <- function(estr="", fit=NULL){
 #'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
 #' }
 fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
-  isgood        = TRUE
-  msgs          = c()
-  output_dir    = tempdir()
-  resolution    = 300
-  value         = NULL
-  preamble      = NULL
+  isgood            = TRUE
+  msgs              = c()
+  output_dir        = tempdir()
+  resolution        = 300
+  value             = NULL
+  figenv_preamble   = NULL
+  tabenv_preamble   = NULL
 
 
   if(is.null(option)){
@@ -644,11 +642,16 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
       resolution = as.numeric(eval_str(estr=rptdetails[["options"]][["resolution"]], fit=fit))
     }
     value = resolution
-  } else if(option == "preamble"){
-    if(!is.null(rptdetails[["options"]][["preamble"]])){
-      preamble = rptdetails[["options"]][["preamble"]]
+  } else if(option == "figenv_preamble"){
+    if(!is.null(rptdetails[["options"]][["figenv_preamble"]])){
+      figenv_preamble = rptdetails[["options"]][["figenv_preamble"]]
     }
-    value = preamble
+    value = figenv_preamble
+  } else if(option == "tabenv_preamble"){
+    if(!is.null(rptdetails[["options"]][["tabenv_preamble"]])){
+      tabenv_preamble = rptdetails[["options"]][["tabenv_preamble"]]
+    }
+    value = tabenv_preamble
   } else {
     msgs = c(msgs, paste0("Unknown option: ", option))
 

@@ -98,7 +98,7 @@
 <div class="section level1">
 <h1 id="introduction">Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px"><a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h1>
-<p>The purpose of <code>nlmixr2rpt</code> is to automate reporting of <code>nlmixr2</code> analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation, and general content for Word and PowerPoint files.</p>
+<p>The purpose of <code>nlmixr2rpt</code> is to automate reporting of <code>nlmixr2</code> analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation code, and general content for Word and PowerPoint files.</p>
 </div>
 <div class="section level1">
 <h1 id="general-workflow">General workflow<a class="anchor" aria-label="anchor" href="#general-workflow"></a>
@@ -107,7 +107,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nlmixr2rpt</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/" class="external-link">onbrand</a></span><span class="op">)</span>  
-<span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"examples"</span>, <span class="st">"fit.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"examples"</span>, <span class="st">"fit_focei_wbc.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Next we need to create <code>onbrand</code> report objects. This will create report objects for both PowerPoint (<code>obnd_pptx</code>) and Word (<code>obnd_docx</code>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html" class="external-link">read_template</a></span><span class="op">(</span>
@@ -119,7 +119,8 @@
   mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Next we will add the report elements to the report objects using the <code><a href="../reference/report_fit.html">report_fit()</a></code> function. This function can be used with both types of report. The contents will be different depending on the document type.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span>
+<code class="sourceCode R">
+<span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span>
   fit     <span class="op">=</span> <span class="va">fit</span>, 
   obnd    <span class="op">=</span> <span class="va">obnd_pptx</span><span class="op">)</span>
 
@@ -173,14 +174,14 @@
 <h2 id="options">
 <code>options</code><a class="anchor" aria-label="anchor" href="#options"></a>
 </h2>
-<p>This section allows you to control general report options. Each element here can be either an explicit value or a piece of R code that will be evaluated. The following options are supported with the expected data type in parentheses:</p>
+<p>This section allows you to control general report options. Each element here can be either an explicit value. If identified as evaluable <sup>[EV]</sup> it will first attempt to evaluate it as R code. If that fails the explicit value will be used. The following options are supported with the expected data type in parentheses:</p>
 <ul>
 <li>
-<code>output_dir</code><sup>[PH]</sup> - The location where figures will be generated (character)</li>
+<code>output_dir</code><sup>[PH,EV]</sup> - The location where figures will be generated (character)</li>
 <li>
-<code>resolution</code> - Resolution of figures being generated (numeric)</li>
+<code>resolution</code><sup>[EV]</sup> - Resolution of figures being generated (numeric)</li>
 <li>
-<code>preamble</code> - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)</li>
+<code>figenv_preamble</code> and <code>tabenv_preamble</code> - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)</li>
 </ul>
 </div>
 <div class="section level2">
@@ -207,7 +208,7 @@
 <li>
 <code>width</code> - figure width in inches (figure environment only)</li>
 <li>
-<code>xpdb</code> - xpose object created from xpose_data_nlmixr(fit) (figure environment only)</li>
+<code>xpdb</code> - the default yaml file contains code in the preamble to create this object by running xpose_data_nlmixr(fit) (figure environment only)</li>
 </ul>
 </div>
 <div class="section level2">
@@ -222,8 +223,6 @@
     caption_format: "text"
     title:          "dv_vs_pred title"
     cmd: |-
-      library(xpose)
-      library(ggplot2)
       p_res &lt;- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
       xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")</code></pre>
@@ -240,7 +239,7 @@
 <li>
 <code>cmd</code><sup>[PH]</sup> - Command to generate the figure.</li>
 </ul>
-<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it needs to create a variable called <code>p_res</code>. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in <code>cmd</code>. If you want to conditionally skip the reporting of a figure, you can instead set the value of <code>p_res</code> to <code>NA</code>. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want to use at the top to ensure the functions are available to you.</p>
+<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it needs to create a variable called <code>p_res</code>. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in <code>cmd</code>. If you want to conditionally skip the reporting of a figure, you can instead set the value of <code>p_res</code> to <code>NA</code>. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want in the relevant preamble section to ensure the functions are available to you.</p>
 </div>
 <div class="section level2">
 <h2 id="tables">
@@ -359,7 +358,7 @@
 <h2 id="powerpoint">PowerPoint<a class="anchor" aria-label="anchor" href="#powerpoint"></a>
 </h2>
 <p>To create an <code>onbrand</code> PowerPoint template for your organization you will need the following master slide names define with the corresponding elements.</p>
-<template id="55b015cd-f62e-4fce-89b3-b656c4017e0c"><style>
+<template id="8fdea38f-9963-4175-a7f0-b298db320432"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -395,160 +394,160 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-fd700b2e{}.cl-fd691904{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fd691936{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fd692e76{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-fd6971b0{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd6971ba{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd6971c4{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-fd700b2e">
+<style>.cl-29f6e026{}.cl-29f0a9ae{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-29f0a9e0{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-29f0be30{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-29f0ff80{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-29f0ff8a{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-29f0ff8b{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-29f6e026">
 <thead>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">Master/Template</span></p></td>
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">onbrand</span></p></td>
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">Content</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">Master/Template</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">onbrand</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">Content</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">Name</span></p></td>
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">Placeholder</span></p></td>
-<td class="cl-fd6971c4"><p class="cl-fd692e76"><span class="cl-fd691904">Type</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">Name</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">Placeholder</span></p></td>
+<td class="cl-29f0ff8b"><p class="cl-29f0be30"><span class="cl-29f0a9ae">Type</span></p></td>
 </tr>
 </thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="2" class="cl-fd6971b0"><p class="cl-fd692e76"><span class="cl-fd691936">title_slide</span></p></td>
-<td class="cl-fd6971b0"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971b0"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="2" class="cl-29f0ff80"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title_slide</span></p></td>
+<td class="cl-29f0ff80"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff80"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="2" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">section_slide</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="2" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">section_slide</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title_only</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title_only</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="3" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_text</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="3" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_body</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_body</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="3" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_list</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="3" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_body</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_body</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="6" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">two_content_header_list</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="6" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">two_content_header_list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left_header</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left_header</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right_header</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right_header</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="6" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">two_content_header_text</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="6" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">two_content_header_text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left_header</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left_header</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right_header</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right_header</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="4" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">two_content_list</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="4" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">two_content_list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">list</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="4" class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">two_content_text</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td rowspan="4" class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">two_content_text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">sub_title</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">sub_title</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_left</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_left</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">content_right</span></p></td>
-<td class="cl-fd6971ba"><p class="cl-fd692e76"><span class="cl-fd691936">text</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">content_right</span></p></td>
+<td class="cl-29f0ff8a"><p class="cl-29f0be30"><span class="cl-29f0a9e0">text</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="7251eba0-ec05-4fc5-ab7e-c7b6a113fb30"></div>
+</div></template><div class="flextable-shadow-host" id="004c509a-354b-4d4f-a8f7-f5ee46145491"></div>
 <script>
-var dest = document.getElementById("7251eba0-ec05-4fc5-ab7e-c7b6a113fb30");
-var template = document.getElementById("55b015cd-f62e-4fce-89b3-b656c4017e0c");
+var dest = document.getElementById("004c509a-354b-4d4f-a8f7-f5ee46145491");
+var template = document.getElementById("8fdea38f-9963-4175-a7f0-b298db320432");
 var caption = template.content.querySelector("caption");
 if(caption) {
   caption.style.cssText = "display:block;text-align:center;";
@@ -565,7 +564,7 @@ fantome.appendChild(templateContent);
 <h2 id="word">Word<a class="anchor" aria-label="anchor" href="#word"></a>
 </h2>
 <p>Similarly, to create an <code>onbrand</code> Word template you will need to the following <code>onbrand</code> styles defined.</p>
-<template id="6f2436a9-d6d8-4e61-ac28-c7d9dad31c59"><style>
+<template id="ad3cbcce-dd65-4d47-8e67-a7cd95409c51"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -601,77 +600,77 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-fd9cac9c{}.cl-fd971a20{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fd971a2a{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-fd972862{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-fd975652{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97565c{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97565d{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975666{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975667{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975668{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975669{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975670{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975671{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975672{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975673{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97567a{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97567b{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97567c{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd97567d{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975684{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975685{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-fd975686{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-fd9cac9c">
+<style>.cl-2a23cd20{}.cl-2a1dd884{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2a1dd88e{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2a1de766{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-2a1e175e{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e175f{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1768{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1769{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e176a{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1772{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1773{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e177c{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e177d{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e177e{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e177f{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1786{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1787{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1790{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1791{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e1792{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e179a{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2a1e179b{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-2a23cd20">
 <thead>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975684"><p class="cl-fd972862"><span class="cl-fd971a20">onbrand</span></p></td>
-<td class="cl-fd975685"><p class="cl-fd972862"><span class="cl-fd971a20">Word</span></p></td>
-<td class="cl-fd975686"><p class="cl-fd972862"><span class="cl-fd971a20">Style</span></p></td>
+<td class="cl-2a1e1792"><p class="cl-2a1de766"><span class="cl-2a1dd884">onbrand</span></p></td>
+<td class="cl-2a1e179a"><p class="cl-2a1de766"><span class="cl-2a1dd884">Word</span></p></td>
+<td class="cl-2a1e179b"><p class="cl-2a1de766"><span class="cl-2a1dd884">Style</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975684"><p class="cl-fd972862"><span class="cl-fd971a20">Style</span></p></td>
-<td class="cl-fd975685"><p class="cl-fd972862"><span class="cl-fd971a20">Style</span></p></td>
-<td class="cl-fd975686"><p class="cl-fd972862"><span class="cl-fd971a20">Type</span></p></td>
+<td class="cl-2a1e1792"><p class="cl-2a1de766"><span class="cl-2a1dd884">Style</span></p></td>
+<td class="cl-2a1e179a"><p class="cl-2a1de766"><span class="cl-2a1dd884">Style</span></p></td>
+<td class="cl-2a1e179b"><p class="cl-2a1de766"><span class="cl-2a1dd884">Type</span></p></td>
 </tr>
 </thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd97565c"><p class="cl-fd972862"><span class="cl-fd971a2a">Code</span></p></td>
-<td class="cl-fd975652"><p class="cl-fd972862"><span class="cl-fd971a2a">Code</span></p></td>
-<td class="cl-fd97565d"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e175f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Code</span></p></td>
+<td class="cl-2a1e175e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Code</span></p></td>
+<td class="cl-2a1e1768"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975670"><p class="cl-fd972862"><span class="cl-fd971a2a">Figure_Caption</span></p></td>
-<td class="cl-fd975669"><p class="cl-fd972862"><span class="cl-fd971a2a">graphic title</span></p></td>
-<td class="cl-fd975671"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177c"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Figure_Caption</span></p></td>
+<td class="cl-2a1e1773"><p class="cl-2a1de766"><span class="cl-2a1dd88e">graphic title</span></p></td>
+<td class="cl-2a1e177d"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">Heading_1</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">heading 1</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Heading_1</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">heading 1</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">Heading_2</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">heading 2</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Heading_2</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">heading 2</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">Heading_3</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">heading 3</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Heading_3</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">heading 3</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">Normal</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">Normal</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Normal</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Normal</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">Notes</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">Notes</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Notes</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Notes</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd97567d"><p class="cl-fd972862"><span class="cl-fd971a2a">Table_Caption</span></p></td>
-<td class="cl-fd97567b"><p class="cl-fd972862"><span class="cl-fd971a2a">table title</span></p></td>
-<td class="cl-fd97567c"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e1791"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Table_Caption</span></p></td>
+<td class="cl-2a1e1787"><p class="cl-2a1de766"><span class="cl-2a1dd88e">table title</span></p></td>
+<td class="cl-2a1e1790"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975672"><p class="cl-fd972862"><span class="cl-fd971a2a">TOC</span></p></td>
-<td class="cl-fd97567a"><p class="cl-fd972862"><span class="cl-fd971a2a">toc 1</span></p></td>
-<td class="cl-fd975673"><p class="cl-fd972862"><span class="cl-fd971a2a">paragraph</span></p></td>
+<td class="cl-2a1e177e"><p class="cl-2a1de766"><span class="cl-2a1dd88e">TOC</span></p></td>
+<td class="cl-2a1e1786"><p class="cl-2a1de766"><span class="cl-2a1dd88e">toc 1</span></p></td>
+<td class="cl-2a1e177f"><p class="cl-2a1de766"><span class="cl-2a1dd88e">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-fd975666"><p class="cl-fd972862"><span class="cl-fd971a2a">Table</span></p></td>
-<td class="cl-fd975668"><p class="cl-fd972862"><span class="cl-fd971a2a">Table Grid</span></p></td>
-<td class="cl-fd975667"><p class="cl-fd972862"><span class="cl-fd971a2a">table</span></p></td>
+<td class="cl-2a1e1769"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Table</span></p></td>
+<td class="cl-2a1e1772"><p class="cl-2a1de766"><span class="cl-2a1dd88e">Table Grid</span></p></td>
+<td class="cl-2a1e176a"><p class="cl-2a1de766"><span class="cl-2a1dd88e">table</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="ce98b93b-9205-4582-aa1e-66ef310dbbc9"></div>
+</div></template><div class="flextable-shadow-host" id="4ffaeb86-97bd-4973-bee2-2e779cdd7734"></div>
 <script>
-var dest = document.getElementById("ce98b93b-9205-4582-aa1e-66ef310dbbc9");
-var template = document.getElementById("6f2436a9-d6d8-4e61-ac28-c7d9dad31c59");
+var dest = document.getElementById("4ffaeb86-97bd-4973-bee2-2e779cdd7734");
+var template = document.getElementById("ad3cbcce-dd65-4d47-8e67-a7cd95409c51");
 var caption = template.content.querySelector("caption");
 if(caption) {
   caption.style.cssText = "display:block;text-align:center;";
@@ -697,9 +696,9 @@ fantome.appendChild(templateContent);
   TEST2: ls()
   OBJ: sprintf("%3g", fit$objf)
 parameters:
-  lCLint:
-    md:  "CL~int~ (L/hr)"
-    txt: "CLint (L/hr)"
+  log_CIRC0:
+    md:  "log(CIRC~0~)"
+    txt: "log(CIRC0)"
   add.err:
     md:  "Add Err"
     txt: "Add Err"
@@ -709,69 +708,80 @@ parameters:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  preamble: |-
+  figenv_preamble: |-
     library("ggplot2")
     library("xpose")
-
+    library("ggforce")
+    library("ggPMX")   
+    xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
+  ggPMX:
+    vpc:      TRUE
 figures:
-  dv_vs_pred:
+  dv_vs_pred_ipred:
     orientation: "portrait"
-    caption:     "dv_vs_pred caption"
-    title:       "dv_vs_pred title"
+    caption:     "Observed vs Predicted"
+    title:       "Observed vs Predicted"
     cmd: |-
-      p_res &lt;- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
-      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
-      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  dv_vs_ipred:
+      p_pred &lt;- dv_vs_pred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
+      ggtitle("===CMPD=== (===CUNITS===)") +
+      ylab("Observed") +
+      xlab("Population Predicted") +
+      theme_light()
+      yrange = layer_scales(p_pred)$y$range$range
+      xrange = layer_scales(p_pred)$x$range$range
+      lb = min(c(yrange,xrange))
+      ub = max(c(yrange,xrange))
+      p_pred = p_pred + xlim(c(lb, ub)) + ylim(c(lb,ub))
+
+      p_ipred &lt;- dv_vs_ipred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
+      ggtitle("===CMPD=== (===CUNITS===)") +
+      coord_fixed()+
+      ylab("Observed") +
+      xlab("Individual Predicted") +
+      theme_light()
+      yrange = layer_scales(p_ipred)$y$range$range
+      xrange = layer_scales(p_ipred)$x$range$range
+      lb = min(c(yrange,xrange))
+      ub = max(c(yrange,xrange))
+      p_ipred = p_ipred + xlim(c(lb, ub)) + ylim(c(lb,ub))
+      p_res &lt;- ggpubr::ggarrange(p_pred, p_ipred, ncol=2, nrow=1 )
+  res_vs_pred_idv:
     orientation: "portrait"
-    caption:     "dv_vs_ipred caption"
-    title:       "dv_vs_ipred title"
-    cmd: |-
-      p_res &lt;- dv_vs_ipred(xpdb, caption=NULL, title=NULL) +
-      xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
-      ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
-  res_vs_pred:
-    orientation: "portrait"
-    caption:     "res_vs_pred caption"
-    title:       "res_vs_pred title"
+    caption:     "CWRES vs Pred and Time"
+    title:       "CWRES vs Pred and Time"
     cmd: |-
       if("CWRES" %in% names(fit)){
-       p_res &lt;- res_vs_pred(xpdb, caption=NULL, title=NULL) +
-       xlab("Conditional Weighted Residuals") +
-       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
+        p_pred &lt;- res_vs_pred(xpdb, caption=NULL, title=NULL, res="CWRES") +
+        ggtitle("===CMPD=== (===CUNITS===)") +
+        ylab("CWRES") +
+        xlab("Population Predicted") +
+        theme_light()
+        
+        p_idv  &lt;- res_vs_idv(xpdb, caption=NULL, title=NULL, res="CWRES") +
+        ggtitle("Time (===CUNITS===)") +
+        ylab("CWRES") +
+        xlab("Time (===TUNITS===)") +
+        theme_light()
+
+        p_res &lt;- ggpubr::ggarrange(p_pred, p_idv, ncol=2, nrow=1 )
       } else {
         p_res &lt;- NA
       }
-  res_vs_idv:
-    orientation: "landscape"
-    caption:     "res_vs_idv caption"
-    title:       "res_vs_idv title"
-    cmd: |-
-      p_res &lt;- res_vs_idv(xpdb, caption=NULL, title=NULL) +
-      xlab("Conditional Weighted Residuals") +
-      ylab("Time (===TUNITS===)")
   prm_vs_iteration:
     orientation: "landscape"
-    caption:     "prm_vs_iteration caption"
-    title:       "prm_vs_iteration title"
+    caption:     "SAEM Stabilization"
+    title:       "SAEM Stabilization"
     cmd: |-
       p_res &lt;- prm_vs_iteration(xpdb, caption=NULL, title=NULL)
-  absval_res_vs_pred:
-    orientation: "landscape"
-    caption:     "absval_res_vs_idv caption"
-    title:       "absval_res_vs_idv title"
-    cmd: |-
-      p_res &lt;- absval_res_vs_pred(xpdb, res = 'IWRES', caption=NULL, title=NULL) +
-      xlab("Time (===TUNITS===)")
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
   ind_plots:
     orientation: "landscape"
-    caption:     "ind_plots caption"
-    title:       "ind_plots title"
+    caption:     "Individual and population prediction overlay"
+    title:       "Individual and population prediction overlay"
     cmd: |-
       p_res &lt;- ind_plots(xpdb, nrow=3, ncol=4, caption=NULL, title=NULL)  +
-      ylab("Predicted and Observed ===CMPD=== Concentrations (===CUNITS===)")
-      xlab("Time (===TUNITS===)")
+      ylab(" ===CMPD=== (===CUNITS===)") +
+      xlab("Time (===TUNITS===)")  +
+      theme_light()
   skip_figure:
     orientation: "landscape"
     caption:     "ind_plots caption"
@@ -811,13 +821,10 @@ pptx:
     - table: pest_table
     - table: skip_table
     - figure: ind_plots
-    - figure: dv_vs_pred
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
+    - figure: dv_vs_pred_ipred
+    - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
-    - figure: skip_figure        
+    - figure: skip_figure
 docx:
   figures:
     landscape:
@@ -830,13 +837,11 @@ docx:
     - text:
         text:  "Figures"
         style: Heading_1
-    - figure: dv_vs_pred
     - figure: ind_plots
-    - figure: dv_vs_ipred
-    - figure: res_vs_pred
-    - figure: res_vs_idv
+    - figure: dv_vs_pred_ipred
+    - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
-    - figure: absval_res_vs_pred
+    - figure: skip_figure
     - text:
         text:  "Tables"
         style: Heading_1

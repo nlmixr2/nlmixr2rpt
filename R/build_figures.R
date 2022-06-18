@@ -46,7 +46,6 @@ build_figures <- function(obnd       = NULL,
   resolution   = NULL
   rpttype      = "Unknown"
 
-
   #------------------------
   # Checking user input
   if(is.null(fit)){
@@ -83,15 +82,15 @@ build_figures <- function(obnd       = NULL,
       isgood = FALSE
     }
     # Getting any user defined preamble code
-    res_fo = fetch_option(rptdetails=rptdetails, option="preamble")
+    res_fo = fetch_option(rptdetails=rptdetails, option="figenv_preamble")
     if(res_fo[["isgood"]]){
       preamble_str = res_fo[["value"]]
-      eval(parse(text=preamble_str))
+      if(!is.null(preamble_str)){
+        eval(parse(text=preamble_str)) }
     } else {
       isgood = FALSE
     }
   }
-
 
   # Caption format information
   allowed_cap_fmts = c("md", "text")
@@ -99,8 +98,7 @@ build_figures <- function(obnd       = NULL,
 
   if(isgood){
     if("figures" %in% names(rptdetails)){
-      # Creating the xpdb object for xpose figures:
-      xpdb <- xpose.nlmixr2::xpose_data_nlmixr(fit)
+      # Creating the controller object
       for(fid in names(rptdetails[["figures"]])){
         # Pulling out the current figure information:
         finfo = rptdetails[["figures"]][[fid]]
@@ -173,6 +171,14 @@ build_figures <- function(obnd       = NULL,
             # Then we generate a figure holding that information so it will
             # be obvious something went wrong for the user
             p_res = mk_error_fig(fmsgs)
+
+            # Dumping the messages to the console as well
+            if(verbose){
+              cli::cli_h3("Figure generation failed")
+              for(msg in fmsgs){
+                cli::cli_alert(msg)
+              }
+            }
 
             # We now set the figure good flag to false
             FISGOOD = FALSE

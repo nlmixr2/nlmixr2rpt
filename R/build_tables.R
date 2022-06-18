@@ -70,10 +70,11 @@ build_tables  <- function(obnd       = NULL,
       isgood = FALSE
     }
     # Getting any user defined preamble code
-    res_fo = fetch_option(rptdetails=rptdetails, option="preamble")
+    res_fo = fetch_option(rptdetails=rptdetails, option="tabenv_preamble")
     if(res_fo[["isgood"]]){
       preamble_str = res_fo[["value"]]
-      eval(parse(text=preamble_str))
+      if(!is.null(preamble_str)){
+        eval(parse(text=preamble_str))}
     } else {
       isgood = FALSE
     }
@@ -218,7 +219,17 @@ build_tables  <- function(obnd       = NULL,
 
           if(!TISGOOD){
             t_res = mk_error_tab(tmsgs)
+
+            # Dumping the messages to the console as well
+            if(verbose){
+              cli::cli_h3("Table generation failed")
+              for(msg in tmsgs){
+                cli::cli_alert(msg)
+              }
+            }
           }
+
+
         }
 
         # Storing the caption format for alter use

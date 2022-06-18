@@ -22,6 +22,9 @@ parameters:
   lCLint:
     md:  "CL~int~ (L/hr)"
     txt: "CLint (L/hr)"
+  log_CIRC0:
+    md:  "log(CIRC~0~)"
+    txt: "log(CIRC0)"
   prop.err:
     md:  "Prop Err"
     txt: "Prop Err"
@@ -77,7 +80,7 @@ figures:
     title:       "Bad figure designed to fail"
     cmd: |-
       bad_figure_command
-  skip_figure: 
+  skip_figure:
     orientation: "portrait"
     caption:     "Bad figure designed to fail"
     title:       "Bad figure designed to fail"

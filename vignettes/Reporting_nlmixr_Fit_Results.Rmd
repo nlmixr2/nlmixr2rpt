@@ -29,7 +29,7 @@ First we need an `nlmixr2` fit object. We're going to load a fit example stored 
 ```{r, eval=TRUE, echo=TRUE}
 library(nlmixr2rpt)
 library(onbrand)  
-fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit_focei.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit_focei_wbc.rds"))
 ```
 
 Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).
@@ -47,6 +47,7 @@ obnd_docx = read_template(
 Next we will add the report elements to the report objects using the `report_fit()` function. This function can be used with both types of report. The contents will be different depending on the document type.  
 
 ```{r, eval=FALSE, echo=TRUE}
+
 obnd_pptx = report_fit(
   fit     = fit, 
   obnd    = obnd_pptx)
@@ -119,13 +120,11 @@ parameters:
 ```
 ## `options`
 
-This section allows you to control general report options. Each element here can
-be either an explicit value or a piece of R code that will be evaluated. The
-following options are supported with the expected data type in parentheses:
+This section allows you to control general report options. Each element here can be either an explicit value. If identified as evaluable ^[EV]^ it will first attempt to evaluate it as R code. If that fails the explicit value will be used. The following options are supported with the expected data type in parentheses:
 
-* `output_dir`^[PH]^ - The location where figures will be generated (character)
-* `resolution` - Resolution of figures being generated (numeric)
-* `preamble` - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)
+* `output_dir`^[PH,EV]^ - The location where figures will be generated (character)
+* `resolution`^[EV]^ - Resolution of figures being generated (numeric)
+* `figenv_preamble` and `tabenv_preamble` - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)
 
 ## Building `figures` & `tables`
 
@@ -140,7 +139,7 @@ Figures and tables are defined in terms of R code that will be evaluated. There 
 * `rptdetails`   - result of reading in the report yaml file 
 * `rpttype`      - either "Word" or "PowerPoint" 
 * `width`        - figure width in inches (figure environment only)
-* `xpdb`         - xpose object created from xpose_data_nlmixr(fit) (figure  environment only) 
+* `xpdb`         - the default yaml file contains code in the preamble to create this object by running xpose_data_nlmixr(fit) (figure  environment only) 
 
 ## `figures` 
 
@@ -154,8 +153,6 @@ figures:
     caption_format: "text"
     title:          "dv_vs_pred title"
     cmd: |-
-      library(xpose)
-      library(ggplot2)
       p_res <- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
       xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")
@@ -169,7 +166,7 @@ It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 * `title`^[PH]^ - Slide title when the figure is used in PowerPoint.
 * `cmd`^[PH]^ - Command to generate the figure.
 
-**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. If you want to conditionally skip the reporting of a figure, you can instead set the value of `p_res` to `NA`. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want to use at the top to ensure the functions are available to you. 
+**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. If you want to conditionally skip the reporting of a figure, you can instead set the value of `p_res` to `NA`. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want in the relevant preamble section to ensure the functions are available to you. 
 
 ## `tables`
 
