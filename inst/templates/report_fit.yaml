@@ -26,6 +26,12 @@ parameters:
   prop.err:
     md:  "Prop Err"
     txt: "Prop Err"
+# Define covariates here as a character vector. For example to define the
+# columns SEX and ROUTE as covariates you'd use:
+# [ "SEX", "ROUTE"]
+covariates:
+  cat:  [ "SEX", "ROUTE"]
+  cont: NULL
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
@@ -40,6 +46,7 @@ options:
     library("ggPMX")   
     # Creating the xpdb object for xpose figures:
     xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
+
 # Uncomment to add a preamble to the table environment
 # tabenv_preamble: |-
 #   library("somethign")
@@ -62,6 +69,8 @@ options:
 # option only applies to figures and is not defined in the table generation
 # environment:
 #
+#  cat_covars   - character vector of categorical covariates from the dataset or NULL if there are none
+#  cont_covars  - character vector of continuous  covariates from the dataset or NULL if there are none
 #  fid          - current figure ID
 #  fit          - nlmixr fit object
 #  height       - figure height (figure enviornment only)
@@ -135,12 +144,43 @@ figures:
       } else {
         p_res <- NA
       }
+  eta_cat:
+    orientation: "landscape"
+    caption:     "Effect of categorical covariates"
+    title:       "Effect of categorical covariates"
+    cmd: |-
+      if(!is.null(cat_covars)){
+        ctr = ggPMX::pmx_nlmixr(fit,
+                vpc = FALSE,
+                conts = cont_covars, 
+                cats  = cat_covars)
+        p_res <- ggPMX::pmx_plot_eta_cats(ctr) +
+          theme_light()
+      } else {
+        p_res <- NA
+      }
+  eta_cont:
+    orientation: "landscape"
+    caption:     "Effect of continuous covariates"
+    title:       "Effect of continuous covariates"
+    cmd: |-
+      if(!is.null(cont_covars)){
+        ctr = ggPMX::pmx_nlmixr(fit,
+                vpc = FALSE,
+                conts = cont_covars, 
+                cats  = cat_covars)
+        p_res <- ggPMX::pmx_plot_eta_conts(ctr) + 
+          theme_light()
+      } else {
+        p_res <- NA
+      }
   prm_vs_iteration:
     orientation: "landscape"
     caption:     "SAEM Stabilization"
     title:       "SAEM Stabilization"
     cmd: |-
-      p_res <- prm_vs_iteration(xpdb, caption=NULL, title=NULL)
+      p_res <- prm_vs_iteration(xpdb, caption=NULL, title=NULL) +
+        theme_light()
   ind_plots:
     orientation: "landscape"
     caption:     "Individual and population prediction overlay"
@@ -209,6 +249,8 @@ pptx:
     - figure: dv_vs_pred_ipred
     - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
+    - figure: eta_cont
+    - figure: eta_cat
     - figure: skip_figure
 docx:
   figures:
@@ -227,6 +269,8 @@ docx:
     - figure: res_vs_pred_idv
     - figure: prm_vs_iteration
     - figure: skip_figure
+    - figure: eta_cont
+    - figure: eta_cat
     - text:
         text:  "Tables"
         style: Heading_1

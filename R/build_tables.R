@@ -1,10 +1,16 @@
-#'@importFrom flextable flextable
+#'@importFrom cli cli_alert cli_h3
+#'@importFrom dplyr mutate relocate 
+#'@importFrom flextable autofit compose flextable
+#'@importFrom onbrand fetch_md_def md_to_oo
+
 #'@export
 #'@title Generates Tables  for an `nlmixr2` Report
 #'@description Creates tables specified in a rptyaml file
 #'@param obnd onbrand report object to have report elements appended to
 #'@param fit nlmixr2 fit object to be reported
 #'@param rptdetails object creating when reading in rptyaml file
+#'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file  
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
 #'@return List containing the tables with the following structure:
@@ -29,10 +35,12 @@
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages
 #' }
-build_tables  <- function(obnd       = NULL,
-                          fit        = NULL,
-                          rptdetails = NULL,
-                          verbose    = TRUE){
+build_tables  <- function(obnd        = NULL,
+                          fit         = NULL,
+                          rptdetails  = NULL,
+                          cat_covars  = NULL,
+                          cont_covars = NULL,
+                          verbose     = TRUE){
 
   isgood     = TRUE
   msgs       = c()
@@ -78,6 +86,15 @@ build_tables  <- function(obnd       = NULL,
     } else {
       isgood = FALSE
     }
+
+    # Defining the covariate lists from the yaml file if 
+    # none have been specified
+    if(is.null(cat_covars)){
+      cat_covars = rptdetails[["covariates"]][["cat"]]
+    }
+    if(is.null(cont_covars)){
+      cont_covars = rptdetails[["covariates"]][["cont"]]
+    }
   }
 
   # Caption format information
@@ -86,7 +103,6 @@ build_tables  <- function(obnd       = NULL,
 
   if(isgood){
     if("tables" %in% names(rptdetails)){
-      #xpdb <- xpose.nlmixr::xpose_data_nlmixr(fit)
       for(tid in names(rptdetails[["tables"]])){
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]

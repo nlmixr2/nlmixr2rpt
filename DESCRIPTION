@@ -13,20 +13,21 @@ LazyData: FALSE
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports:
+  cli,
   dplyr, 
   flextable,
   ggforce,
   ggplot2,
   grDevices,
-  onbrand,
   stringr,
   nlmixr2,
+  onbrand,
   xpose,
   xpose.nlmixr2,
   yaml
 Suggests: 
-    rmarkdown,
-    knitr,
-    testthat (>= 3.0.0)
+  rmarkdown,
+  knitr,
+  testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3

@@ -85,7 +85,7 @@ Tables are used in a similiar fashion. This code will extract the flextable obje
 ```{r, eval=TRUE, echo=TRUE, results=TRUE,  warning=FALSE}
 tab_ft    = btres$rpttabs$pest_table$table$ft[[1]]
 tab_title = btres$rpttabs$pest_table$title_proc
-tab_ft = flextable::set_caption(tab_ft, caption = tab_title)
+tab_ft_knit = flextable::set_caption(tab_ft, caption = tab_title)
 
-tab_ft
+tab_ft_knit
 ```

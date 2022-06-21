@@ -2,6 +2,7 @@
 #'@import grDevices
 #'@import xpose
 #'@import stringr
+#'@importFrom cli cli_alert cli_h3
 #'@importFrom ggforce n_pages
 #'@importFrom xpose.nlmixr2 xpose_data_nlmixr
 
@@ -11,6 +12,8 @@
 #'@param obnd `onbrand` report object to have report elements appended to
 #'@param fit `nlmixr2` fit object to be reported
 #'@param rptdetails Object created  when reading in rptyaml file
+#'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
 #'@return List containing the figures with the following structure:
@@ -34,10 +37,12 @@
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages
 #' }
-build_figures <- function(obnd       = NULL,
-                          fit        = NULL,
-                          rptdetails = NULL,
-                          verbose    = TRUE){
+build_figures <- function(obnd        = NULL,
+                          fit         = NULL,
+                          rptdetails  = NULL,
+                          cat_covars  = NULL,
+                          cont_covars = NULL,
+                          verbose     = TRUE){
   isgood       = TRUE
   msgs         = c()
   rptfigs      = list()
@@ -90,6 +95,16 @@ build_figures <- function(obnd       = NULL,
     } else {
       isgood = FALSE
     }
+
+    # Defining the covariate lists from the yaml file if 
+    # none have been specified
+    if(is.null(cat_covars)){
+      cat_covars = rptdetails[["covariates"]][["cat"]]
+    }
+    if(is.null(cont_covars)){
+      cont_covars = rptdetails[["covariates"]][["cont"]]
+    }
+
   }
 
   # Caption format information

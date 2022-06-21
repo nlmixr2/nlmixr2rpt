@@ -75,8 +75,8 @@ content and format of the report in the supplied yaml file</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">report_fit</span><span class="op">(</span>
   obnd <span class="op">=</span> <span class="cn">NULL</span>,
   fit <span class="op">=</span> <span class="cn">NULL</span>,
-  rptyaml <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>, <span class="st">"report_fit.yaml"</span><span class="op">)</span>,
-  ph <span class="op">=</span> <span class="cn">NULL</span>
+  ph <span class="op">=</span> <span class="cn">NULL</span>,
+  rptyaml <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>, <span class="st">"report_fit.yaml"</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -86,13 +86,10 @@ content and format of the report in the supplied yaml file</p>
 <dd><p>onbrand report object to have report elements appended to</p></dd>
 <dt>fit</dt>
 <dd><p>nlmixr2 fit object to be reported</p></dd>
+<dt>ph</dt>
+<dd><p>Manual placeholders, see <code><a href="yaml_read_fit.html">yaml_read_fit</a></code> for more</p></dd>
 <dt>rptyaml</dt>
 <dd><p>yaml file containing the report elements and structure</p></dd>
-<dt>ph</dt>
-<dd><p>Manual placeholders, see <code><a href="yaml_read_fit.html">yaml_read_fit</a></code> for more
-details.
-For example the run number may be "RUNN" in the yaml file. To overwrite this just
-provide <code>list(RUNN="RUN_1")</code> (default: <code>NULL</code>)</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

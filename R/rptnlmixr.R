@@ -11,11 +11,17 @@
 #'@param fit nlmixr2 fit object to be reported
 #'@param ph Manual placeholders, see \code{\link{yaml_read_fit}} for more
 #'@param rptyaml yaml file containing the report elements and structure
+#'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file  
+#'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'@return onbrand object with the report elements added
-report_fit <- function(obnd      = NULL,
-                       fit       = NULL,
-                       ph        = NULL,
-                       rptyaml   = system.file(package="nlmixr2rpt","templates", "report_fit.yaml")){
+report_fit <- function(obnd        = NULL,
+                       fit         = NULL,
+                       ph          = NULL,
+                       cat_covars  = NULL,
+                       cont_covars = NULL,
+                       rptyaml     = system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
+                       verbose     = TRUE){
   isgood       = TRUE
   msgs         = c()
   rptdetails   = NULL
@@ -89,10 +95,24 @@ report_fit <- function(obnd      = NULL,
   if(isgood){
     #------------------------
     # Building Tables
-    btres = build_tables(obnd=obnd, fit=fit, rptdetails=rptdetails)
+    message("building tables")
+    btres = build_tables(
+      obnd        = obnd, 
+      fit         = fit, 
+      rptdetails  = rptdetails,
+      cont_covars = cont_covars,
+      cat_covars  = cat_covars,
+      verbose     = verbose)
     #------------------------
     # Building Figures
-    bfres = build_figures(obnd=obnd, fit=fit, rptdetails=rptdetails)
+    message("building figures")
+    bfres = build_figures(
+      obnd        = obnd, 
+      fit         = fit, 
+      rptdetails  = rptdetails, 
+      cont_covars = cont_covars,
+      cat_covars  = cat_covars,
+      verbose     = verbose)
     #------------------------
     # Appending results to the open report
     # These are the allowed report elements for each document type
