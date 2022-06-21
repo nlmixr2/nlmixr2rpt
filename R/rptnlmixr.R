@@ -95,7 +95,6 @@ report_fit <- function(obnd        = NULL,
   if(isgood){
     #------------------------
     # Building Tables
-    message("building tables")
     btres = build_tables(
       obnd        = obnd, 
       fit         = fit, 
@@ -105,7 +104,6 @@ report_fit <- function(obnd        = NULL,
       verbose     = verbose)
     #------------------------
     # Building Figures
-    message("building figures")
     bfres = build_figures(
       obnd        = obnd, 
       fit         = fit, 

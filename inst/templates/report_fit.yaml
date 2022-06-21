@@ -30,7 +30,7 @@ parameters:
 # columns SEX and ROUTE as covariates you'd use:
 # [ "SEX", "ROUTE"]
 covariates:
-  cat:  [ "SEX", "ROUTE"]
+  cat:  NULL
   cont: NULL
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
