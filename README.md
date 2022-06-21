@@ -42,10 +42,10 @@ devtools::install_github("john-harrold/nlmixr2rpt")
 
 ## Getting Started
 
-Browse through the [documentation](https://nlmixr2rpt.ubiquity.tools/)
-and check out the vignette:
+Browse through the [documentation](https://nlmixr2rpt.nlmixr2.org/) and
+check out the vignette:
 
 -   [Reporting `nlmixr` Fit
-    Results](https://nlmixr2rpt.ubiquity.tools/articles/Reportin_nlmixr_Fit_Results.html)
+    Results](https://nlmixr2rpt.nlmixr2.org/articles/Reportin_nlmixr_Fit_Results.html)
 -   [Accessing Figures and
-    Tables](https://nmlixr2rpt.ubiquity.tools/articles/Accessing_Figures_and_Tables.html)
+    Tables](https://nmlixr2rpt.nlmixr2.org/articles/Accessing_Figures_and_Tables.html)
