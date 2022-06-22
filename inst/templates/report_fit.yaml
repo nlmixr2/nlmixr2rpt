@@ -46,18 +46,7 @@ options:
     library("ggPMX")   
     # Creating the xpdb object for xpose figures:
     xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
-
-# Uncomment to add a preamble to the table environment
-# tabenv_preamble: |-
-#   library("somethign")
-  ggPMX:
-   #dvid:     NULL
-   #conts:    NULL
-   #cats:     NULL
-   #strats:   NULL
-   #endpoint: NULL
-   #settings: NULL
-    vpc:      TRUE
+  tabenv_preamble: NULL
 #------
 # Both figures and tables are generated based on user defined commands. These
 # will be depdendnt on input data (e.g., nlmixr fit object), default

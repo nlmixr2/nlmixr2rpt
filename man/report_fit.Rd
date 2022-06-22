@@ -8,7 +8,10 @@ report_fit(
   obnd = NULL,
   fit = NULL,
   ph = NULL,
-  rptyaml = system.file(package = "nlmixr2rpt", "templates", "report_fit.yaml")
+  cat_covars = NULL,
+  cont_covars = NULL,
+  rptyaml = system.file(package = "nlmixr2rpt", "templates", "report_fit.yaml"),
+  verbose = TRUE
 )
 }
 \arguments{
@@ -18,7 +21,13 @@ report_fit(
 
 \item{ph}{Manual placeholders, see \code{\link{yaml_read_fit}} for more}
 
+\item{cat_covars}{character vector of categorical covariates to overwrite defaults in yaml file}
+
+\item{cont_covars}{character vector of continuous covariates to overwrite defaults in yaml file}
+
 \item{rptyaml}{yaml file containing the report elements and structure}
+
+\item{verbose}{Boolean variable when set to TRUE (default) messages will be}
 }
 \value{
 onbrand object with the report elements added

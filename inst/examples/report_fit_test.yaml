@@ -28,12 +28,21 @@ parameters:
   prop.err:
     md:  "Prop Err"
     txt: "Prop Err"
+covariates:
+  cat:  NULL
+  cont: NULL
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  preamble: |-
+  figenv_preamble: |-
+    # Loading required libraries
     library("ggplot2")
     library("xpose")
+    library("ggforce")
+    library("ggPMX")   
+    # Creating the xpdb object for xpose figures:
+    xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
+  tabenv_preamble: NULL
 #------
 # Both figures and tables are generated based on user defined commands. These
 # will be depdendnt on input data (e.g., nlmixr fit object), default

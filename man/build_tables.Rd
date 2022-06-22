@@ -4,7 +4,14 @@
 \alias{build_tables}
 \title{Generates Tables  for an \code{nlmixr2} Report}
 \usage{
-build_tables(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
+build_tables(
+  obnd = NULL,
+  fit = NULL,
+  rptdetails = NULL,
+  cat_covars = NULL,
+  cont_covars = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{obnd}{onbrand report object to have report elements appended to}
@@ -12,6 +19,10 @@ build_tables(obnd = NULL, fit = NULL, rptdetails = NULL, verbose = TRUE)
 \item{fit}{nlmixr2 fit object to be reported}
 
 \item{rptdetails}{object creating when reading in rptyaml file}
+
+\item{cat_covars}{character vector of categorical covariates to overwrite defaults in yaml file}
+
+\item{cont_covars}{character vector of continuous covariates to overwrite defaults in yaml file}
 
 \item{verbose}{Boolean variable when set to TRUE (default) messages will be
 displayed on the terminal}

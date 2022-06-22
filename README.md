@@ -27,13 +27,8 @@ a copy of the included yaml file and modifying it to suite your needs
 
 ## Installation
 
-Then you can install `nlmixr2rpt` from CRAN
-
-``` r
-install.packages("nlmixr2rpt") 
-```
-
-Or install the development version from GitHub:
+Not on CRAN yet. For now you’ll need to install the development version
+from GitHub:
 
 ``` r
 #install.packages("devtools") 
@@ -42,10 +37,10 @@ devtools::install_github("john-harrold/nlmixr2rpt")
 
 ## Getting Started
 
-Browse through the [documentation](https://nlmixr2rpt.nlmixr2.org/) and
-check out the vignette:
-
--   [Reporting `nlmixr` Fit
-    Results](https://nlmixr2rpt.nlmixr2.org/articles/Reportin_nlmixr_Fit_Results.html)
--   [Accessing Figures and
-    Tables](https://nmlixr2rpt.nlmixr2.org/articles/Accessing_Figures_and_Tables.html)
+Browse through the
+[documentation](https://john-harrold.github.io/nlmixr2rpt/) and check
+out the vignette:  
+\* [Reporting `nlmixr` Fit
+Results](https://john-harrold.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
+\* [Accessing Figures and
+Tables](https://john-harrold.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)

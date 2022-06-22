@@ -110,7 +110,7 @@ The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` fiel
 
 ## `parameters`  
 
-For certain reporting elements it may be better to present parameters differently than the parameter names being used in the model. To do this you can define how they are reported in the `parameters` section. You can define any parameters you want here whether they are present in the model or not. They will only be used if they are present. For tables in Word or PowerPoint you can specify the names using markdown (`md`), otherwise you can specify how they will be handled in text environments (`txt`). For example the intrinsic clearance may be called `lCLint` in the model. And you can specify it as:
+For certain reporting elements it may be better to present parameters differently than the parameter names being used in the model. In `nlmixr` you can use a comment after the parameter definition to specify alternate text. The function `gen_pest_table()` will use this alternate text if it is present. In the `parameters` section you have some more flexability in how parameters are reported. You can define any parameters you want here whether they are present in the model or not. They will only be used if they are present. For tables in Word or PowerPoint you can specify the names using markdown (`md`), otherwise you can specify how they will be handled in text environments (`txt`). For example the intrinsic clearance may be called `lCLint` in the model. And you can specify it as:
 
 ```
 parameters:
@@ -119,12 +119,11 @@ parameters:
     txt: "CLint (L/hr)"    
 ```
 
+Note that if you specify a parameter name here it will overwrite any alternate text specified in the model `ini()`.
+
 ## `covariates`  
 
-For figure and table generation it can be useful to have your covariates
-defined. You can define them here as either categorical (`cat`) or continuous
-(`cont`). For example to define the categorical covariates as SEX and ROUTE
-and the continuous covariate as WT you would do the following:
+For figure and table generation it can be useful to have your covariates defined. You can define them here as either categorical (`cat`) or continuous (`cont`). For example to define the categorical covariates as SEX and ROUTE and the continuous covariate as WT you would do the following:
 
 ```
 covariates:
@@ -132,11 +131,7 @@ covariates:
   cont: ["WT"]
 ```
 
-If you don't need any covariates you can set them to `NULL`. If you want to
-overwrite these at run time you can specify different values when calling
-`report_fit()`. These are availabel in the figure runtime environment as the
-objects `cat_covars` for categorical covariates and `cont_covars` for
-continuous covariates.
+If you don't need any covariates you can set them to `NULL`. If you want to overwrite these at runtime you can specify different values when calling `report_fit()`. These are available in the figure and table runtime environments as the objects `cat_covars` for categorical covariates and `cont_covars` for continuous covariates.
 
 
 ## `options`
