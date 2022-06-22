@@ -40,5 +40,6 @@ devtools::install_github("john-harrold/nlmixr2rpt")
 ## Getting Started  
 
 Browse through the [documentation](https://john-harrold.github.io/nlmixr2rpt/) and check out the vignette:  
+
 * [Reporting `nlmixr` Fit Results](https://john-harrold.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
 * [Accessing Figures and Tables](https://john-harrold.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)

@@ -70,7 +70,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">build_tables</span><span class="op">(</span>obnd <span class="op">=</span> <span class="cn">NULL</span>, fit <span class="op">=</span> <span class="cn">NULL</span>, rptdetails <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">build_tables</span><span class="op">(</span>
+  obnd <span class="op">=</span> <span class="cn">NULL</span>,
+  fit <span class="op">=</span> <span class="cn">NULL</span>,
+  rptdetails <span class="op">=</span> <span class="cn">NULL</span>,
+  cat_covars <span class="op">=</span> <span class="cn">NULL</span>,
+  cont_covars <span class="op">=</span> <span class="cn">NULL</span>,
+  verbose <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -81,6 +88,10 @@
 <dd><p>nlmixr2 fit object to be reported</p></dd>
 <dt>rptdetails</dt>
 <dd><p>object creating when reading in rptyaml file</p></dd>
+<dt>cat_covars</dt>
+<dd><p>character vector of categorical covariates to overwrite defaults in yaml file</p></dd>
+<dt>cont_covars</dt>
+<dd><p>character vector of continuous covariates to overwrite defaults in yaml file</p></dd>
 <dt>verbose</dt>
 <dd><p>Boolean variable when set to TRUE (default) messages will be
 displayed on the terminal</p></dd>
