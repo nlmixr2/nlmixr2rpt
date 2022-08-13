@@ -4,6 +4,7 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^tmp$
 build_custom.R
 README.Rmd
 LICENSE

@@ -11,7 +11,7 @@ report_fit(
   cat_covars = NULL,
   cont_covars = NULL,
   rptyaml = system.file(package = "nlmixr2rpt", "templates", "report_fit.yaml"),
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ report_fit(
 
 \item{rptyaml}{yaml file containing the report elements and structure}
 
-\item{verbose}{Boolean variable when set to TRUE (default) messages will be}
+\item{verbose}{Boolean variable when set to TRUE messages will be}
 }
 \value{
 onbrand object with the report elements added

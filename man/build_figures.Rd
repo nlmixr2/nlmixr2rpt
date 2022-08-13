@@ -36,6 +36,7 @@ figure ids in the yaml file. Each figure ID contains the following elements:
 \item \code{"figure"}       - list of figure file names for the current fid
 \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape")
 \item \code{"isgood"}       - Boolean variable indicating success or failure
+\item \code{"skip"}         - Boolean variable indicating whether the figure should be skipped during reporting
 \item \code{"fmsgs"}        - Vector of messages
 \item \code{"cmd"}          - Original plot generation command
 \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
