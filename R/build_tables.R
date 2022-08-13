@@ -1,5 +1,5 @@
 #'@importFrom cli cli_alert cli_h3
-#'@importFrom dplyr mutate relocate 
+#'@importFrom dplyr mutate relocate
 #'@importFrom flextable autofit compose flextable
 #'@importFrom onbrand fetch_md_def md_to_oo
 
@@ -10,7 +10,7 @@
 #'@param fit nlmixr2 fit object to be reported
 #'@param rptdetails object creating when reading in rptyaml file
 #'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
-#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file  
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
 #'@return List containing the tables with the following structure:
@@ -19,9 +19,10 @@
 #'   table ids in the yaml file. It contains the elements from the yamle file
 #'   and the following elements:
 #'   \itemize{
-#'     \item \code{"table"}        - List of tables by table ID
+#'     \item \code{"table"}        - Result of build (t_res object)
 #'     \item \code{"orientation"}  - Table orientation ("portrait" or "landscape")
 #'     \item \code{"isgood"}       - Boolean variable indicating success or failure
+#'     \item \code{"skip"}         - Boolean variable indicating whether the table should be skipped during reporting
 #'     \item \code{"tmsgs"}        - Vector of messages
 #'     \item \code{"cmd"}          - Original plot generation command
 #'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
@@ -43,6 +44,7 @@ build_tables  <- function(obnd        = NULL,
                           verbose     = TRUE){
 
   isgood     = TRUE
+  SKIP       = FALSE
   msgs       = c()
   rpttabs    = list()
   btres      = list()
@@ -87,7 +89,7 @@ build_tables  <- function(obnd        = NULL,
       isgood = FALSE
     }
 
-    # Defining the covariate lists from the yaml file if 
+    # Defining the covariate lists from the yaml file if
     # none have been specified
     if(is.null(cat_covars)){
       cat_covars = rptdetails[["covariates"]][["cat"]]
@@ -102,10 +104,13 @@ build_tables  <- function(obnd        = NULL,
   cap_fmt_def = "text"
 
   if(isgood){
+    if(verbose){cli::cli_h3(paste0("Building report tables")) }
     if("tables" %in% names(rptdetails)){
+      if(verbose){cli::cli_ul()}
       for(tid in names(rptdetails[["tables"]])){
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]
+        if(verbose){cli::cli_li(paste0(tid))}
         # Initializing information about the current table
         tmsgs = c(paste("table id:", tid))
         TISGOOD = TRUE
@@ -168,8 +173,16 @@ build_tables  <- function(obnd        = NULL,
 
         df_found = FALSE
         ft_found = FALSE
+
+        # Detecting NAs to skip
+        if(length(t_res) == 1){
+          if(is.na(t_res)){
+            SKIP = TRUE
+          }
+        }
+
         if(TISGOOD){
-        if(!is.na(t_res)){
+        if(!SKIP){
           # Now we need to check the t_res to make sure it
           # has the correct fields
             #looking for either a data frame or a flextable
@@ -258,12 +271,16 @@ build_tables  <- function(obnd        = NULL,
         # Store the stauts of the table
         rpttabs[[tid]][["isgood"]] = TISGOOD
 
+        # Store the skip state of the table
+        rpttabs[[tid]][["skip"]] = SKIP
+
         # Now we append any messages generated
         rpttabs[[tid]][["msgs"]] = tmsgs
 
         # Now we append the table
         rpttabs[[tid]][["table"]] = t_res
       }
+    if(verbose){cli::cli_end() }
     } else {
       isgood = FALSE
       msgs   = c(msgs, "No tables found in rptdetails")

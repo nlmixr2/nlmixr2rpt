@@ -13,7 +13,7 @@
 #'@param rptyaml yaml file containing the report elements and structure
 #'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
 #'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file  
-#'@param verbose Boolean variable when set to TRUE (default) messages will be
+#'@param verbose Boolean variable when set to TRUE messages will be 
 #'@return onbrand object with the report elements added
 report_fit <- function(obnd        = NULL,
                        fit         = NULL,
@@ -21,7 +21,7 @@ report_fit <- function(obnd        = NULL,
                        cat_covars  = NULL,
                        cont_covars = NULL,
                        rptyaml     = system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
-                       verbose     = TRUE){
+                       verbose     = FALSE){
   isgood       = TRUE
   msgs         = c()
   rptdetails   = NULL
@@ -218,7 +218,7 @@ report_fit <- function(obnd        = NULL,
           if(rpttype == "PowerPoint"){
             # For each figure defined by fid we add all the pages
             # one slide at a time:
-            if(is.na(curr_fig[["figure"]])){
+            if(curr_fig[["skip"]]){
               message("Skipping figure: ", fid, " (NA found, not generated)")
             } else {
               for(fpage in 1:length(curr_fig[["figure"]])){
@@ -238,13 +238,14 @@ report_fit <- function(obnd        = NULL,
             }
           }
           if(rpttype == "Word"){
-            if(is.na(curr_fig[["figure"]])){
+            if(curr_fig[["skip"]]){
               message("Skipping figure: ", fid, " (NA found, not generated)")
             } else {
               for(fpage in 1:length(curr_fig[["figure"]])){
                 obnd = onbrand::report_add_doc_content(obnd,
                   type     = "imagefile",
                   content  = list(image           = curr_fig[["figure"]][fpage],
+                                  key             = fid, 
                                   caption         = curr_fig[["caption_proc"]],
                                   caption_format  = curr_fig[["caption_format"]],
                                   width           = curr_fig[["width"]],
@@ -306,7 +307,7 @@ report_fit <- function(obnd        = NULL,
           }
           if("table" %in% names(rptele)){
             if(rpttype == "PowerPoint"){
-              if(is.na(curr_tab[["table"]])){
+              if(curr_tab[["skip"]]){
                 message("Skipping table: ", tid, " (NA found, not generated)")
               } else {
                 # Adding one slide per table
@@ -327,7 +328,7 @@ report_fit <- function(obnd        = NULL,
               }
             }
             if(rpttype == "Word"){
-              if(is.na(curr_tab[["table"]])){
+              if(curr_tab[["skip"]]){
                 message("Skipping table: ", tid, " (NA found, not generated)")
               } else {
                 for(tpage in 1:length(curr_tab[["table"]][["ft"]])){

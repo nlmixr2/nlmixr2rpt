@@ -24,6 +24,7 @@
 #'     \item \code{"figure"}       - list of figure file names for the current fid
 #'     \item \code{"orientation"}  - Figure orientation ("portrait" or "landscape")
 #'     \item \code{"isgood"}       - Boolean variable indicating success or failure
+#'     \item \code{"skip"}         - Boolean variable indicating whether the figure should be skipped during reporting
 #'     \item \code{"fmsgs"}        - Vector of messages
 #'     \item \code{"cmd"}          - Original plot generation command
 #'     \item \code{"cmd_proc"}     - Plot generation command after processing for placeholders
@@ -113,10 +114,12 @@ build_figures <- function(obnd        = NULL,
 
   if(isgood){
     if("figures" %in% names(rptdetails)){
-      # Creating the controller object
+      if(verbose){cli::cli_h3(paste0("Building report figures")) }
+      if(verbose){cli::cli_ul()}
       for(fid in names(rptdetails[["figures"]])){
         # Pulling out the current figure information:
         finfo = rptdetails[["figures"]][[fid]]
+        if(verbose){cli::cli_li(paste0(fid))}
 
         # Pulling out the figure width and height
         width  = fetch_fdim(obnd, fid, "width",  rptdetails)
@@ -125,6 +128,7 @@ build_figures <- function(obnd        = NULL,
         # Initializing information about the current figure
         fmsgs = c(paste("figure id:", fid))
         FISGOOD = TRUE
+        SKIP    = FALSE
         p_res   = NULL
 
 
@@ -210,16 +214,24 @@ build_figures <- function(obnd        = NULL,
           # This is the number of figure pages in the current figure. If
           # The figure isn't paginated, it will return NULL
           nfpages = ggforce::n_pages(p_res)
+
+          # Starting the sub bullets
+          if(verbose){ cli_list_fn     = cli::cli_ul() }
+          
           if(is.null(nfpages)){
             # creating and storing the output file name:
             fig_file = file.path(output_dir, paste0(fid, "-", rpttype, ".png"))
             figure   = c(fig_file)
 
-            # dumping the figure to a file
-            grDevices::png(width    = width,    height = height, units = "in",
-                filename = fig_file, res    = resolution)
-            suppressMessages( print(p_res, page=fpage))
-            grDevices::dev.off()
+            if(verbose){ cli::cli_li(fig_file) }
+             wfres = write_figure(
+               p_res      = p_res,
+               page       = NULL, 
+               width      = width,
+               height     = height,
+               resolution = resolution, 
+               fig_file   = fig_file,
+               verbose    = verbose)
           } else {
             # This will create a figure for each page
             # page so that they can be accessed individually
@@ -229,14 +241,26 @@ build_figures <- function(obnd        = NULL,
               figure   = c(figure, fig_file)
 
               # dumping the figure to a file
-              grDevices::png(width    = width,    height = height, units = "in",
-                  filename = fig_file, res    = resolution)
-              suppressMessages( print(p_res, page=fpage))
-              grDevices::dev.off()
+              if(verbose){ cli::cli_li(fig_file) }
+              wfres = write_figure(
+                p_res      = p_res,
+                page       = fpage,
+                width      = width,
+                height     = height,
+                resolution = resolution, 
+                fig_file   = fig_file,
+                verbose    = verbose)
+             # grDevices::png(width    = width,    height = height, units = "in",
+             #     filename = fig_file, res    = resolution)
+             # suppressMessages( print(p_res, page=fpage))
+             # grDevices::dev.off()
             }
           }
+          # Closing the subbullets
+          if(verbose){cli::cli_end(cli_list_fn)}
         } else if(is.na(p_res)){
           # Figure was set to NA to skip
+          SKIP   = TRUE
           figure = p_res
         } else if(is.character(p_res)){
           #JMH test this with a vector of image files
@@ -251,8 +275,12 @@ build_figures <- function(obnd        = NULL,
         # We carry forward the figure info from
         # the yaml file
         rptfigs[[fid]] = finfo
-        # Store the stauts of the figurej
+
+        # Store the stauts of the figure
         rptfigs[[fid]][["isgood"]] = FISGOOD
+
+        # Store the skip state of the figure
+        rptfigs[[fid]][["skip"]] = SKIP   
 
         # Now we append any messages generated
         rptfigs[[fid]][["msgs"]] = fmsgs
@@ -264,6 +292,7 @@ build_figures <- function(obnd        = NULL,
         rptfigs[[fid]][["height"]] = height
         rptfigs[[fid]][["width"]]  = width
       }
+      if(verbose){cli::cli_end() }
     } else {
       isgood = FALSE
       msgs   = c(msgs, "No figures found in rptdetails")
@@ -345,3 +374,81 @@ fetch_fdim  <- function(obnd       = NULL,
   }
 res}
 
+#'@export
+#'@title Gets Figure Dimensions
+#'@description For a given figure id and report type this will pull out the
+#'dimensions of the figure.
+#'@param p_res ggplot or ggforce paginated object
+#'@param page  page number to write or NULL for a ggplot object 
+#'@param width width in inches
+#'@param height height in inches
+#'@param resolution resolution in dpi
+#'@param fig_file file name to write the figure to
+#'@param verbose Boolean variable when set to TRUE (default) messages will be
+#'displayed on the terminal
+#'@return list with the following 
+#' \itemize{
+#'   \item \code{"isgood"} - Boolean variable indicating success or failure
+#'   \item \code{"msgs"} - Vector of messages
+#' }
+write_figure  <- function(p_res      = NULL,
+                          page       = NULL,
+                          width      = 3,
+                          height     = 3,
+                          resolution = NULL,
+                          fig_file   = NULL,
+                          verbose    = TRUE){
+
+  isgood = TRUE
+  msgs   = c()
+
+  tcres =
+    tryCatch(
+      {
+       # Evaulating the figure generation code
+       grDevices::png(width    = width,    
+                      height   = height, 
+                      units    = "in",
+           filename = fig_file, 
+           res      = resolution)
+       if(is.null(page)){
+         suppressMessages( print(p_res))
+       } else {
+         suppressMessages( print(p_res, page=page))
+       }
+       grDevices::dev.off()
+
+      list(isgood=TRUE, p_res=p_res)},
+     error = function(e) {
+      list(isgood=FALSE, error=e)})
+
+  # If we failed to save the figure we return the errors to the user
+  if(!tcres[["isgood"]]){
+    # Creating messages from the try catch failure
+    msgs = c(msgs,
+    "Unable to save figure",
+    paste(" -> call:   ", toString(tcres[["error"]][["call"]])),
+    paste(" -> message:", toString(tcres[["error"]][["message"]])))
+
+    # Generating an error figure and putting it into the specified output file
+    p_res = mk_error_fig(msgs)
+    # Writing the error figure:
+    grDevices::png(width    = width,    
+                   height   = height, 
+                   units    = "in",
+        filename = fig_file, 
+        res      = resolution)
+    suppressMessages( print(p_res))
+    grDevices::dev.off()
+
+    if(verbose){
+      cli::cli_h3("Writing figure failed:")
+      for(msg in msgs){
+        cli::cli_alert(msg)
+      }
+    }
+  }
+
+  res = list(isgood = isgood,
+             msgs   = msgs)
+res}
