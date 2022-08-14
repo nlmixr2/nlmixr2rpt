@@ -13,9 +13,12 @@ placeholders:
   CUNITS: Conc Units
   TUNITS: Time Units
   RUN: RUNN
-  TEST: "'ls()'"
-  TEST2: ls()
   OBJ: sprintf("%3g", fit$objf)
+# Here you can specify the names of parameters used in reporting. For each
+# parmaeter in your model you can create an entry and specify how it will be
+# seen both formatted as markdown (md) or as text (txt). Unused parameters
+# will be ignored and if you have parameters specified in the model but not
+# defined here the names from the model will be used.
 parameters:
   log_CIRC0:
     md:  "log(CIRC~0~)"
@@ -41,9 +44,6 @@ covariates:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
-  # JMH updte vignette to account for having preambels for both the figure and
-  # table environments. Also to account for making the xpdb object in the
-  # figure preamble
   figenv_preamble: |-
     # Loading required libraries
     library("ggplot2")
@@ -117,7 +117,6 @@ figures:
       p_ipred = p_ipred + xlim(c(lb, ub)) + ylim(c(lb,ub))
       # Combining figures
       p_res <- ggpubr::ggarrange(p_pred, p_ipred, ncol=2, nrow=1 )
-      #p_res = p_pred
   res_vs_pred_idv:
     orientation: "portrait"
     caption:     "CWRES vs Pred and Time"

@@ -158,12 +158,14 @@ build_tables  <- function(obnd        = NULL,
             t_res = tcres[["t_res"]]
           } else {
             # Otherwise we capture erro information here:
-            tmsgs = c(tmsgs,
+            tmsgs = c(
             "Unable to generate table",
-            "command run:",
-            tinfo[["cmd_proc"]],
             paste(" -> call:   ", toString(tcres[["error"]][["call"]])),
-            paste(" -> message:", toString(tcres[["error"]][["message"]])))
+            paste(" -> message:", toString(tcres[["error"]][["message"]])),
+            tmsgs,
+            "command run:",
+            tinfo[["cmd_proc"]]
+            )
 
             # We now set the table good flag to false
             TISGOOD = FALSE

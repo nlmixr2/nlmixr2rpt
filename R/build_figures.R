@@ -182,10 +182,10 @@ build_figures <- function(obnd        = NULL,
             # Otherwise we capture erro information here:
             fmsgs = c(fmsgs,
             "Unable to generate figure",
-            "command run:",
-            finfo[["cmd_proc"]],
             paste(" -> call:   ", toString(tcres[["error"]][["call"]])),
-            paste(" -> message:", toString(tcres[["error"]][["message"]])))
+            paste(" -> message:", toString(tcres[["error"]][["message"]])),
+            "command run:",
+            finfo[["cmd_proc"]])
 
             # Then we generate a figure holding that information so it will
             # be obvious something went wrong for the user
