@@ -7,21 +7,23 @@
 #'@title Report `nlmixr2` Fit Results to PowerPoint and Word
 #'@description Appends `nlmixr2` fit results to an onbrand report object with the
 #'content and format of the report in the supplied yaml file
-#'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr2 fit object to be reported
-#'@param ph Manual placeholders, see \code{\link{yaml_read_fit}} for more
-#'@param rptyaml yaml file containing the report elements and structure
-#'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file
-#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file  
-#'@param verbose Boolean variable when set to TRUE messages will be 
-#'@return onbrand object with the report elements added
-report_fit <- function(obnd        = NULL,
-                       fit         = NULL,
-                       ph          = NULL,
-                       cat_covars  = NULL,
-                       cont_covars = NULL,
-                       rptyaml     = system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
-                       verbose     = FALSE){
+#'@param obnd onbrand report object to have report elements appended to.
+#'@param fit nlmixr2 fit object to be reported.
+#'@param placeholders Manual placeholders, see \code{\link{yaml_read_fit}} for more.
+#'@param rptyaml yaml file containing the report elements and structure.
+#'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file.
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file. 
+#'@param parameters  list with element names for each parameter to overwrite defaults in yaml file.
+#'@param verbose Boolean variable when set to TRUE messages will be .
+#'@return onbrand object with the report elements added.
+report_fit <- function(obnd          = NULL,
+                       fit           = NULL,
+                       placeholders  = NULL,
+                       cat_covars    = NULL,
+                       cont_covars   = NULL,
+                       parameters    = NULL,
+                       rptyaml       = system.file(package="nlmixr2rpt","templates", "report_fit.yaml"),
+                       verbose       = FALSE){
   isgood       = TRUE
   msgs         = c()
   rptdetails   = NULL
@@ -59,7 +61,8 @@ report_fit <- function(obnd        = NULL,
   # reading the yaml file
   if(isgood){
   yamlrr = yaml_read_fit(obnd    = obnd,
-                         ph      = ph,
+                         ph      = placeholders,
+                         params  = parameters, 
                          fit     = fit,
                          rptyaml = rptyaml)
     if(!yamlrr[["isgood"]]){
@@ -407,10 +410,11 @@ str}
 #'@title Reads and Checks `report_fit.yaml` File
 #'@description Reads in the report yaml file and looks it to make sure it has all
 #'the necessary fields for the given report.
-#'@param obnd onbrand report object to have report elements appended to
-#'@param fit nlmixr2 fit object to be reported
-#'@param rptyaml yaml file containing the report elements and structure
-#'@param ph Placeholders in the yaml file can be overwritten at runtime
+#'@param obnd onbrand report object to have report elements appended to.
+#'@param fit nlmixr2 fit object to be reported.
+#'@param rptyaml yaml file containing the report elements and structure.
+#'@param ph Placeholders in the yaml file can be overwritten at runtime.
+#'@param params  list with element names for each parameter to overwrite at runtime.
 #'with a named list for example RUN may be "RUNN" in the yaml file. To
 #'overwrite this just provide \code{list(RUN="RUN_1")}
 #'(default: \code{NULL})
@@ -424,7 +428,7 @@ str}
 #'   \item \code{"rptdetails"} - Contents of the yaml file
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
-yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, fit=NULL){
+yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, params=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
   rptdetails = NULL
@@ -545,6 +549,21 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, fit=NULL){
       }
     }
   }
+
+
+
+  # Adding runtime defined parameters
+  if(!is.null(params)){
+    for(pname in names(params)){
+      if("md" %in% names(params[[pname]]) &
+         "txt" %in% names(params[[pname]])){
+        rptdetails[[""]][[pname]] = params[[pname]]
+      } else {
+        cli::cli_alert_warning(paste0("Parmaeter: ", pname, " must have both md and txt specified. Skipping."))
+      }
+    }
+  }
+
 
 
   # Now we attempt to evaulate the placeholders. This allows the user to

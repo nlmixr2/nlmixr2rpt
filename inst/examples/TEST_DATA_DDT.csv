@@ -1,0 +1,22 @@
+COLUMN,DESCRIPTION
+ID,Subject ID
+TIME_DY,Time since first dose in days
+TIME_HR,Time since first dose in hours
+NTIME_DY,Time since last dose in days
+NTIME_HR,Time since last dose in hours
+DV,Observation value
+AMT,Dosing amount in ng
+RECDESC,Record description
+DOSE,Dose in mg (numeric)
+DOSE_STR,Dose (character)
+WT,Weight in kg
+SUBTYPE,Type of subject either healthy volunteer (HV) or patient (PT)
+SUBTYPE_ID,"Numeric SUBTYPE: 0 = HV, 1 = PT"
+SEX,Subject sex
+SEX_ID,"Numeric SEX: 0 = Male, 1 = Female"
+F1,Bioavailablity
+ka,Absorption rate (1/day)
+CL,Clearannce (L/day)
+Vc,Central volume (L)
+Vp,Peripherial volume (L)
+Q,Inter compartmental clearnace (L/day)

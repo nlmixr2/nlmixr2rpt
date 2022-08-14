@@ -26,6 +26,12 @@ parameters:
   prop.err:
     md:  "Prop Err"
     txt: "Prop Err"
+  add_err:
+    md:  "Add Err"
+    txt: "Add Err"
+  prop_err:
+    md:  "Prop Err"
+    txt: "Prop Err"
 # Define covariates here as a character vector. For example to define the
 # columns SEX and ROUTE as covariates you'd use:
 # [ "SEX", "ROUTE"]
@@ -69,7 +75,8 @@ options:
 #  rptdetails   - result of reading in the report yaml file
 #  rpttype      - either "Word" or "PowerPoint"
 #  width        - figure width  (figure environment only)
-#  xpdb         - xpose object created from xpose_data_nlmixr(fit) (figure
+#  xpdb         - the default yaml file contains code in the preamble to
+#                 create this object by running xpose_data_nlmixr(fit) (figure
 #                 environment only)
 #
 # The output must be stored in p_res and it can be either of the following:
@@ -251,6 +258,10 @@ docx:
       height: 6.0
   content:
     - text:
+        text:  "Tables"
+        style: Heading_1
+    - table: pest_table
+    - text:
         text:  "Figures"
         style: Heading_1
     - figure: ind_plots
@@ -260,7 +271,3 @@ docx:
     - figure: skip_figure
     - figure: eta_cont
     - figure: eta_cat
-    - text:
-        text:  "Tables"
-        style: Heading_1
-    - table: pest_table

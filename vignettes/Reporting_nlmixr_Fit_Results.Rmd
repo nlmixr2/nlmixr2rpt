@@ -104,7 +104,7 @@ Notice that the `OBJ` placeholder contains R Code. By default the reporting proc
   ISCMD: ls()
 ```
 
-The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return a list of the objects in the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `ph` (placeholder) argument to `report_fit()`.
+The `ISSTR` field will just result in the string `"ls()"` while the `ISCMD` field will return a list of the objects in the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a `placeholders` (placeholder) argument to `report_fit()`.
 
 **Note:** Fields that support placeholders will be indicated by ^[PH]^ and fields with evaluable code will be indicated by ^[EV]^.
 
@@ -118,6 +118,8 @@ parameters:
     md:  "CL~int~ (L/hr)"    
     txt: "CLint (L/hr)"    
 ```
+
+It is also possible to overwrite the contents of this file at runtime by providing a `parameters` argument to `report_fit()`.
 
 **Note:** If you specify a parameter name here it will overwrite any alternate text specified in the model `ini()`.
 

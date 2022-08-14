@@ -108,6 +108,8 @@ build_tables  <- function(obnd        = NULL,
     if("tables" %in% names(rptdetails)){
       if(verbose){cli::cli_ul()}
       for(tid in names(rptdetails[["tables"]])){
+        # By default we don't skip the figure
+        SKIP       = FALSE
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]
         if(verbose){cli::cli_li(paste0(tid))}
@@ -180,7 +182,6 @@ build_tables  <- function(obnd        = NULL,
             SKIP = TRUE
           }
         }
-
         if(TISGOOD){
         if(!SKIP){
           # Now we need to check the t_res to make sure it
@@ -257,8 +258,6 @@ build_tables  <- function(obnd        = NULL,
               }
             }
           }
-
-
         }
 
         # Storing the caption format for alter use
