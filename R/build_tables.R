@@ -112,7 +112,7 @@ build_tables  <- function(obnd        = NULL,
         SKIP       = FALSE
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]
-        if(verbose){cli::cli_li(paste0(tid))}
+        if(verbose){cli::cli_alert(paste0(tid))}
         # Initializing information about the current table
         tmsgs = c(paste("table id:", tid))
         TISGOOD = TRUE

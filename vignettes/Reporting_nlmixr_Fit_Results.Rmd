@@ -72,7 +72,7 @@ file.copy(system.file(package="nlmixr2rpt", "templates", "report_fit.yaml"),
           "my_report.yaml")
 ```
 
-Then you can edit the `my_report.yaml` file and when you call `report_fit()` provide this yaml file as the `rptyaml` argument. The following section will describe the element of the yaml report format.
+Then you can edit the `my_report.yaml` file and when you call `report_fit()` provide this yaml file as the `rptyaml` argument. The following section will describe the elements of the yaml report format.
 
 # The yaml report file structure
 

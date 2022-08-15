@@ -119,7 +119,7 @@ build_figures <- function(obnd        = NULL,
       for(fid in names(rptdetails[["figures"]])){
         # Pulling out the current figure information:
         finfo = rptdetails[["figures"]][[fid]]
-        if(verbose){cli::cli_li(paste0(fid))}
+        if(verbose){cli::cli_alert(paste0(fid))}
 
         # Pulling out the figure width and height
         width  = fetch_fdim(obnd, fid, "width",  rptdetails)
