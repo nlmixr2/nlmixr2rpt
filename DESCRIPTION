@@ -18,6 +18,7 @@ Imports:
   flextable,
   ggforce,
   ggplot2,
+  ggPMX,
   grDevices,
   stringr,
   nlmixr2,
