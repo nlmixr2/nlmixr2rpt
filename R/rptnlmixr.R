@@ -60,11 +60,11 @@ report_fit <- function(obnd          = NULL,
 
   # reading the yaml file
   if(isgood){
-  yamlrr = yaml_read_fit(obnd    = obnd,
-                         ph      = placeholders,
-                         params  = parameters, 
-                         fit     = fit,
-                         rptyaml = rptyaml)
+  yamlrr = yaml_read_fit(obnd         = obnd,
+                         placeholders = placeholders,
+                         parameters   = parameters, 
+                         fit          = fit,
+                         rptyaml      = rptyaml)
     if(!yamlrr[["isgood"]]){
       isgood = FALSE
     }
@@ -413,8 +413,8 @@ str}
 #'@param obnd onbrand report object to have report elements appended to.
 #'@param fit nlmixr2 fit object to be reported.
 #'@param rptyaml yaml file containing the report elements and structure.
-#'@param ph Placeholders in the yaml file can be overwritten at runtime.
-#'@param params  list with element names for each parameter to overwrite at runtime.
+#'@param placeholders list of placeholders to overwrite defaults in the yaml file.
+#'@param parameters  list with element names for each parameter to overwrite at runtime.
 #'with a named list for example RUN may be "RUNN" in the yaml file. To
 #'overwrite this just provide \code{list(RUN="RUN_1")}
 #'(default: \code{NULL})
@@ -428,7 +428,7 @@ str}
 #'   \item \code{"rptdetails"} - Contents of the yaml file
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
-yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, params=NULL, fit=NULL){
+yaml_read_fit = function(obnd = NULL,rptyaml=NULL, placeholders=NULL, parameters=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
   rptdetails = NULL
@@ -536,8 +536,8 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, params=NULL, fit=NUL
 
 
   # Processing manual placeholders specified at runtime
-  if(!is.null(ph)){
-    for(phname in names(ph)){
+  if(!is.null(placeholders)){
+    for(phname in names(placeholders)){
       # If the manual placeholder isnt present in the yaml file we
       # notify the user and flip the isgood flag
       if(is.null(rptdetails[["placeholders"]][[phname]])){
@@ -545,7 +545,7 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, params=NULL, fit=NUL
         isgood = FALSE
       } else {
         # If it's there we just overwrite the defaults from the yaml file
-        rptdetails[["placeholders"]][[phname]] = ph[[phname]]
+        rptdetails[["placeholders"]][[phname]] = placeholders[[phname]]
       }
     }
   }
@@ -553,11 +553,11 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, ph=NULL, params=NULL, fit=NUL
 
 
   # Adding runtime defined parameters
-  if(!is.null(params)){
-    for(pname in names(params)){
-      if("md" %in% names(params[[pname]]) &
-         "txt" %in% names(params[[pname]])){
-        rptdetails[[""]][[pname]] = params[[pname]]
+  if(!is.null(parameters)){
+    for(pname in names(parameters)){
+      if("md" %in% names(parameters[[pname]]) &
+         "txt" %in% names(parameters[[pname]])){
+        rptdetails[[""]][[pname]] = parameters[[pname]]
       } else {
         cli::cli_alert_warning(paste0("Parmaeter: ", pname, " must have both md and txt specified. Skipping."))
       }

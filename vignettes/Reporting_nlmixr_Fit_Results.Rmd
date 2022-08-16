@@ -29,7 +29,7 @@ First we need an `nlmixr2` fit object. We're going to load a fit example stored 
 ```{r, eval=TRUE, echo=TRUE}
 library(nlmixr2rpt)
 library(onbrand)  
-fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit_focei_wbc.rds"))
+fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
 ```
 
 Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).

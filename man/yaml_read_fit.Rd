@@ -4,19 +4,27 @@
 \alias{yaml_read_fit}
 \title{Reads and Checks \code{report_fit.yaml} File}
 \usage{
-yaml_read_fit(obnd = NULL, rptyaml = NULL, ph = NULL, fit = NULL)
+yaml_read_fit(
+  obnd = NULL,
+  rptyaml = NULL,
+  placeholders = NULL,
+  parameters = NULL,
+  fit = NULL
+)
 }
 \arguments{
-\item{obnd}{onbrand report object to have report elements appended to}
+\item{obnd}{onbrand report object to have report elements appended to.}
 
-\item{rptyaml}{yaml file containing the report elements and structure}
+\item{rptyaml}{yaml file containing the report elements and structure.}
 
-\item{ph}{Placeholders in the yaml file can be overwritten at runtime
+\item{placeholders}{list of placeholders to overwrite defaults in the yaml file.}
+
+\item{parameters}{list with element names for each parameter to overwrite at runtime.
 with a named list for example RUN may be "RUNN" in the yaml file. To
 overwrite this just provide \code{list(RUN="RUN_1")}
 (default: \code{NULL})}
 
-\item{fit}{nlmixr2 fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported.}
 }
 \value{
 List containing the following information about the report

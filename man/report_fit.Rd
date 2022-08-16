@@ -7,30 +7,33 @@
 report_fit(
   obnd = NULL,
   fit = NULL,
-  ph = NULL,
+  placeholders = NULL,
   cat_covars = NULL,
   cont_covars = NULL,
+  parameters = NULL,
   rptyaml = system.file(package = "nlmixr2rpt", "templates", "report_fit.yaml"),
   verbose = FALSE
 )
 }
 \arguments{
-\item{obnd}{onbrand report object to have report elements appended to}
+\item{obnd}{onbrand report object to have report elements appended to.}
 
-\item{fit}{nlmixr2 fit object to be reported}
+\item{fit}{nlmixr2 fit object to be reported.}
 
-\item{ph}{Manual placeholders, see \code{\link{yaml_read_fit}} for more}
+\item{placeholders}{Manual placeholders, see \code{\link{yaml_read_fit}} for more.}
 
-\item{cat_covars}{character vector of categorical covariates to overwrite defaults in yaml file}
+\item{cat_covars}{character vector of categorical covariates to overwrite defaults in yaml file.}
 
-\item{cont_covars}{character vector of continuous covariates to overwrite defaults in yaml file}
+\item{cont_covars}{character vector of continuous covariates to overwrite defaults in yaml file.}
 
-\item{rptyaml}{yaml file containing the report elements and structure}
+\item{parameters}{list with element names for each parameter to overwrite defaults in yaml file.}
 
-\item{verbose}{Boolean variable when set to TRUE messages will be}
+\item{rptyaml}{yaml file containing the report elements and structure.}
+
+\item{verbose}{Boolean variable when set to TRUE messages will be .}
 }
 \value{
-onbrand object with the report elements added
+onbrand object with the report elements added.
 }
 \description{
 Appends \code{nlmixr2} fit results to an onbrand report object with the
