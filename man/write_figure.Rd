@@ -11,6 +11,7 @@ write_figure(
   height = 3,
   resolution = NULL,
   fig_file = NULL,
+  fig_stamp = NULL,
   verbose = TRUE
 )
 }
@@ -26,6 +27,8 @@ write_figure(
 \item{resolution}{resolution in dpi}
 
 \item{fig_file}{file name to write the figure to}
+
+\item{fig_stamp}{Character object containing the text to stamp on the figure with optional ===file=== placeholder}
 
 \item{verbose}{Boolean variable when set to TRUE (default) messages will be
 displayed on the terminal}

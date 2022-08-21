@@ -20,15 +20,9 @@ placeholders:
 # will be ignored and if you have parameters specified in the model but not
 # defined here the names from the model will be used.
 parameters:
-  log_CIRC0:
-    md:  "log(CIRC~0~)"
-    txt: "log(CIRC0)"
-  add.err:
-    md:  "Add Err"
-    txt: "Add Err"
-  prop.err:
-    md:  "Prop Err"
-    txt: "Prop Err"
+  lVp:
+    md:  "V~p~"
+    txt: "Vp" 
   add_err:
     md:  "Add Err"
     txt: "Add Err"
@@ -42,8 +36,10 @@ covariates:
   cat:  NULL
   cont: NULL
 options:
-  output_dir:   "file.path(tempdir(), '===RUN===')"
+  output_dir:   "file.path(getwd(), '===RUN===')"
   resolution:   300
+  # Set fig_stamp to NULL to suppress
+  fig_stamp:          "source: ===FILE==="
   figenv_preamble: |-
     # Loading required libraries
     library("ggplot2")
@@ -94,6 +90,7 @@ figures:
       # Population prediction  
       p_pred <- dv_vs_pred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
       ggtitle("===CMPD=== (===CUNITS===)") +
+      coord_fixed()+
       ylab("Observed") +
       xlab("Population Predicted") +
       theme_light()

@@ -557,9 +557,9 @@ yaml_read_fit = function(obnd = NULL,rptyaml=NULL, placeholders=NULL, parameters
     for(pname in names(parameters)){
       if("md" %in% names(parameters[[pname]]) &
          "txt" %in% names(parameters[[pname]])){
-        rptdetails[[""]][[pname]] = parameters[[pname]]
+        rptdetails[["parameters"]][[pname]] = parameters[[pname]]
       } else {
-        cli::cli_alert_warning(paste0("Parmaeter: ", pname, " must have both md and txt specified. Skipping."))
+        cli::cli_alert_warning(paste0("Parameter: ", pname, " must have both md and txt specified. Skipping."))
       }
     }
   }
@@ -639,6 +639,8 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   value             = NULL
   figenv_preamble   = NULL
   tabenv_preamble   = NULL
+  fig_stamp         = NULL
+  fig_stamp_postion = c(.1,.1)
 
 
   if(is.null(option)){
@@ -690,6 +692,14 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
       tabenv_preamble = rptdetails[["options"]][["tabenv_preamble"]]
     }
     value = tabenv_preamble
+  } else if(option == "fig_stamp"){
+    if(is.null(rptdetails[["options"]][["fig_stamp"]])){
+      msgs = c(msgs, "rptdetails does not contain a fig_stamp specification")
+      msgs = c(msgs, paste0("using ", fig_stamp, " instead"))
+    } else {
+      fig_stamp    = process_ph(rptdetails[["options"]][["fig_stamp"]], rptdetails=rptdetails)
+    }
+    value = fig_stamp
   } else {
     msgs = c(msgs, paste0("Unknown option: ", option))
 

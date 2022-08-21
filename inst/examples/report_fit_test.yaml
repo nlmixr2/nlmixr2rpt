@@ -22,6 +22,9 @@ parameters:
   lCLint:
     md:  "CL~int~ (L/hr)"
     txt: "CLint (L/hr)"
+  TV_ka:
+    md:  "k~a~ (1/hr)"
+    txt: "ka  (1/hr)"
   log_CIRC0:
     md:  "log(CIRC~0~)"
     txt: "log(CIRC0)"
@@ -34,6 +37,8 @@ covariates:
 options:
   output_dir:   "file.path(tempdir(), '===RUN===')"
   resolution:   300
+  # Set fig_stamp to NULL to suppress
+  fig_stamp:          "source: ===FILE==="
   figenv_preamble: |-
     # Loading required libraries
     library("ggplot2")

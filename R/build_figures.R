@@ -44,13 +44,15 @@ build_figures <- function(obnd        = NULL,
                           cat_covars  = NULL,
                           cont_covars = NULL,
                           verbose     = TRUE){
-  isgood       = TRUE
-  msgs         = c()
-  rptfigs      = list()
-  bfres        = list()
-  output_dir   = NULL
-  resolution   = NULL
-  rpttype      = "Unknown"
+  isgood             = TRUE
+  msgs               = c()
+  rptfigs            = list()
+  bfres              = list()
+  output_dir         = NULL
+  resolution         = NULL
+  rpttype            = "Unknown"
+                     
+  fig_stamp          = NULL
 
   #------------------------
   # Checking user input
@@ -93,6 +95,14 @@ build_figures <- function(obnd        = NULL,
       preamble_str = res_fo[["value"]]
       if(!is.null(preamble_str)){
         eval(parse(text=preamble_str)) }
+    } else {
+      isgood = FALSE
+    }
+
+    # Getting the fig_stamp
+    res_fo = fetch_option(rptdetails=rptdetails, option="fig_stamp")
+    if(res_fo[["isgood"]]){
+      fig_stamp    = res_fo[["value"]]
     } else {
       isgood = FALSE
     }
@@ -225,13 +235,14 @@ build_figures <- function(obnd        = NULL,
 
             if(verbose){ cli::cli_li(fig_file) }
              wfres = write_figure(
-               p_res      = p_res,
-               page       = NULL, 
-               width      = width,
-               height     = height,
-               resolution = resolution, 
-               fig_file   = fig_file,
-               verbose    = verbose)
+               p_res              = p_res,
+               page               = NULL, 
+               width              = width,
+               height             = height,
+               resolution         = resolution, 
+               fig_file           = fig_file,
+               fig_stamp          = fig_stamp,
+               verbose            = verbose)
           } else {
             # This will create a figure for each page
             # page so that they can be accessed individually
@@ -243,13 +254,14 @@ build_figures <- function(obnd        = NULL,
               # dumping the figure to a file
               if(verbose){ cli::cli_li(fig_file) }
               wfres = write_figure(
-                p_res      = p_res,
-                page       = fpage,
-                width      = width,
-                height     = height,
-                resolution = resolution, 
-                fig_file   = fig_file,
-                verbose    = verbose)
+                p_res              = p_res,
+                page               = fpage,
+                width              = width,
+                height             = height,
+                resolution         = resolution, 
+                fig_file           = fig_file,
+                fig_stamp          = fig_stamp,
+                verbose            = verbose)
              # grDevices::png(width    = width,    height = height, units = "in",
              #     filename = fig_file, res    = resolution)
              # suppressMessages( print(p_res, page=fpage))
@@ -384,6 +396,7 @@ res}
 #'@param height height in inches
 #'@param resolution resolution in dpi
 #'@param fig_file file name to write the figure to
+#'@param fig_stamp Character object containing the text to stamp on the figure with optional ===file=== placeholder
 #'@param verbose Boolean variable when set to TRUE (default) messages will be
 #'displayed on the terminal
 #'@return list with the following 
@@ -391,21 +404,62 @@ res}
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages
 #' }
-write_figure  <- function(p_res      = NULL,
-                          page       = NULL,
-                          width      = 3,
-                          height     = 3,
-                          resolution = NULL,
-                          fig_file   = NULL,
-                          verbose    = TRUE){
-
+write_figure  <- function(p_res              = NULL,
+                          page               = NULL,
+                          width              = 3,
+                          height             = 3,
+                          resolution         = NULL,
+                          fig_file           = NULL,
+                          fig_stamp          = NULL,
+                          verbose            = TRUE){
+                                             
   isgood = TRUE
   msgs   = c()
 
   tcres =
     tryCatch(
       {
-       # Evaulating the figure generation code
+       # Adding stamps if necessary
+       if(is.ggplot(p_res)){
+         if(!is.null(fig_stamp)){
+           # If we are processing a ggplot object and fig_stamp has been
+           # defined we append the fig_stamp to the figure:
+           fig_stamp = stringr::str_replace_all(fig_stamp, "===FILE===", fig_file)
+
+
+          ## If the plot is a ggplot but hasn't been arranged we arrange it
+          ## so we can stamp it
+          #if(!("ggarrange" %in% class(p_res)) & ("ggplot" %in% class(p_res))){
+          #  p_res <- ggpubr::ggarrange(p_res)
+          #}
+
+           # If we're using a manually paneled figure using ggarrange we have
+           # to use annotate_figure:
+           if("ggarrange" %in% class(p_res)){
+           # p_res = ggpubr::annotate_figure(p_res, 
+           #          fig.lab=paste(fig_stamp, "\n"),
+           #          fig.lab.size=5,
+           #          fig.lab.pos="bottom.left")
+
+             p_res = ggpubr::annotate_figure(
+                      bottom=ggpubr::text_grob(fig_stamp,
+                                       #just="left",
+                                       hjust=1,
+                                       vjust=0,
+                                       size=5), p_res)
+         
+
+
+           } else {
+             p_res = p_res +
+               labs(tag=fig_stamp) +
+               theme(plot.tag.position=c(.01, -.01), 
+                     plot.tag=element_text(size=5, vjust=0, hjust=0))
+               
+           }
+         }
+       }
+       # Saving the figure:
        grDevices::png(width    = width,    
                       height   = height, 
                       units    = "in",

@@ -25,13 +25,13 @@ ini({
 model({ 
    # System Parameters 
    F1          = TV_F1
-   ka          = exp(TV_ka)*exp(ETAka)
-   CL          = exp(TV_CL)*exp(ETACL)
-   Vc          = exp(TV_Vc)*exp(ETAVc)
-   Vp          = exp(TV_Vp)*exp(ETAVp)
+   ka          = exp(TV_ka + ETAka)
+   CL          = exp(TV_CL + ETACL)
+   Vc          = exp(TV_Vc + ETAVc)
+   Vp          = exp(TV_Vp + ETAVp)
    Cp          = Ap/(Vp)
    Cc          = Ac/Vc
-   Q           = exp(TV_Q)*exp(ETAQ)
+   Q           = exp(TV_Q  + ETAQ)
    MW          = TV_MW
 
    # Static Secondary Parameters 
