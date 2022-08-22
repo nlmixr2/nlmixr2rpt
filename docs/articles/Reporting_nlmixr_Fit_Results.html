@@ -40,7 +40,7 @@
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fas fa-chalkboard-teacher"></span>
      
     Tutorials
@@ -82,6 +82,7 @@
       
 
       </header><link href="Reporting_nlmixr_Fit_Results_files/tabwid-1.0.0/tabwid.css" rel="stylesheet">
+<link href="Reporting_nlmixr_Fit_Results_files/tabwid-1.0.0/scrool.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -95,110 +96,185 @@
 
     
     
-<div class="section level1">
-<h1 id="introduction">Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px"><a class="anchor" aria-label="anchor" href="#introduction"></a>
-</h1>
-<p>The purpose of <code>nlmixr2rpt</code> is to automate reporting of <code>nlmixr2</code> analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation code, and general content for Word and PowerPoint files.</p>
-</div>
-<div class="section level1">
-<h1 id="general-workflow">General workflow<a class="anchor" aria-label="anchor" href="#general-workflow"></a>
-</h1>
-<p>First we need an <code>nlmixr2</code> fit object. We’re going to load a fit example stored in this package:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nlmixr2rpt</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/" class="external-link">onbrand</a></span><span class="op">)</span>  
-<span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"examples"</span>, <span class="st">"fit_focei_wbc.rds"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Next we need to create <code>onbrand</code> report objects. This will create report objects for both PowerPoint (<code>obnd_pptx</code>) and Word (<code>obnd_docx</code>).</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html" class="external-link">read_template</a></span><span class="op">(</span>
-  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.pptx"</span><span class="op">)</span>,
-  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="va">obnd_docx</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html" class="external-link">read_template</a></span><span class="op">(</span>
-  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.docx"</span><span class="op">)</span>,
-  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Next we will add the report elements to the report objects using the <code><a href="../reference/report_fit.html">report_fit()</a></code> function. This function can be used with both types of report. The contents will be different depending on the document type.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span>
-  fit     <span class="op">=</span> <span class="va">fit</span>, 
-  obnd    <span class="op">=</span> <span class="va">obnd_pptx</span><span class="op">)</span>
-
-<span class="va">obnd_docx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span>
-  fit     <span class="op">=</span> <span class="va">fit</span>, 
-  obnd    <span class="op">=</span> <span class="va">obnd_docx</span><span class="op">)</span></code></pre></div>
-<p>This function will append the report elements for the supplied fit object to the supplied report. If you have multiple fit objects they can added sequentially. You can also add other report content using the <code>onbrand</code> and <code>officer</code> functions. Once you’re done then you just need to save the reports:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://onbrand.ubiquity.tools/reference/save_report.html" class="external-link">save_report</a></span><span class="op">(</span><span class="va">obnd_pptx</span>, <span class="st">"report.pptx"</span><span class="op">)</span>
-<span class="fu"><a href="https://onbrand.ubiquity.tools/reference/save_report.html" class="external-link">save_report</a></span><span class="op">(</span><span class="va">obnd_docx</span>, <span class="st">"report.docx"</span><span class="op">)</span></code></pre></div>
-<p>The contents of each report type is defined in a yaml file. The commands above use the default value found in the <code>nlmixr2rpt</code> package. To customize the report elements you can make a copy of the file in your current working directory:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>, <span class="st">"report_fit.yaml"</span><span class="op">)</span>, 
-          <span class="st">"my_report.yaml"</span><span class="op">)</span></code></pre></div>
-<p>Then you can edit the <code>my_report.yaml</code> file and when you call <code><a href="../reference/report_fit.html">report_fit()</a></code> provide this yaml file as the <code>rptyaml</code> argument. The following section will describe the element of the yaml report format.</p>
-</div>
-<div class="section level1">
-<h1 id="the-yaml-report-file-structure">The yaml report file structure<a class="anchor" aria-label="anchor" href="#the-yaml-report-file-structure"></a>
-</h1>
-<p>The core of <code>nlmixr2rpt</code> is the yaml reporting file. Below we outline each of the main sections and describe the expected elements in those sections.</p>
 <div class="section level2">
-<h2 id="placeholders">
-<code>placeholders</code><a class="anchor" aria-label="anchor" href="#placeholders"></a>
+<h2 id="introduction">Introduction
+<img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px"><a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>You may wish create your report template with placeholders. For example if you want create a generic template for population PK analysis, it may be useful to label the figures generically. You can use this section to define placeholders that will be applied when the report is created. For example consider the yaml code here:</p>
+<p>The purpose of <code>nlmixr2rpt</code> is to automate reporting of
+<code>nlmixr2</code> analyses. This is accomplished by creating a yaml
+file that contains reporting options, figure and table generation code,
+and general content for Word and PowerPoint files.</p>
+</div>
+<div class="section level2">
+<h2 id="general-workflow">General workflow<a class="anchor" aria-label="anchor" href="#general-workflow"></a>
+</h2>
+<p>First we need an <code>nlmixr2</code> fit object. We’re going to load
+a fit example stored in this package:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">nlmixr2rpt</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/" class="external-link">onbrand</a></span><span class="op">)</span>  </span>
+<span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"examples"</span>, <span class="st">"fit.rds"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Next we need to create <code>onbrand</code> report objects. This will
+create report objects for both PowerPoint (<code>obnd_pptx</code>) and
+Word (<code>obnd_docx</code>).</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/onbrand/man/read_template.html" class="external-link">read_template</a></span><span class="op">(</span></span>
+<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.pptx"</span><span class="op">)</span>,</span>
+<span>  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">obnd_docx</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/onbrand/man/read_template.html" class="external-link">read_template</a></span><span class="op">(</span></span>
+<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.docx"</span><span class="op">)</span>,</span>
+<span>  mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Next we will add the report elements to the report objects using the
+<code><a href="../reference/report_fit.html">report_fit()</a></code> function. This function can be used with both
+types of report. The contents will be different depending on the
+document type.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">obnd_pptx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span></span>
+<span>  fit     <span class="op">=</span> <span class="va">fit</span>, </span>
+<span>  obnd    <span class="op">=</span> <span class="va">obnd_pptx</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">obnd_docx</span> <span class="op">=</span> <span class="fu"><a href="../reference/report_fit.html">report_fit</a></span><span class="op">(</span></span>
+<span>  fit     <span class="op">=</span> <span class="va">fit</span>, </span>
+<span>  obnd    <span class="op">=</span> <span class="va">obnd_docx</span><span class="op">)</span></span></code></pre></div>
+<p>This function will append the report elements for the supplied fit
+object to the supplied report. If you have multiple fit objects they can
+added sequentially. You can also add other report content using the
+<code>onbrand</code> and <code>officer</code> functions. Once you’re
+done then you just need to save the reports:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/onbrand/man/save_report.html" class="external-link">save_report</a></span><span class="op">(</span><span class="va">obnd_pptx</span>, <span class="st">"report.pptx"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/onbrand/man/save_report.html" class="external-link">save_report</a></span><span class="op">(</span><span class="va">obnd_docx</span>, <span class="st">"report.docx"</span><span class="op">)</span></span></code></pre></div>
+<p>The contents of each report type is defined in a yaml file. The
+commands above use the default value found in the
+<code>nlmixr2rpt</code> package. To customize the report elements you
+can make a copy of the file in your current working directory:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>, <span class="st">"report_fit.yaml"</span><span class="op">)</span>, </span>
+<span>          <span class="st">"my_report.yaml"</span><span class="op">)</span></span></code></pre></div>
+<p>Then you can edit the <code>my_report.yaml</code> file and when you
+call <code><a href="../reference/report_fit.html">report_fit()</a></code> provide this yaml file as the
+<code>rptyaml</code> argument. The following section will describe the
+elements of the yaml report format.</p>
+</div>
+<div class="section level2">
+<h2 id="the-yaml-report-file-structure">The yaml report file structure<a class="anchor" aria-label="anchor" href="#the-yaml-report-file-structure"></a>
+</h2>
+<p>The core of <code>nlmixr2rpt</code> is the yaml reporting file. Below
+we outline each of the main sections and describe the expected elements
+in those sections.</p>
+<div class="section level3">
+<h3 id="placeholders">
+<code>placeholders</code><a class="anchor" aria-label="anchor" href="#placeholders"></a>
+</h3>
+<p>You may wish create your report template with placeholders. For
+example if you want create a generic template for population PK
+analysis, it may be useful to label the figures generically. You can use
+this section to define placeholders that will be applied when the report
+is created. For example consider the yaml code here:</p>
 <pre><code>placeholders:
   CMPD: Compound Name
   CUNITS: Conc Units
   OBJ: sprintf("%3g", fit$objf)</code></pre>
-<p>When you create the report you can label your y-axis generically such as:</p>
-<p><code>"===CMPD== (===CUNITS===)"</code></p>
+<p>When you create the report you can label your y-axis generically such
+as:</p>
+<p><code>"===CMPD=== (===CUNITS===)"</code></p>
 <p>But when the report is built, it will become:</p>
 <p><code>"Compound Name (Conc Units)"</code></p>
-<p>Notice that the <code>OBJ</code> placeholder contains R Code. By default the reporting process will try to evaluate the placeholders as R Code. If that fails it will revert back to the string supplied. If you run into problems you can quote your placeholder value with both double and single quotes. For example:</p>
-<pre><code><span class="va">ISSTR</span><span class="op">:</span><span class="st">"'ls()'"</span>
-  <span class="va">ISCMD</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span></code></pre>
-<p>The <code>ISSTR</code> field will just result in the string <code>"ls()"</code> while the <code>ISCMD</code> field will return a list of the objects in the environment where the string is evaluated. It is also possible to overwrite the contents of this file at runtime by providing a <code>ph</code> (placeholder) argument to <code><a href="../reference/report_fit.html">report_fit()</a></code>.</p>
-<p><strong>Note:</strong> Fields that support placeholders will be indicated by <sup>[PH]</sup></p>
+<p>Notice that the <code>OBJ</code> placeholder contains R Code. By
+default the reporting process will try to evaluate the placeholders as R
+Code. If that fails it will revert back to the string supplied. If you
+run into problems you can quote your placeholder value with both double
+and single quotes. For example:</p>
+<pre><code><span>  <span class="va">ISSTR</span><span class="op">:</span><span class="st">"'ls()'"</span></span>
+<span>  <span class="va">ISCMD</span><span class="op">:</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
+<p>The <code>ISSTR</code> field will just result in the string
+<code>"ls()"</code> while the <code>ISCMD</code> field will return a
+list of the objects in the environment where the string is evaluated. It
+is also possible to overwrite the contents of this file at runtime by
+providing a <code>placeholders</code> (placeholder) argument to
+<code><a href="../reference/report_fit.html">report_fit()</a></code>.</p>
+<p><strong>Note:</strong> Fields that support placeholders will be
+indicated by <sup>[PH]</sup> and fields with evaluable code will be
+indicated by <sup>[EV]</sup>.</p>
 </div>
-<div class="section level2">
-<h2 id="parameters">
+<div class="section level3">
+<h3 id="parameters">
 <code>parameters</code><a class="anchor" aria-label="anchor" href="#parameters"></a>
-</h2>
-<p>For certain reporting elements it may be better to present parameters differently than the parameter names being used in the model. In <code>nlmixr</code> you can use a comment after the parameter definition to specify alternate text. The function <code><a href="../reference/gen_pest_table.html">gen_pest_table()</a></code> will use this alternate text if it is present. In the <code>parameters</code> section you have some more flexability in how parameters are reported. You can define any parameters you want here whether they are present in the model or not. They will only be used if they are present. For tables in Word or PowerPoint you can specify the names using markdown (<code>md</code>), otherwise you can specify how they will be handled in text environments (<code>txt</code>). For example the intrinsic clearance may be called <code>lCLint</code> in the model. And you can specify it as:</p>
-<pre><code><span class="va">parameters</span><span class="op">:</span>
-  <span class="va">lCLint</span><span class="op">:</span>    
-    <span class="va">md</span><span class="op">:</span>  <span class="st">"CL~int~ (L/hr)"</span>    
-    <span class="va">txt</span><span class="op">:</span> <span class="st">"CLint (L/hr)"</span></code></pre>
-<p>Note that if you specify a parameter name here it will overwrite any alternate text specified in the model <code>ini()</code>.</p>
+</h3>
+<p>For certain reporting elements it may be better to present parameters
+differently than the parameter names being used in the model. In
+<code>nlmixr</code> you can use a comment after the parameter definition
+to specify alternate text. The function <code><a href="../reference/gen_pest_table.html">gen_pest_table()</a></code>
+will use this alternate text if it is present. In the
+<code>parameters</code> section you have some more flexability in how
+parameters are reported. You can define any parameters you want here
+whether they are present in the model or not. They will only be used if
+they are present. For tables in Word or PowerPoint you can specify the
+names using markdown (<code>md</code>), otherwise you can specify how
+they will be handled in text environments (<code>txt</code>). For
+example the intrinsic clearance may be called <code>lCLint</code> in the
+model. And you can specify it as:</p>
+<pre><code><span><span class="va">parameters</span><span class="op">:</span></span>
+<span>  <span class="va">lCLint</span><span class="op">:</span>    </span>
+<span>    <span class="va">md</span><span class="op">:</span>  <span class="st">"CL~int~ (L/hr)"</span>    </span>
+<span>    <span class="va">txt</span><span class="op">:</span> <span class="st">"CLint (L/hr)"</span>    </span></code></pre>
+<p>It is also possible to overwrite the contents of this file at runtime
+by providing a <code>parameters</code> argument to
+<code><a href="../reference/report_fit.html">report_fit()</a></code>.</p>
+<p><strong>Note:</strong> If you specify a parameter name here it will
+overwrite any alternate text specified in the model
+<code>ini()</code>.</p>
 </div>
-<div class="section level2">
-<h2 id="covariates">
+<div class="section level3">
+<h3 id="covariates">
 <code>covariates</code><a class="anchor" aria-label="anchor" href="#covariates"></a>
-</h2>
-<p>For figure and table generation it can be useful to have your covariates defined. You can define them here as either categorical (<code>cat</code>) or continuous (<code>cont</code>). For example to define the categorical covariates as SEX and ROUTE and the continuous covariate as WT you would do the following:</p>
+</h3>
+<p>For figure and table generation it can be useful to have your
+covariates defined. You can define them here as either categorical
+(<code>cat</code>) or continuous (<code>cont</code>). For example to
+define the categorical covariates as SEX and ROUTE and the continuous
+covariate as WT you would do the following:</p>
 <pre><code>covariates:
   cat: ["SEX", "ROUTE"]
   cont: ["WT"]</code></pre>
-<p>If you don’t need any covariates you can set them to <code>NULL</code>. If you want to overwrite these at runtime you can specify different values when calling <code><a href="../reference/report_fit.html">report_fit()</a></code>. These are available in the figure and table runtime environments as the objects <code>cat_covars</code> for categorical covariates and <code>cont_covars</code> for continuous covariates.</p>
+<p>If you don’t need any covariates you can set them to
+<code>NULL</code>. If you want to overwrite these at runtime you can
+specify different values when calling <code><a href="../reference/report_fit.html">report_fit()</a></code>. These
+are available in the figure and table runtime environments as the
+objects <code>cat_covars</code> for categorical covariates and
+<code>cont_covars</code> for continuous covariates.</p>
 </div>
-<div class="section level2">
-<h2 id="options">
+<div class="section level3">
+<h3 id="options">
 <code>options</code><a class="anchor" aria-label="anchor" href="#options"></a>
-</h2>
-<p>This section allows you to control general report options. Each element here can be either an explicit value. If identified as evaluable <sup>[EV]</sup> it will first attempt to evaluate it as R code. If that fails the explicit value will be used. The following options are supported with the expected data type in parentheses:</p>
+</h3>
+<p>This section allows you to control general report options. Each
+element here can be either an explicit value. If identified as evaluable
+<sup>[EV]</sup> it will first attempt to evaluate it as R code. If that
+fails the explicit value will be used. The following options are
+supported with the expected data type in parentheses:</p>
 <ul>
 <li>
-<code>output_dir</code><sup>[PH,EV]</sup> - The location where figures will be generated (character)</li>
+<code>output_dir</code><sup>[PH,EV]</sup> - The location where
+figures will be generated (character)</li>
 <li>
-<code>resolution</code><sup>[EV]</sup> - Resolution of figures being generated (numeric)</li>
+<code>resolution</code><sup>[EV]</sup> - Resolution of figures being
+generated (numeric)</li>
 <li>
-<code>figenv_preamble</code> and <code>tabenv_preamble</code> - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)</li>
+<code>figenv_preamble</code> and <code>tabenv_preamble</code> -
+User-defined code evaluated before figures and tables are built (specify
+libraries needed, source files containing user defined code, etc.)</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="building-figures-tables">Building <code>figures</code> &amp; <code>tables</code><a class="anchor" aria-label="anchor" href="#building-figures-tables"></a>
-</h2>
-<p>Figures and tables are defined in terms of R code that will be evaluated. There are several objects available in the environment that can be used when creating these report elements. The following objects will be defined:</p>
+<div class="section level3">
+<h3 id="building-figures-tables">Building <code>figures</code> &amp; <code>tables</code><a class="anchor" aria-label="anchor" href="#building-figures-tables"></a>
+</h3>
+<p>Figures and tables are defined in terms of R code that will be
+evaluated. There are several objects available in the environment that
+can be used when creating these report elements. The following objects
+will be defined:</p>
 <ul>
 <li>
 <code>fid</code> - current figure ID (figure environment only)</li>
@@ -207,32 +283,42 @@
 <li>
 <code>fit</code> - <code>nlmixr2</code> fit object</li>
 <li>
-<code>cat_covars</code> - character object containing the categorical covariates</li>
+<code>cat_covars</code> - character object containing the
+categorical covariates</li>
 <li>
-<code>cont_covars</code> - character object containing the continuous covariates</li>
+<code>cont_covars</code> - character object containing the
+continuous covariates</li>
 <li>
-<code>height</code> - figure height in inches (figure environment only)</li>
+<code>height</code> - figure height in inches (figure environment
+only)</li>
 <li>
 <code>obnd</code> - onbrand object of the report document</li>
 <li>
 <code>output_dir</code> - directory where figures are stored</li>
 <li>
-<code>resolution</code> - resolution of the figure (figure environment only)</li>
+<code>resolution</code> - resolution of the figure (figure
+environment only)</li>
 <li>
-<code>rptdetails</code> - result of reading in the report yaml file</li>
+<code>rptdetails</code> - result of reading in the report yaml
+file</li>
 <li>
 <code>rpttype</code> - either “Word” or “PowerPoint”</li>
 <li>
-<code>width</code> - figure width in inches (figure environment only)</li>
+<code>width</code> - figure width in inches (figure environment
+only)</li>
 <li>
-<code>xpdb</code> - the default yaml file contains code in the preamble to create this object by running xpose_data_nlmixr(fit) (figure environment only)</li>
+<code>xpdb</code> - the default yaml file contains code in the
+preamble to create this object by running xpose_data_nlmixr(fit) (figure
+environment only)</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="figures">
+<div class="section level3">
+<h3 id="figures">
 <code>figures</code><a class="anchor" aria-label="anchor" href="#figures"></a>
-</h2>
-<p>The figures section consists of figure IDs. These IDs are used again when defining the Word and PowerPoint report contents. Consider this example:</p>
+</h3>
+<p>The figures section consists of figure IDs. These IDs are used again
+when defining the Word and PowerPoint report contents. Consider this
+example:</p>
 <pre><code>figures:
   dv_vs_pred:
     orientation:    "portrait"
@@ -243,37 +329,59 @@
       p_res &lt;- dv_vs_pred(xpdb, caption=NULL, title=NULL) +
       xlab("Observed ===CMPD=== Concentrations (===CUNITS===)") +
       ylab("Population Predicted ===CMPD=== Concentrations (===CUNITS===)")</code></pre>
-<p>It creates the figure with the ID <code>dv_vs_pred</code>. It has the following elements:</p>
+<p>It creates the figure with the ID <code>dv_vs_pred</code>. It has the
+following elements:</p>
 <ul>
 <li>
-<code>orientation</code> - Orientation when used in a Word report, it can be either “portrait” or “landscape”.</li>
+<code>orientation</code> - Orientation when used in a Word report,
+it can be either “portrait” or “landscape”.</li>
 <li>
-<code>caption</code><sup>[PH]</sup> - Figure caption in Word reports.</li>
+<code>caption</code><sup>[PH]</sup> - Figure caption in Word
+reports.</li>
 <li>
-<code>caption_format</code> - This element is optional and can be either <code>"text"</code>(default plain text) or <code>"md"</code> (Markdown).</li>
+<code>caption_format</code> - This element is optional and can be
+either <code>"text"</code>(default plain text) or <code>"md"</code>
+(Markdown).</li>
 <li>
-<code>title</code><sup>[PH]</sup> - Slide title when the figure is used in PowerPoint.</li>
+<code>title</code><sup>[PH]</sup> - Slide title when the figure is
+used in PowerPoint.</li>
 <li>
-<code>cmd</code><sup>[PH]</sup> - Command to generate the figure.</li>
+<code>cmd</code><sup>[PH]</sup> - Command to generate the
+figure.</li>
 </ul>
-<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it needs to create a variable called <code>p_res</code>. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in <code>cmd</code>. If you want to conditionally skip the reporting of a figure, you can instead set the value of <code>p_res</code> to <code>NA</code>. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want in the relevant preamble section to ensure the functions are available to you.</p>
+<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it
+needs to create a variable called <code>p_res</code>. This can be either
+a paginated ggplot object or a vector of file names containing image
+files created by the code in <code>cmd</code>. If you want to
+conditionally skip the reporting of a figure, you can instead set the
+value of <code>p_res</code> to <code>NA</code>. This will generate a
+message and prevent inclusion of a build error in the final document.
+You should also include any libraries you want in the relevant preamble
+section to ensure the functions are available to you.</p>
 </div>
-<div class="section level2">
-<h2 id="tables">
+<div class="section level3">
+<h3 id="tables">
 <code>tables</code><a class="anchor" aria-label="anchor" href="#tables"></a>
-</h2>
-<p>Tables behave similarly to figures. In the tables section you create a table ID with the following options specified.</p>
+</h3>
+<p>Tables behave similarly to figures. In the tables section you create
+a table ID with the following options specified.</p>
 <ul>
 <li>
-<code>orientation</code> - Orientation when used in a Word report, it can be either “portrait” or “landscape”.</li>
+<code>orientation</code> - Orientation when used in a Word report,
+it can be either “portrait” or “landscape”.</li>
 <li>
-<code>caption</code><sup>[PH]</sup> - Table caption in Word reports.</li>
+<code>caption</code><sup>[PH]</sup> - Table caption in Word
+reports.</li>
 <li>
-<code>caption_format</code> - This element is optional and can be either <code>"text"</code>(default plain text) or <code>"md"</code> (Markdown).</li>
+<code>caption_format</code> - This element is optional and can be
+either <code>"text"</code>(default plain text) or <code>"md"</code>
+(Markdown).</li>
 <li>
-<code>title</code><sup>[PH]</sup> - Slide title when the table is used in PowerPoint.</li>
+<code>title</code><sup>[PH]</sup> - Slide title when the table is
+used in PowerPoint.</li>
 <li>
-<code>cmd</code><sup>[PH]</sup> - Command to generate the table.</li>
+<code>cmd</code><sup>[PH]</sup> - Command to generate the
+table.</li>
 </ul>
 <p>This example will create a table of the parameter estimates.</p>
 <pre><code>tables:
@@ -287,95 +395,144 @@
       fit        = fit, 
       obnd       = obnd,
       rptdetails = rptdetails)</code></pre>
-<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it needs to create a variable called <code>t_res</code>. This a list which can contain the following elements:</p>
+<p><strong>Note:</strong> When the <code>cmd</code> is evaluated it
+needs to create a variable called <code>t_res</code>. This a list which
+can contain the following elements:</p>
 <ul>
 <li>
-<code>df</code> - List of data frames containing the tabular information.</li>
+<code>df</code> - List of data frames containing the tabular
+information.</li>
 <li>
-<code>ft</code> - List of flextables containing the tabular information</li>
+<code>ft</code> - List of flextables containing the tabular
+information</li>
 </ul>
-<p>If you only supply the data frames list element, they will be converted into flextables internally. Flextables will span multiple pages automatically. If you prefer to have a caption on each page you can split the tables manually into multiple data frames/flextables. The reporting functionality is written to support table spanning multiple pages. If you define a separate table for each page you need to add those as sequential list elements to the <code>df</code> and <code>ft</code> elements. For example:</p>
-<pre><code><span class="va">t_res</span><span class="op">$</span><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">t_res</span><span class="op">$</span><span class="va">df</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">t_res</span><span class="op">$</span><span class="va">df</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">etc</span></code></pre>
+<p>If you only supply the data frames list element, they will be
+converted into flextables internally. Flextables will span multiple
+pages automatically. If you prefer to have a caption on each page you
+can split the tables manually into multiple data frames/flextables. The
+reporting functionality is written to support table spanning multiple
+pages. If you define a separate table for each page you need to add
+those as sequential list elements to the <code>df</code> and
+<code>ft</code> elements. For example:</p>
+<pre><code><span><span class="va">t_res</span><span class="op">$</span><span class="va">df</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">t_res</span><span class="op">$</span><span class="va">df</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">t_res</span><span class="op">$</span><span class="va">df</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">etc</span></span></code></pre>
 <p>or</p>
-<pre><code><span class="va">t_res</span><span class="op">$</span><span class="va">ft</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">t_res</span><span class="op">$</span><span class="va">ft</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="va">t_res</span><span class="op">$</span><span class="va">ft</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span> 
-<span class="va">etc</span></code></pre>
-<p>If you only have a single table or if you want it to span multiple pages automatically you simply specify the first element listed above (e.g. <code>t_res$df[[1]]</code>).</p>
-<p>If you want to conditionally skip the generation of a table, simply set <code>t_res</code> to <code>NA</code>. Like with figures above, this will signal to the reporting functions that you do not want to generate this table for the current fit object. It will also prevent the generation of a build error.</p>
+<pre><code><span><span class="va">t_res</span><span class="op">$</span><span class="va">ft</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">t_res</span><span class="op">$</span><span class="va">ft</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">t_res</span><span class="op">$</span><span class="va">ft</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">=</span> <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span> </span>
+<span><span class="va">etc</span></span></code></pre>
+<p>If you only have a single table or if you want it to span multiple
+pages automatically you simply specify the first element listed above
+(e.g. <code>t_res$df[[1]]</code>).</p>
+<p>If you want to conditionally skip the generation of a table, simply
+set <code>t_res</code> to <code>NA</code>. Like with figures above, this
+will signal to the reporting functions that you do not want to generate
+this table for the current fit object. It will also prevent the
+generation of a build error.</p>
 </div>
-<div class="section level2">
-<h2 id="pptx">
+<div class="section level3">
+<h3 id="pptx">
 <code>pptx</code><a class="anchor" aria-label="anchor" href="#pptx"></a>
-</h2>
-<p>This section defines general aspects of PowerPoint reports and also the contents of the report relating to the fitting results. Both the <code>figures</code> and <code>tables</code> sections contain the <code>onbrand</code> slide master names (<code>"content_text"</code>) to be used to hold these objects. The slides will be created with a title specified in figure and table IDs. The placeholder name for the title (<code>"title"</code>) must be specified as well as the placeholder name for the content (<code>"content_body"</code>). Figures for PowerPoint reports must be generated in the dimensions of the placeholder, so it is important that the <code>width</code> and <code>height</code> elements are specified in inches.</p>
-<pre><code><span class="va">pptx</span><span class="op">:</span>
-  <span class="va">figures</span><span class="op">:</span>
-    <span class="va">master</span><span class="op">:</span>   
-      <span class="va">name</span><span class="op">:</span>       <span class="st">"content_text"</span>      
-      <span class="va">title_ph</span><span class="op">:</span>   <span class="st">"title"</span>   
-      <span class="va">content_ph</span><span class="op">:</span> <span class="st">"content_body"</span>
-    <span class="va">width</span><span class="op">:</span>  <span class="fl">9.5</span>
-    <span class="va">height</span><span class="op">:</span> <span class="fl">5.0</span>
-  <span class="va">tables</span><span class="op">:</span>  
-    <span class="va">master</span><span class="op">:</span>   
-      <span class="va">name</span><span class="op">:</span>       <span class="st">"content_text"</span>      
-      <span class="va">title_ph</span><span class="op">:</span>   <span class="st">"title"</span>   
-      <span class="va">content_ph</span><span class="op">:</span> <span class="st">"content_body"</span></code></pre>
-<p>The actual content is specified in the <code>content</code> section. This is a list of keywords followed by a value. The <code>table</code> keyword should be followed by a table ID defined in the <code>tables</code> section. Similarly the <code>figure</code> keyworld should be followed by a figure ID defined in the <code>figures</code> section:</p>
-<pre><code><span class="va">content</span><span class="op">:</span>  
-    <span class="op">-</span> <span class="va">table</span><span class="op">:</span> <span class="va">pest_table</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">ind_plots</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_pred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_ipred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_pred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_idv</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">prm_vs_iteration</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">absval_res_vs_pred</span></code></pre>
+</h3>
+<p>This section defines general aspects of PowerPoint reports and also
+the contents of the report relating to the fitting results. Both the
+<code>figures</code> and <code>tables</code> sections contain the
+<code>onbrand</code> slide master names (<code>"content_text"</code>) to
+be used to hold these objects. The slides will be created with a title
+specified in figure and table IDs. The placeholder name for the title
+(<code>"title"</code>) must be specified as well as the placeholder name
+for the content (<code>"content_body"</code>). Figures for PowerPoint
+reports must be generated in the dimensions of the placeholder, so it is
+important that the <code>width</code> and <code>height</code> elements
+are specified in inches.</p>
+<pre><code><span><span class="va">pptx</span><span class="op">:</span></span>
+<span>  <span class="va">figures</span><span class="op">:</span></span>
+<span>    <span class="va">master</span><span class="op">:</span>   </span>
+<span>      <span class="va">name</span><span class="op">:</span>       <span class="st">"content_text"</span>      </span>
+<span>      <span class="va">title_ph</span><span class="op">:</span>   <span class="st">"title"</span>   </span>
+<span>      <span class="va">content_ph</span><span class="op">:</span> <span class="st">"content_body"</span></span>
+<span>    <span class="va">width</span><span class="op">:</span>  <span class="fl">9.5</span></span>
+<span>    <span class="va">height</span><span class="op">:</span> <span class="fl">5.0</span></span>
+<span>  <span class="va">tables</span><span class="op">:</span>  </span>
+<span>    <span class="va">master</span><span class="op">:</span>   </span>
+<span>      <span class="va">name</span><span class="op">:</span>       <span class="st">"content_text"</span>      </span>
+<span>      <span class="va">title_ph</span><span class="op">:</span>   <span class="st">"title"</span>   </span>
+<span>      <span class="va">content_ph</span><span class="op">:</span> <span class="st">"content_body"</span></span></code></pre>
+<p>The actual content is specified in the <code>content</code> section.
+This is a list of keywords followed by a value. The <code>table</code>
+keyword should be followed by a table ID defined in the
+<code>tables</code> section. Similarly the <code>figure</code> keyworld
+should be followed by a figure ID defined in the <code>figures</code>
+section:</p>
+<pre><code><span>  <span class="va">content</span><span class="op">:</span>  </span>
+<span>    <span class="op">-</span> <span class="va">table</span><span class="op">:</span> <span class="va">pest_table</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">ind_plots</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_pred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_ipred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_pred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_idv</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">prm_vs_iteration</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">absval_res_vs_pred</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="docx">
+<div class="section level3">
+<h3 id="docx">
 <code>docx</code><a class="anchor" aria-label="anchor" href="#docx"></a>
-</h2>
-<p>This section starts with general information about word documents. The <code>figures</code> section defines the height and width of figures for both <code>landscape</code> and <code>portrait</code> orientations. Again the units here are inches.</p>
-<pre><code><span class="va">docx</span><span class="op">:</span>
-  <span class="va">figures</span><span class="op">:</span>
-    <span class="va">landscape</span><span class="op">:</span>
-      <span class="va">width</span><span class="op">:</span>  <span class="fl">8.0</span>
-      <span class="va">height</span><span class="op">:</span> <span class="fl">4.2</span>
-    <span class="va">portrait</span><span class="op">:</span>
-      <span class="va">width</span><span class="op">:</span>  <span class="fl">6.5</span>
-      <span class="va">height</span><span class="op">:</span> <span class="fl">6.0</span></code></pre>
-<p>Just like with PowerPoint the content is defined in the <code>content</code> section. This can be defined as a <code>figure</code> or a <code>table</code> the same as in PowerPoint. Content can also include text elements as well. Just specify the <code>onbrand</code> style to control general formatting.</p>
-<pre><code><span class="va">content</span><span class="op">:</span>
-    <span class="op">-</span> <span class="va">text</span><span class="op">:</span> 
-        <span class="va">text</span><span class="op">:</span>  <span class="st">"Figures"</span>
-        <span class="va">style</span><span class="op">:</span> <span class="va">Heading_1</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_pred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">ind_plots</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_ipred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_pred</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_idv</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">prm_vs_iteration</span>
-    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">absval_res_vs_pred</span>
-    <span class="op">-</span> <span class="va">text</span><span class="op">:</span> 
-        <span class="va">text</span><span class="op">:</span>  <span class="st">"Tables"</span>
-        <span class="va">style</span><span class="op">:</span> <span class="va">Heading_1</span>
-    <span class="op">-</span> <span class="va">table</span><span class="op">:</span> <span class="va">pest_table</span></code></pre>
+</h3>
+<p>This section starts with general information about word documents.
+The <code>figures</code> section defines the height and width of figures
+for both <code>landscape</code> and <code>portrait</code> orientations.
+Again the units here are inches.</p>
+<pre><code><span><span class="va">docx</span><span class="op">:</span></span>
+<span>  <span class="va">figures</span><span class="op">:</span></span>
+<span>    <span class="va">landscape</span><span class="op">:</span></span>
+<span>      <span class="va">width</span><span class="op">:</span>  <span class="fl">8.0</span></span>
+<span>      <span class="va">height</span><span class="op">:</span> <span class="fl">4.2</span></span>
+<span>    <span class="va">portrait</span><span class="op">:</span></span>
+<span>      <span class="va">width</span><span class="op">:</span>  <span class="fl">6.5</span></span>
+<span>      <span class="va">height</span><span class="op">:</span> <span class="fl">6.0</span></span></code></pre>
+<p>Just like with PowerPoint the content is defined in the
+<code>content</code> section. This can be defined as a
+<code>figure</code> or a <code>table</code> the same as in PowerPoint.
+Content can also include text elements as well. Just specify the
+<code>onbrand</code> style to control general formatting.</p>
+<pre><code><span>  <span class="va">content</span><span class="op">:</span></span>
+<span>    <span class="op">-</span> <span class="va">text</span><span class="op">:</span> </span>
+<span>        <span class="va">text</span><span class="op">:</span>  <span class="st">"Figures"</span></span>
+<span>        <span class="va">style</span><span class="op">:</span> <span class="va">Heading_1</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_pred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">ind_plots</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">dv_vs_ipred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_pred</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">res_vs_idv</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">prm_vs_iteration</span></span>
+<span>    <span class="op">-</span> <span class="va">figure</span><span class="op">:</span> <span class="va">absval_res_vs_pred</span></span>
+<span>    <span class="op">-</span> <span class="va">text</span><span class="op">:</span> </span>
+<span>        <span class="va">text</span><span class="op">:</span>  <span class="st">"Tables"</span></span>
+<span>        <span class="va">style</span><span class="op">:</span> <span class="va">Heading_1</span></span>
+<span>    <span class="op">-</span> <span class="va">table</span><span class="op">:</span> <span class="va">pest_table</span></span></code></pre>
 </div>
 </div>
-<div class="section level1">
-<h1 id="customizing-reports-for-your-organization">Customizing reports for your organization<a class="anchor" aria-label="anchor" href="#customizing-reports-for-your-organization"></a>
-</h1>
-<p>The reporting here is done using the <code>onbrand</code> package. This provides an abstraction layer to the <code>officer</code> package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or styles for Word, then create an on brand mapping file. Then when you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the <code>onbrand</code> package.</p>
 <div class="section level2">
-<h2 id="powerpoint">PowerPoint<a class="anchor" aria-label="anchor" href="#powerpoint"></a>
+<h2 id="customizing-reports-for-your-organization">Customizing reports for your organization<a class="anchor" aria-label="anchor" href="#customizing-reports-for-your-organization"></a>
 </h2>
-<p>To create an <code>onbrand</code> PowerPoint template for your organization you will need the following master slide names define with the corresponding elements.</p>
-<template id="23b06c40-f119-4369-b4ab-506b2aa07c8c"><style>
+<p>The reporting here is done using the <code>onbrand</code> package.
+This provides an abstraction layer to the <code>officer</code> package.
+The benefit here is that you can use your own organization Word and
+PowerPoint templates. Simply create them with the appropriate masters
+for PowerPoint or styles for Word, then create an on brand mapping file.
+Then when you initialize your report objects you can just provide the
+your organizational template and mapping files. For more details on how
+to create the templates and mapping files, see the vignette in the
+<code>onbrand</code> package.</p>
+<div class="section level3">
+<h3 id="powerpoint">PowerPoint<a class="anchor" aria-label="anchor" href="#powerpoint"></a>
+</h3>
+<p>To create an <code>onbrand</code> PowerPoint template for your
+organization you will need the following master slide names define with
+the corresponding elements.</p>
+<template id="89b5ed4e-527d-41fe-ab9e-ef15e647d44d"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -411,160 +568,160 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-7e79bc32{}.cl-7e736f08{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7e736f44{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7e738394{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-7e73c534{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e73c53e{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e73c53f{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-7e79bc32">
+<style>.cl-68776ed8{}.cl-6874050e{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-68740522{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-687411ac{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-68743768{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-68743769{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-68743772{width:54pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-68776ed8">
 <thead>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">Master/Template</span></p></td>
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">onbrand</span></p></td>
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">Content</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">Master/Template</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">onbrand</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">Content</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">Name</span></p></td>
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">Placeholder</span></p></td>
-<td class="cl-7e73c53f"><p class="cl-7e738394"><span class="cl-7e736f08">Type</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">Name</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">Placeholder</span></p></td>
+<td class="cl-68743772"><p class="cl-687411ac"><span class="cl-6874050e">Type</span></p></td>
 </tr>
 </thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="2" class="cl-7e73c534"><p class="cl-7e738394"><span class="cl-7e736f44">title_slide</span></p></td>
-<td class="cl-7e73c534"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c534"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="2" class="cl-68743768"><p class="cl-687411ac"><span class="cl-68740522">title_slide</span></p></td>
+<td class="cl-68743768"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743768"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="2" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">section_slide</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="2" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">section_slide</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title_only</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title_only</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="3" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_text</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="3" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_body</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_body</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="3" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_list</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="3" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_body</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_body</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="6" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">two_content_header_list</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="6" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">two_content_header_list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left_header</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left_header</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right_header</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right_header</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="6" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">two_content_header_text</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="6" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">two_content_header_text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left_header</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left_header</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right_header</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right_header</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="4" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">two_content_list</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="4" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">two_content_list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">list</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">list</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td rowspan="4" class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">two_content_text</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td rowspan="4" class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">two_content_text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">sub_title</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">sub_title</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_left</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_left</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">content_right</span></p></td>
-<td class="cl-7e73c53e"><p class="cl-7e738394"><span class="cl-7e736f44">text</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">content_right</span></p></td>
+<td class="cl-68743769"><p class="cl-687411ac"><span class="cl-68740522">text</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="471a18e1-edb3-450e-957e-ab2bf2e402ce"></div>
+</div></template><div class="flextable-shadow-host" id="a95702e7-588a-4bee-a4cc-2adac55b6d1b"></div>
 <script>
-var dest = document.getElementById("471a18e1-edb3-450e-957e-ab2bf2e402ce");
-var template = document.getElementById("23b06c40-f119-4369-b4ab-506b2aa07c8c");
+var dest = document.getElementById("a95702e7-588a-4bee-a4cc-2adac55b6d1b");
+var template = document.getElementById("89b5ed4e-527d-41fe-ab9e-ef15e647d44d");
 var caption = template.content.querySelector("caption");
 if(caption) {
   caption.style.cssText = "display:block;text-align:center;";
@@ -577,11 +734,12 @@ var templateContent = template.content;
 fantome.appendChild(templateContent);
 </script>
 </div>
-<div class="section level2">
-<h2 id="word">Word<a class="anchor" aria-label="anchor" href="#word"></a>
-</h2>
-<p>Similarly, to create an <code>onbrand</code> Word template you will need to the following <code>onbrand</code> styles defined.</p>
-<template id="41261dc5-f530-4abf-9cf4-3d22269c0a56"><style>
+<div class="section level3">
+<h3 id="word">Word<a class="anchor" aria-label="anchor" href="#word"></a>
+</h3>
+<p>Similarly, to create an <code>onbrand</code> Word template you will
+need to the following <code>onbrand</code> styles defined.</p>
+<template id="dfa8600c-3b7f-4618-aaac-5197b74761d7"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -617,77 +775,77 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-7ea50270{}.cl-7e9f1ac2{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7e9f1acc{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-7e9f283c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-7e9f564a{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5654{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f565e{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f565f{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5660{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5661{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5668{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5669{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f566a{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5672{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5673{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5674{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5675{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5686{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5687{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5688{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5690{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-7e9f5691{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-7ea50270">
+<style>.cl-688fcafa{}.cl-688d2d86{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-688d2d9a{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-688d3452{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-688d4942{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d494c{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d494d{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d494e{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d494f{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4956{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4957{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4960{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4961{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4962{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d496a{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d496b{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d496c{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4974{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4975{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d4976{width:95.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d497e{width:76.8pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-688d497f{width:70.7pt;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 1pt solid rgba(102, 102, 102, 1.00);border-right: 1pt solid rgba(102, 102, 102, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-688fcafa">
 <thead>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5688"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">onbrand</span></p></td>
-<td class="cl-7e9f5690"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">Word</span></p></td>
-<td class="cl-7e9f5691"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">Style</span></p></td>
+<td class="cl-688d4976"><p class="cl-688d3452"><span class="cl-688d2d86">onbrand</span></p></td>
+<td class="cl-688d497e"><p class="cl-688d3452"><span class="cl-688d2d86">Word</span></p></td>
+<td class="cl-688d497f"><p class="cl-688d3452"><span class="cl-688d2d86">Style</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5688"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">Style</span></p></td>
-<td class="cl-7e9f5690"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">Style</span></p></td>
-<td class="cl-7e9f5691"><p class="cl-7e9f283c"><span class="cl-7e9f1ac2">Type</span></p></td>
+<td class="cl-688d4976"><p class="cl-688d3452"><span class="cl-688d2d86">Style</span></p></td>
+<td class="cl-688d497e"><p class="cl-688d3452"><span class="cl-688d2d86">Style</span></p></td>
+<td class="cl-688d497f"><p class="cl-688d3452"><span class="cl-688d2d86">Type</span></p></td>
 </tr>
 </thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5654"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Code</span></p></td>
-<td class="cl-7e9f564a"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Code</span></p></td>
-<td class="cl-7e9f565e"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d494c"><p class="cl-688d3452"><span class="cl-688d2d9a">Code</span></p></td>
+<td class="cl-688d4942"><p class="cl-688d3452"><span class="cl-688d2d9a">Code</span></p></td>
+<td class="cl-688d494d"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5669"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Figure_Caption</span></p></td>
-<td class="cl-7e9f5668"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">graphic title</span></p></td>
-<td class="cl-7e9f566a"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4960"><p class="cl-688d3452"><span class="cl-688d2d9a">Figure_Caption</span></p></td>
+<td class="cl-688d4957"><p class="cl-688d3452"><span class="cl-688d2d9a">graphic title</span></p></td>
+<td class="cl-688d4961"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Heading_1</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">heading 1</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">Heading_1</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">heading 1</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Heading_2</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">heading 2</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">Heading_2</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">heading 2</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Heading_3</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">heading 3</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">Heading_3</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">heading 3</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Normal</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Normal</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">Normal</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">Normal</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Notes</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Notes</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">Notes</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">Notes</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5687"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Table_Caption</span></p></td>
-<td class="cl-7e9f5675"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">table title</span></p></td>
-<td class="cl-7e9f5686"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4975"><p class="cl-688d3452"><span class="cl-688d2d9a">Table_Caption</span></p></td>
+<td class="cl-688d496c"><p class="cl-688d3452"><span class="cl-688d2d9a">table title</span></p></td>
+<td class="cl-688d4974"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f5672"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">TOC</span></p></td>
-<td class="cl-7e9f5674"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">toc 1</span></p></td>
-<td class="cl-7e9f5673"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">paragraph</span></p></td>
+<td class="cl-688d4962"><p class="cl-688d3452"><span class="cl-688d2d9a">TOC</span></p></td>
+<td class="cl-688d496b"><p class="cl-688d3452"><span class="cl-688d2d9a">toc 1</span></p></td>
+<td class="cl-688d496a"><p class="cl-688d3452"><span class="cl-688d2d9a">paragraph</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-7e9f565f"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Table</span></p></td>
-<td class="cl-7e9f5661"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">Table Grid</span></p></td>
-<td class="cl-7e9f5660"><p class="cl-7e9f283c"><span class="cl-7e9f1acc">table</span></p></td>
+<td class="cl-688d494e"><p class="cl-688d3452"><span class="cl-688d2d9a">Table</span></p></td>
+<td class="cl-688d4956"><p class="cl-688d3452"><span class="cl-688d2d9a">Table Grid</span></p></td>
+<td class="cl-688d494f"><p class="cl-688d3452"><span class="cl-688d2d9a">table</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="34b907f8-2b14-4015-973a-9b533284fe6b"></div>
+</div></template><div class="flextable-shadow-host" id="4dfdc5f1-1ad7-43c5-8aae-beddd41135d1"></div>
 <script>
-var dest = document.getElementById("34b907f8-2b14-4015-973a-9b533284fe6b");
-var template = document.getElementById("41261dc5-f530-4abf-9cf4-3d22269c0a56");
+var dest = document.getElementById("4dfdc5f1-1ad7-43c5-8aae-beddd41135d1");
+var template = document.getElementById("dfa8600c-3b7f-4618-aaac-5197b74761d7");
 var caption = template.content.querySelector("caption");
 if(caption) {
   caption.style.cssText = "display:block;text-align:center;";
@@ -701,33 +859,32 @@ fantome.appendChild(templateContent);
 </script>
 </div>
 </div>
-<div class="section level1">
-<h1 id="report-configuration-file-report_fit-yaml">Report configuration file <code>report_fit.yaml</code><a class="anchor" aria-label="anchor" href="#report-configuration-file-report_fit-yaml"></a>
-</h1>
+<div class="section level2">
+<h2 id="report-configuration-file-report_fit-yaml">Report configuration file <code>report_fit.yaml</code><a class="anchor" aria-label="anchor" href="#report-configuration-file-report_fit-yaml"></a>
+</h2>
 <pre><code>placeholders:
   CMPD: Compound Name
   CUNITS: Conc Units
   TUNITS: Time Units
   RUN: RUNN
-  TEST: "'ls()'"
-  TEST2: ls()
   OBJ: sprintf("%3g", fit$objf)
 parameters:
-  log_CIRC0:
-    md:  "log(CIRC~0~)"
-    txt: "log(CIRC0)"
-  add.err:
+  lVp:
+    md:  "V~p~"
+    txt: "Vp" 
+  add_err:
     md:  "Add Err"
     txt: "Add Err"
-  prop.err:
+  prop_err:
     md:  "Prop Err"
     txt: "Prop Err"
 covariates:
   cat:  NULL
   cont: NULL
 options:
-  output_dir:   "file.path(tempdir(), '===RUN===')"
+  output_dir:   "file.path(getwd(), '===RUN===')"
   resolution:   300
+  fig_stamp:          "source: ===FILE==="
   figenv_preamble: |-
     library("ggplot2")
     library("xpose")
@@ -743,6 +900,7 @@ figures:
     cmd: |-
       p_pred &lt;- dv_vs_pred(xpdb, caption=NULL, title=NULL, subtitle=NULL) +
       ggtitle("===CMPD=== (===CUNITS===)") +
+      coord_fixed()+
       ylab("Observed") +
       xlab("Population Predicted") +
       theme_light()
@@ -887,6 +1045,10 @@ docx:
       height: 6.0
   content:
     - text:
+        text:  "Tables"
+        style: Heading_1
+    - table: pest_table
+    - text:
         text:  "Figures"
         style: Heading_1
     - figure: ind_plots
@@ -895,11 +1057,7 @@ docx:
     - figure: prm_vs_iteration
     - figure: skip_figure
     - figure: eta_cont
-    - figure: eta_cat
-    - text:
-        text:  "Tables"
-        style: Heading_1
-    - table: pest_table</code></pre>
+    - figure: eta_cat</code></pre>
 </div>
   </div>
 
@@ -920,7 +1078,7 @@ docx:
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer>

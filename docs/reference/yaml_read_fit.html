@@ -24,7 +24,7 @@ the necessary fields for the given report."><!-- mathjax --><script src="https:/
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     <span class="fas fa-chalkboard-teacher"></span>
      
     Tutorials
@@ -72,26 +72,45 @@ the necessary fields for the given report.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">yaml_read_fit</span><span class="op">(</span>obnd <span class="op">=</span> <span class="cn">NULL</span>, rptyaml <span class="op">=</span> <span class="cn">NULL</span>, ph <span class="op">=</span> <span class="cn">NULL</span>, fit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">yaml_read_fit</span><span class="op">(</span></span>
+<span>  obnd <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rptyaml <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  placeholders <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  parameters <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fit <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>obnd</dt>
-<dd><p>onbrand report object to have report elements appended to</p></dd>
+<dd><p>onbrand report object to have report elements appended to.</p></dd>
+
+
 <dt>rptyaml</dt>
-<dd><p>yaml file containing the report elements and structure</p></dd>
-<dt>ph</dt>
-<dd><p>Placeholders in the yaml file can be overwritten at runtime
+<dd><p>yaml file containing the report elements and structure.</p></dd>
+
+
+<dt>placeholders</dt>
+<dd><p>list of placeholders to overwrite defaults in the yaml file.</p></dd>
+
+
+<dt>parameters</dt>
+<dd><p>list with element names for each parameter to overwrite at runtime.
 with a named list for example RUN may be "RUNN" in the yaml file. To
 overwrite this just provide <code>list(RUN="RUN_1")</code>
 (default: <code>NULL</code>)</p></dd>
+
+
 <dt>fit</dt>
-<dd><p>nlmixr2 fit object to be reported</p></dd>
+<dd><p>nlmixr2 fit object to be reported.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>List containing the following information about the report</p><ul><li><p><code>"isgood"</code> - Boolean variable indicating success or failure</p></li>
+    
+
+<p>List containing the following information about the report</p><ul><li><p><code>"isgood"</code> - Boolean variable indicating success or failure</p></li>
 <li><p><code>"msgs"</code> - Vector of messages</p></li>
 <li><p><code>"rpttype"</code> - Type of onbrand report ("Word" or "PowerPoint")</p></li>
 <li><p><code>"rptfigfmt"</code> - Default figure formatting (orientation and dimensions)</p></li>
@@ -112,7 +131,7 @@ overwrite this just provide <code>list(RUN="RUN_1")</code>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
       </footer></div>

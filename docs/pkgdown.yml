@@ -1,8 +1,8 @@
-pandoc: 2.16.2
-pkgdown: 2.0.1
+pandoc: '2.18'
+pkgdown: 2.0.5
 pkgdown_sha: ~
 articles:
   Accessing_Figures_and_Tables: Accessing_Figures_and_Tables.html
   Reporting_nlmixr_Fit_Results: Reporting_nlmixr_Fit_Results.html
-last_built: 2022-06-22T14:34Z
+last_built: 2022-08-22T02:01Z
 

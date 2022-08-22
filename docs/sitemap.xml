@@ -58,6 +58,9 @@
     <loc>/reference/report_fit.html</loc>
   </url>
   <url>
+    <loc>/reference/write_figure.html</loc>
+  </url>
+  <url>
     <loc>/reference/yaml_read_fit.html</loc>
   </url>
 </urlset>

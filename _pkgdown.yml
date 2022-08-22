@@ -24,6 +24,7 @@ reference:
   - process_ph
   - fetch_option
   - fetch_fdim
+  - write_figure
 navbar:
   left:
   - text: Tutorials
