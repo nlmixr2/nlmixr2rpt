@@ -387,17 +387,18 @@ fetch_fdim  <- function(obnd       = NULL,
 res}
 
 #'@export
-#'@title Gets Figure Dimensions
-#'@description For a given figure id and report type this will pull out the
+#'@title Writes Figures to File
+#'@description Takes a figure object, optionally
+#'stamps the image, and writes to a file
 #'dimensions of the figure.
-#'@param p_res ggplot or ggforce paginated object
-#'@param page  page number to write or NULL for a ggplot object 
-#'@param width width in inches
-#'@param height height in inches
-#'@param resolution resolution in dpi
-#'@param fig_file file name to write the figure to
-#'@param fig_stamp Character object containing the text to stamp on the figure with optional ===file=== placeholder
-#'@param verbose Boolean variable when set to TRUE (default) messages will be
+#'@param p_res ggplot, ggforce paginated object, or ggarrange object.
+#'@param page  Page number to write or NULL for a ggplot object.
+#'@param width Width in inches.
+#'@param height Height in inches.
+#'@param resolution resolution in dpi.
+#'@param fig_file File name to write the figure to.
+#'@param fig_stamp Character object containing the text to stamp on the figure with optional ===file=== placeholder.
+#'@param verbose Boolean variable when set to TRUE (default) messages will be.
 #'displayed on the terminal
 #'@return list with the following 
 #' \itemize{
