@@ -39,7 +39,7 @@ options:
   output_dir:   "file.path(getwd(), '===RUN===')"
   resolution:   300
   # Set fig_stamp to NULL to suppress
-  fig_stamp:          "source: ===FILE==="
+  fig_stamp:    "source: ===FILE==="
   figenv_preamble: |-
     # Loading required libraries
     library("ggplot2")

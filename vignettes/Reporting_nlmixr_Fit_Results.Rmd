@@ -144,6 +144,8 @@ This section allows you to control general report options. Each element here can
 * `resolution`^[EV]^ - Resolution of figures being generated (numeric)
 * `figenv_preamble` and `tabenv_preamble` - User-defined code evaluated before figures and tables are built (specify libraries needed, source files containing user defined code, etc.)
 
+* `fig_stamp`^[PH]^ - If this is set to a string it will stamp the contents of that string at the lower left portion of the figure after writing. This applies only to figures where the `p_res` object is either a vanilla `ggplot` object, a paginated `ggforce` object, or the result of `ggarrage` from the `ggpubr` package. Along with the regular placeholders, this option can also contain the `===FILE===` placeholder. This will be replaced with the full path to the figure file that is generated. 
+
 ## Building `figures` & `tables`
 
 Figures and tables are defined in terms of R code that will be evaluated. There are several objects available in the environment that can be used when creating these report elements. The following objects will be defined:
@@ -187,7 +189,7 @@ It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 * `title`^[PH]^ - Slide title when the figure is used in PowerPoint.
 * `cmd`^[PH]^ - Command to generate the figure.
 
-**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a paginated ggplot object or a vector of file names containing image files created by the code in `cmd`. If you want to conditionally skip the reporting of a figure, you can instead set the value of `p_res` to `NA`. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want in the relevant preamble section to ensure the functions are available to you. 
+**Note:** When the `cmd` is evaluated it needs to create a variable called `p_res`. This can be either a `ggplot` object, a paginated object from `ggforce`, the result of `ggarrage` from the `ggpubr` package, or a vector of file names containing image files created by the code in `cmd`. If you want to conditionally skip the reporting of a figure, you can instead set the value of `p_res` to `NA`. This will generate a message and prevent inclusion of a build error in the final document. You should also include any libraries you want in the relevant preamble section to ensure the functions are available to you. 
 
 ## `tables`
 
