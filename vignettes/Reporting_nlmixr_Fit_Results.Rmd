@@ -1,8 +1,8 @@
 ---
-title: "Reporting `nlmixr2` Fit Results"
+title: "Reporting nlmixr2 Fit Results"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Reporting `nlmixr2` Fit Results}
+  %\VignetteIndexEntry{Reporting nlmixr2 Fit Results}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/john-harrold/nlmixr2rpt/workflows/R-CMD-check/badge.svg)](https://github.com/john-harrold/nlmixr2rpt/actions)
+[![R-CMD-check](https://github.com/nlmixr2/nlmixr2rpt/workflows/R-CMD-check/badge.svg)](https://github.com/nlmixr2/nlmixr2rpt/actions)
 [![Lifecycle:
 Experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!---
@@ -34,16 +34,16 @@ from GitHub:
 
 ``` r
 #install.packages("devtools") 
-devtools::install_github("john-harrold/nlmixr2rpt")
+devtools::install_github("nlmixr2/nlmixr2rpt")
 ```
 
 ## Getting Started
 
 Browse through the
-[documentation](https://john-harrold.github.io/nlmixr2rpt/) and check
-out the vignette:
+[documentation](https://nlmixr2.github.io/nlmixr2rpt/) and check out the
+vignette:
 
 -   [Reporting `nlmixr` Fit
-    Results](https://john-harrold.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
+    Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
 -   [Accessing Figures and
-    Tables](https://john-harrold.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)
+    Tables](https://nlmixr2.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)
