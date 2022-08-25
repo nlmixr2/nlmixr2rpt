@@ -39,9 +39,52 @@ devtools::install_github("nlmixr2/nlmixr2rpt")
 
 ## Getting Started
 
-Browse through the
+### PowerPoint
+
+Assuming you have the results of an nlmixr analysis in the object `fit`
+you can dump those results into a PowerPoint document by doing the
+following:
+
+``` r
+obnd_pptx = read_template(
+  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+obnd_pptx = report_fit(
+  fit     = fit, 
+  obnd    = obnd_pptx)
+
+save_report(obnd_pptx, "report.pptx")
+```
+
+This creates an onbrand reporting object `obnd_pptx`. You can add other
+reporting elements using `onbrand` or `officer`. Next the command
+`report_fit()` will append the results in the `fit` object to an onbrand
+report. After calling `report_fit()` you can append other reporting
+elements. Finally you just need to save the document using
+`save_report()`.
+
+### Word
+
+The process for a Word document is the same. You simply need to use a
+Word onbrand template instead of a PowerPoint.
+
+``` r
+obnd_docx = read_template(
+  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+obnd_docx = report_fit(
+  fit     = fit, 
+  obnd    = obnd_docx)
+save_report(obnd_docx, "report.docx")
+```
+
+## Further reading
+
+If you want to learn more about customizing the outputs or using your
+own organizational templates in reporting, be sure to browse through the
 [documentation](https://nlmixr2.github.io/nlmixr2rpt/) and check out the
-vignette:
+vignettes:
 
 -   [Reporting `nlmixr` Fit
     Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
