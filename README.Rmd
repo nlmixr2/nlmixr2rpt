@@ -85,9 +85,11 @@ The process for a Word document is the same. You simply need to use a Word onbra
 obnd_docx = read_template(
   template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
   mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
 obnd_docx = report_fit(
   fit     = fit, 
   obnd    = obnd_docx)
+
 save_report(obnd_docx, "report.docx")
 ```
 
@@ -95,9 +97,11 @@ save_report(obnd_docx, "report.docx")
 obnd_docx = read_template(
   template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
   mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
 obnd_docx = report_fit(
   fit     = fit, 
   obnd    = obnd_docx)
+
 save_report(obnd_docx, file.path(tempdir(), "report.docx"))
 ```
 
@@ -106,5 +110,5 @@ save_report(obnd_docx, file.path(tempdir(), "report.docx"))
 
 If you want to learn more about customizing the outputs or using your own organizational templates in reporting, be sure to browse through the [documentation](https://nlmixr2.github.io/nlmixr2rpt/) and check out the vignettes:
 
-* [Reporting `nlmixr` Fit Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
+* [Reporting nlmixr Fit Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
 * [Accessing Figures and Tables](https://nlmixr2.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)
