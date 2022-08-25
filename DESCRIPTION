@@ -9,7 +9,7 @@ Maintainer: John Harrold <john.m.harrold@gmail.com>
 Description: This allows you to generate reporting workflows around `nlmixr2` analyses with outputs in Word and PowerPoint. You can specify figures, tables and report structure in a user-definable yaml file. Also you can use the internal functions to access the figures and tables to allow their including in other outputs (e.g. RMarkdown).
 URL: https://nlmixr2rpt.nlmixr2.com
 BugReports: https://github.com/nlmixr2/nlmixr2rpt/issues
-License: GPL (>=2)
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: FALSE
 Roxygen: list(markdown = TRUE)
