@@ -748,14 +748,10 @@ fetch_fit_example  <- function(){
     dplyr::select(-.data[["Q"]])        |>  
     dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
   
-  model_ui = 
-      suppressMessages(
-      suppressWarnings(
-        rxode2::rxode2(my_model)               |> 
-          rxode2::ini(TV_ka=fix(log(0.5)))     |>
-          rxode2::model(ka=exp(TV_ka)) 
-      )
-      )
+   model_ui =  rxode2::rxode2(my_model) 
+   model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
+   model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
+
   
   fit = suppressMessages(
         suppressWarnings(
