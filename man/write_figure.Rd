@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_figures.R
 \name{write_figure}
 \alias{write_figure}
-\title{Gets Figure Dimensions}
+\title{Writes Figures to File}
 \usage{
 write_figure(
   p_res = NULL,
@@ -16,21 +16,21 @@ write_figure(
 )
 }
 \arguments{
-\item{p_res}{ggplot or ggforce paginated object}
+\item{p_res}{ggplot, ggforce paginated object, or ggarrange object.}
 
-\item{page}{page number to write or NULL for a ggplot object}
+\item{page}{Page number to write or NULL for a ggplot object.}
 
-\item{width}{width in inches}
+\item{width}{Width in inches.}
 
-\item{height}{height in inches}
+\item{height}{Height in inches.}
 
-\item{resolution}{resolution in dpi}
+\item{resolution}{resolution in dpi.}
 
-\item{fig_file}{file name to write the figure to}
+\item{fig_file}{File name to write the figure to.}
 
-\item{fig_stamp}{Character object containing the text to stamp on the figure with optional ===file=== placeholder}
+\item{fig_stamp}{Character object containing the text to stamp on the figure with optional ===file=== placeholder.}
 
-\item{verbose}{Boolean variable when set to TRUE (default) messages will be
+\item{verbose}{Boolean variable when set to TRUE (default) messages will be.
 displayed on the terminal}
 }
 \value{
@@ -41,6 +41,7 @@ list with the following
 }
 }
 \description{
-For a given figure id and report type this will pull out the
+Takes a figure object, optionally
+stamps the image, and writes to a file
 dimensions of the figure.
 }

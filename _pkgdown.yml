@@ -22,9 +22,10 @@ reference:
   - mk_error_fig
   - mk_error_tab
   - eval_str
-  - process_ph
   - fetch_option
   - fetch_fdim
+  - fetch_fit_example
+  - process_ph
   - write_figure
 navbar:
   left:

@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
   collapse  = TRUE,
   comment = "#>"
 )
+
+
+
 ```
 
 # Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" />
@@ -29,7 +32,9 @@ First we need an `nlmixr2` fit object. We're going to load a fit example stored 
 ```{r, eval=TRUE, echo=TRUE}
 library(nlmixr2rpt)
 library(onbrand)  
-fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
+
+# This will create an example fit object to use in the examples below
+fit = fetch_fit_example()
 ```
 
 Next we need to create `onbrand` report objects. This will create report objects for both PowerPoint (`obnd_pptx`) and Word (`obnd_docx`).
@@ -319,7 +324,7 @@ general formatting.
 
 # Customizing reports for your organization
 
-The reporting here is done using the `onbrand` package. This provides an abstraction layer to the `officer` package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or styles for Word, then create an on brand mapping file. Then when you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the `onbrand` package. 
+The reporting here is done using the `onbrand` package. This provides an abstraction layer to the `officer` package. The benefit here is that you can use your own organization Word and PowerPoint templates. Simply create them with the appropriate masters for PowerPoint or styles for Word, then create an on brand mapping file. When you initialize your report objects you can just provide the your organizational template and mapping files. For more details on how to create the templates and mapping files, see the vignette in the `onbrand` package. 
 
 ## PowerPoint
 

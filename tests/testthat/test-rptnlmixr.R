@@ -5,7 +5,7 @@ suppressPackageStartupMessages(library("ggPMX")   )
 
 # Objects used in the tests below:
 rptyaml    = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml")
-fit        = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
+fit        = fetch_fit_example()
 obnd_test  = read_template(
   template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
   mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))

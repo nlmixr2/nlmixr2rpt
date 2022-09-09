@@ -40,7 +40,7 @@ obnd = read_template(
 You should have an `nlmixr2` fit object from your own analysis. We will load an example from this package.
 
 ```{r, eval=TRUE, echo=TRUE}
-fit = readRDS(system.file(package="nlmixr2rpt", "examples", "fit.rds"))
+fit = fetch_fit_example()
 ```
 
 Next we read in the yaml file using `yaml_read_fit()`. Below we are using a stripped down example for testing. The contents of the yaml file are stored in the `rptdetails` list element that is returned.

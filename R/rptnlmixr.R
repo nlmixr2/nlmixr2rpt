@@ -1,6 +1,8 @@
 #'@import onbrand
-#'@importFrom yaml read_yaml
 #'@importFrom stringr str_replace_all
+#'@importFrom rxode2 model ini rxode2
+#'@importFrom utils read.csv
+#'@importFrom yaml read_yaml
 
 
 #'@export
@@ -714,4 +716,55 @@ fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
              msgs       = msgs,
              value      = value)
 return(res)}
+
+
+
+#'@export
+#'@title Fetch Fit Example
+#'@description Creates an nlmixr2 fit example using `posthoc` estimation
+#'method for testing purposes.
+#'displayed on the terminal
+#'following:
+#'@return Example nlmixr2 fit object
+#'@examples
+#' fit = fetch_fit_example()
+fetch_fit_example  <- function(){
+
+  file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
+  file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
+
+  my_model = NULL
+  eval(parse(text=paste(readLines(file_model), collapse="\n")))
+
+  # For the dataset we remove the parameter definitions
+  # and we filter it down to the single dose data for 3, 
+  # 30 and 300 mg
+  DS = read.csv(file_data)   |> 
+    dplyr::select(-.data[["F1"]])       |> 
+    dplyr::select(-.data[["ka"]])       |> 
+    dplyr::select(-.data[["CL"]])       |> 
+    dplyr::select(-.data[["Vc"]])       |> 
+    dplyr::select(-.data[["Vp"]])       |> 
+    dplyr::select(-.data[["Q"]])        |>  
+    dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
+  
+  model_ui = 
+      suppressMessages(
+      suppressWarnings(
+        rxode2::rxode2(my_model)               |> 
+          rxode2::ini(TV_ka=fix(log(0.5)))     |>
+          rxode2::model(ka=exp(TV_ka)) 
+      )
+      )
+  
+  fit = suppressMessages(
+        suppressWarnings(
+          nlmixr2::nlmixr(model_ui, DS, est="posthoc")
+        ))
+
+  # This is mainly to "use" ggPMX to avoid declared imports should be used
+  # errors
+  ggPMX::is.pmx_gpar(NULL)
+
+return(fit)}
 

@@ -26,6 +26,8 @@ Imports:
   stringr,
   nlmixr2,
   onbrand,
+  rxode2,
+  utils,
   xpose,
   xpose.nlmixr2,
   yaml
