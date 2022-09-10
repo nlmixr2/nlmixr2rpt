@@ -18,6 +18,24 @@
 #'@param parameters  list with element names for each parameter to overwrite defaults in yaml file.
 #'@param verbose Boolean variable when set to TRUE messages will be .
 #'@return onbrand object with the report elements added.
+#'@examples
+#'\donttest{
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# This will create an example fit object to use in the examples below
+#'fit = fetch_fit_example()
+#'
+#'# Appening fit results
+#'obnd_pptx = report_fit(
+#'  fit     = fit, 
+#'  obnd    = obnd)
+#'
+#'# Writing the report to a file
+#'save_report(obnd, file.path(tempdir(), "report.pptx"))
+#'}
 report_fit <- function(obnd          = NULL,
                        fit           = NULL,
                        placeholders  = NULL,
@@ -397,6 +415,24 @@ return(obnd)}
 #'@param rptdetails Object creating when reading in rptyaml file
 #'(default: \code{NULL})
 #'@return processed string
+#'@examples
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# We also need an nlmixr fit object
+#'fit = fetch_fit_example()
+#'
+#'# This reads in the report details as well
+#'rptdetails = yaml_read_fit(
+#'  obnd    = obnd,
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+#'  fit     = fit)$rptdetails
+#'
+#' str = "This is ===CMPD=="
+#'
+#' process_ph(str, rptdetails)
 process_ph = function(str, rptdetails){
   if("placeholders" %in% names(rptdetails)){
     for(PHNAME in names(rptdetails[["placeholders"]])){
@@ -430,6 +466,21 @@ str}
 #'   \item \code{"rptdetails"} - Contents of the yaml file
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
+#'@examples
+#'# We need an onbrand object to use below
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# We also need an nlmixr fit object
+#'fit = fetch_fit_example()
+#'
+#'# This reads in the report details as well
+#'yaml_read_res = yaml_read_fit(
+#'  obnd    = obnd,
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+#'  fit     = fit)
 yaml_read_fit = function(obnd = NULL,rptyaml=NULL, placeholders=NULL, parameters=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
@@ -599,6 +650,8 @@ return(res)}
 #'@param estr     Object creating when reading in rptyaml file
 #'@param fit nlmixr2 fit object to be reported
 #'@return String containing the evaled as a character or the original string
+#'@examples
+#' res = eval_str(estr="ls()")
 eval_str  <- function(estr="", fit=NULL){
 
   res =
@@ -725,38 +778,52 @@ return(res)}
 #'method for testing purposes.
 #'displayed on the terminal
 #'following:
+#'@param use_cache Boolean variable used to cache the fit process for the
+#'current R session.
 #'@return Example nlmixr2 fit object
 #'@examples
 #' fit = fetch_fit_example()
-fetch_fit_example  <- function(){
+fetch_fit_example  <- function(use_cache = TRUE){
 
-  file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
-  file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
 
-  my_model = NULL
-  eval(parse(text=paste(readLines(file_model), collapse="\n")))
+  # This is where the fit will be cached:
+  cache_file = file.path(tempdir(), "fetch_fit_example.rds")
 
-  # For the dataset we remove the parameter definitions
-  # and we filter it down to the single dose data for 3, 
-  # 30 and 300 mg
-  DS = read.csv(file_data)   |> 
-    dplyr::select(-.data[["F1"]])       |> 
-    dplyr::select(-.data[["ka"]])       |> 
-    dplyr::select(-.data[["CL"]])       |> 
-    dplyr::select(-.data[["Vc"]])       |> 
-    dplyr::select(-.data[["Vp"]])       |> 
-    dplyr::select(-.data[["Q"]])        |>  
-    dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
+  if(use_cache & file.exists(cache_file)){
+    # Loading the cache file
+    cli::cli_alert_info("Loading fit from cache file")
+    fit = readRDS(cache_file)
+  } else {
+    file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
+    file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
   
-   model_ui =  rxode2::rxode2(my_model) 
-   model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
-   model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
-
+    my_model = NULL
+    eval(parse(text=paste(readLines(file_model), collapse="\n")))
   
-  fit = suppressMessages(
-        suppressWarnings(
-          nlmixr2::nlmixr(model_ui, DS, est="posthoc")
-        ))
+    # For the dataset we remove the parameter definitions
+    # and we filter it down to the single dose data for 3, 
+    # 30 and 300 mg
+    DS = read.csv(file_data)   |> 
+      dplyr::select(-.data[["F1"]])       |> 
+      dplyr::select(-.data[["ka"]])       |> 
+      dplyr::select(-.data[["CL"]])       |> 
+      dplyr::select(-.data[["Vc"]])       |> 
+      dplyr::select(-.data[["Vp"]])       |> 
+      dplyr::select(-.data[["Q"]])        |>  
+      dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
+    
+     model_ui =  rxode2::rxode2(my_model) 
+     model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
+     model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
+    
+    fit = suppressMessages(
+          suppressWarnings(
+            nlmixr2::nlmixr(model_ui, DS, est="posthoc")
+          ))
+  
+    cli::cli_alert_info("Writing fit from cache file")
+    saveRDS(fit, cache_file)
+  }
 
   # This is mainly to "use" ggPMX to avoid declared imports should be used
   # errors

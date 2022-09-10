@@ -55,3 +55,26 @@ and the following elements:
 \description{
 Creates tables specified in a rptyaml file
 }
+\examples{
+\donttest{
+# We need an onbrand object to use below
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# We also need an nlmixr fit object
+fit = fetch_fit_example()
+
+# This reads in the report details as well
+rptdetails = yaml_read_fit(
+ obnd    = obnd,
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+ fit     = fit)$rptdetails
+
+# Now we will build the tables 
+btres = build_tables(obnd        = obnd,
+                     fit        = fit, 
+                     rptdetails = rptdetails)
+}
+}

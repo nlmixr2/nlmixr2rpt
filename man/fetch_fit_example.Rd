@@ -4,7 +4,11 @@
 \alias{fetch_fit_example}
 \title{Fetch Fit Example}
 \usage{
-fetch_fit_example()
+fetch_fit_example(use_cache = TRUE)
+}
+\arguments{
+\item{use_cache}{Boolean variable used to cache the fit process for the
+current R session.}
 }
 \value{
 Example nlmixr2 fit object

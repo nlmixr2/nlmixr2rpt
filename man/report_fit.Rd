@@ -39,3 +39,22 @@ onbrand object with the report elements added.
 Appends \code{nlmixr2} fit results to an onbrand report object with the
 content and format of the report in the supplied yaml file
 }
+\examples{
+\donttest{
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# This will create an example fit object to use in the examples below
+fit = fetch_fit_example()
+
+# Appening fit results
+obnd_pptx = report_fit(
+ fit     = fit, 
+ obnd    = obnd)
+
+# Writing the report to a file
+save_report(obnd, file.path(tempdir(), "report.pptx"))
+}
+}

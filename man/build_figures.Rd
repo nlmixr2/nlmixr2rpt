@@ -54,3 +54,26 @@ figure ids in the yaml file. Each figure ID contains the following elements:
 \description{
 Creates figures specified in a rptyaml file
 }
+\examples{
+# We need an onbrand object to use below
+\donttest{
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# We also need an nlmixr fit object
+fit = fetch_fit_example()
+
+# This reads in the report details as well
+rptdetails = yaml_read_fit(
+ obnd    = obnd,
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+ fit     = fit)$rptdetails
+
+# Now we will build the figures
+bfres = build_figures(obnd       = obnd,
+                     fit        = fit, 
+                     rptdetails = rptdetails)
+}
+}

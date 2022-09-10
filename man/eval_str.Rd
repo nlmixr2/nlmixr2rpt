@@ -17,3 +17,6 @@ String containing the evaled as a character or the original string
 \description{
 Attempts to evaluate a string as a chunk of R code.
 }
+\examples{
+res = eval_str(estr="ls()")
+}
