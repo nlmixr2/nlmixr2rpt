@@ -357,6 +357,11 @@ return(bfres)}
 #'cascade an error message to the end user.
 #'@param msgs Vector of error messages
 #'@return ggplot object
+#'@examples
+#'\donttest{
+#'mk_error_fig("This is an error")
+#'}
+
 mk_error_fig  <- function(msgs){
   p_res = ggplot()+annotate("text",
                    hjust= 0, vjust=1,
@@ -377,6 +382,26 @@ p_res}
 #'@param rptdetails Object creating when reading in rptyaml file
 #'@param fdim Dimension to fetch either "width" or "height"
 #'@return ggplot object
+#'@examples
+#'\donttest{
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# This will create an example fit object to use in the examples below
+#'fit = fetch_fit_example()
+#'
+#'# This reads in the report details as well
+#'rptdetails = yaml_read_fit(
+#'  obnd    = obnd,
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+#'  fit     = fit)$rptdetails
+#'
+#'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="width", rptdetails=rptdetails)
+#'
+#'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="height", rptdetails=rptdetails)
+#'}
 fetch_fdim  <- function(obnd       = NULL,
                         fid        = NULL,
                         fdim       = "width",
@@ -427,6 +452,17 @@ res}
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages
 #' }
+#'@examples
+#'library(ggplot2)
+#'write_figure(
+#'  p_res = ggplot(),
+#'  page = NULL,
+#'  width = 3,
+#'  height = 3,
+#'  resolution = 200,
+#'  fig_file = file.path(tempdir(), "write_figure_example.png"),
+#'  fig_stamp = "stamp",
+#'  verbose = TRUE)
 write_figure  <- function(p_res              = NULL,
                           page               = NULL,
                           width              = 3,

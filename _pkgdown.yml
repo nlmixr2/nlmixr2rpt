@@ -9,7 +9,6 @@ reference:
 - contents:
   - report_fit
   - yaml_read_fit
-  - gen_pest_table
 - title: "Accessing report elements"
   desc: "Accessing figures and tables outside of the report worflow"
 - contents:
@@ -25,6 +24,7 @@ reference:
   - fetch_option
   - fetch_fdim
   - fetch_fit_example
+  - gen_pest_table
   - process_ph
   - write_figure
 navbar:

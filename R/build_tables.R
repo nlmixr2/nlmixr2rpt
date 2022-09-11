@@ -206,6 +206,7 @@ build_tables  <- function(obnd        = NULL,
             SKIP = TRUE
           }
         }
+
         if(TISGOOD){
         if(!SKIP){
           # Now we need to check the t_res to make sure it
@@ -246,7 +247,7 @@ build_tables  <- function(obnd        = NULL,
             # If we haven't found either we create an error
             if(!df_found &!ft_found){
               tmsgs = c(tmsgs, paste0("Error processing table id ", tid, "."))
-              tmsgs = c(tmsgs, paste0("t_res must contain at least one of the follwoing fields:"))
+              tmsgs = c(tmsgs, paste0("t_res must contain at least one of the following fields:"))
               tmsgs = c(tmsgs, paste0("  - df: list of data frames for the table."))
               tmsgs = c(tmsgs, paste0("  - ft: list of flextables for the table."))
               TISGOOD = FALSE
@@ -267,23 +268,23 @@ build_tables  <- function(obnd        = NULL,
             ft_found = TRUE
           }
 
-          # If we get to this point and the table isn't good then we generate
-          # a table holding any error information so it will be obvious
-          # something went wrong for the user when they look at the final report
+        }
 
-          if(!TISGOOD){
-            t_res = mk_error_tab(tmsgs)
+        # If we get to this point and the table isn't good then we generate
+        # a table holding any error information so it will be obvious
+        # something went wrong for the user when they look at the final report
 
-            # Dumping the messages to the console as well
-            if(verbose){
-              cli::cli_h3("Table generation failed")
-              for(msg in tmsgs){
-                cli::cli_alert(msg)
-              }
+        if(!TISGOOD){
+          t_res = mk_error_tab(tmsgs)
+
+          # Dumping the messages to the console as well
+          if(verbose){
+            cli::cli_h3("Table generation failed")
+            for(msg in tmsgs){
+              cli::cli_alert(msg)
             }
           }
         }
-
         # Storing the caption format for alter use
         tinfo[["caption_format"]] = caption_format
 
@@ -340,6 +341,25 @@ btres}
 #'  \item \code{"msgs"}    - Vector of messages
 #'  \item \code{"ft"}      - Parameter estimates as a `flextable` object
 #'  \item \code{"df"}      - Parameter estimates as a `data.frame`
+#'}
+#'@examples
+#'\donttest{
+#'rm(list=ls())
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# This will create an example fit object to use in the examples below
+#'fit = fetch_fit_example()
+#'
+#'#'# This reads in the report details as well
+#'rptdetails = yaml_read_fit(
+#'  obnd    = obnd,
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+#'  fit     = fit)$rptdetails
+#'
+#'gen_pest_table(obnd = obnd, fit = fit, rptdetails = rptdetails, verbose = TRUE)
 #'}
 gen_pest_table  <- function(obnd       = NULL,
                             fit        = NULL,
@@ -399,6 +419,11 @@ res}
 #'cascade an error message to the end user.
 #'@param msgs Vector of error messages
 #'@return list with a single `flextable` object
+#'@examples
+#'\donttest{
+#'error_tab = mk_error_tab("This is an error")
+#'error_tab$ft[[1]]
+#'}
 mk_error_tab <- function(msgs){
   df = data.frame(Error=paste(msgs, collapse="\n"))
   ft = flextable::flextable(df) %>%

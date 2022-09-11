@@ -102,6 +102,62 @@ displayed on the terminal</p></dd>
 <li><p><code>"df"</code>      - Parameter estimates as a <code>data.frame</code></p></li>
 </ul></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/ls.html" class="external-link">ls</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://onbrand.ubiquity.tools/" class="external-link">onbrand</a></span><span class="op">)</span>  </span></span>
+<span class="r-in"><span><span class="va">obnd</span> <span class="op">=</span> <span class="fu"><a href="https://onbrand.ubiquity.tools/reference/read_template.html" class="external-link">read_template</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.pptx"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> mapping  <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"templates"</span>,<span class="st">"nlmixr_obnd_template.yaml"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This will create an example fit object to use in the examples below</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">=</span> <span class="fu"><a href="fetch_fit_example.html">fetch_fit_example</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading fit from cache file</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">#'# This reads in the report details as well</span></span></span>
+<span class="r-in"><span><span class="va">rptdetails</span> <span class="op">=</span> <span class="fu"><a href="yaml_read_fit.html">yaml_read_fit</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> obnd    <span class="op">=</span> <span class="va">obnd</span>,</span></span>
+<span class="r-in"><span> rptyaml <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span>package<span class="op">=</span><span class="st">"nlmixr2rpt"</span>, <span class="st">"examples"</span>, <span class="st">"report_fit_test.yaml"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> fit     <span class="op">=</span> <span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">rptdetails</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">gen_pest_table</span><span class="op">(</span>obnd <span class="op">=</span> <span class="va">obnd</span>, fit <span class="op">=</span> <span class="va">fit</span>, rptdetails <span class="op">=</span> <span class="va">rptdetails</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $isgood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $msgs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ft</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ft[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> a flextable object.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> col_keys: `Parameter`, `Est.`, `Back-transformed`, `BSV(CV%)`, `Shrink(SD)%` </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> header has 1 row(s) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> body has 9 row(s) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> original dataset sample: </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Parameter   Est. Back-transformed BSV(CV%) Shrink(SD)%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_F1       TV_F1  0.744            0.744                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_ka k~a~ (1/hr) -0.693              0.5                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_CL       TV_CL  -1.61              0.2     32.1     -17.4%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_Vc       TV_Vc   1.28             3.61     35.1     -23.1%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_Vp       TV_Vp   1.01             2.75     28.7     -152.%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $df</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $df[[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            Parameter   Est. Back-transformed BSV(CV%) Shrink(SD)%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_F1          TV_F1  0.744            0.744                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_ka    k~a~ (1/hr) -0.693              0.5                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_CL          TV_CL  -1.61              0.2     32.1     -17.4%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_Vc          TV_Vc   1.28             3.61     35.1     -23.1%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_Vp          TV_Vp   1.01             2.75     28.7     -152.%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_Q            TV_Q -0.292            0.747     101.     -46.8%&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> TV_MW          TV_MW    140              140                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prop_err    prop_err    0.1              0.1                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> add_err      add_err    0.1              0.1                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

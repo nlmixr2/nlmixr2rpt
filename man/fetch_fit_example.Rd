@@ -20,5 +20,7 @@ displayed on the terminal
 following:
 }
 \examples{
+\donttest{
 fit = fetch_fit_example()
+}
 }

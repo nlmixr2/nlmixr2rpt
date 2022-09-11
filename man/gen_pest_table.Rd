@@ -28,3 +28,23 @@ List with the following elements
 \description{
 Generates a flextable containting the parameter estimates.
 }
+\examples{
+\donttest{
+rm(list=ls())
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# This will create an example fit object to use in the examples below
+fit = fetch_fit_example()
+
+#'# This reads in the report details as well
+rptdetails = yaml_read_fit(
+ obnd    = obnd,
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+ fit     = fit)$rptdetails
+
+gen_pest_table(obnd = obnd, fit = fit, rptdetails = rptdetails, verbose = TRUE)
+}
+}

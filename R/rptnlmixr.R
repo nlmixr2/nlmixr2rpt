@@ -31,6 +31,7 @@
 #'# Appening fit results
 #'obnd_pptx = report_fit(
 #'  fit     = fit, 
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  obnd    = obnd)
 #'
 #'# Writing the report to a file
@@ -416,6 +417,7 @@ return(obnd)}
 #'(default: \code{NULL})
 #'@return processed string
 #'@examples
+#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -430,9 +432,10 @@ return(obnd)}
 #'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  fit     = fit)$rptdetails
 #'
-#' str = "This is ===CMPD=="
+#' str = "This is ===CMPD==="
 #'
 #' process_ph(str, rptdetails)
+#'}
 process_ph = function(str, rptdetails){
   if("placeholders" %in% names(rptdetails)){
     for(PHNAME in names(rptdetails[["placeholders"]])){
@@ -467,6 +470,7 @@ str}
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
 #'@examples
+#'\donttest{
 #'# We need an onbrand object to use below
 #'library(onbrand)  
 #'obnd = read_template(
@@ -476,11 +480,12 @@ str}
 #'# We also need an nlmixr fit object
 #'fit = fetch_fit_example()
 #'
-#'# This reads in the report details as well
+#'# This reads in the report details
 #'yaml_read_res = yaml_read_fit(
 #'  obnd    = obnd,
 #'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  fit     = fit)
+#'}
 yaml_read_fit = function(obnd = NULL,rptyaml=NULL, placeholders=NULL, parameters=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
@@ -651,7 +656,9 @@ return(res)}
 #'@param fit nlmixr2 fit object to be reported
 #'@return String containing the evaled as a character or the original string
 #'@examples
+#'\donttest{
 #' res = eval_str(estr="ls()")
+#'}
 eval_str  <- function(estr="", fit=NULL){
 
   res =
@@ -686,6 +693,25 @@ eval_str  <- function(estr="", fit=NULL){
 #'   \item \code{"output_dir"} - Directory to place figures that are generated (default: \code{tempdir()})
 #'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
 #' }
+#'@examples
+#'\donttest{
+#'library(onbrand)  
+#'obnd = read_template(
+#'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+#'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+#'
+#'# This will create an example fit object to use in the examples below
+#'fit = fetch_fit_example()
+#'
+#'# This reads in the report details as well
+#'rptdetails = yaml_read_fit(
+#'  obnd    = obnd,
+#'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+#'  fit     = fit)$rptdetails
+#'
+#'
+#'fetch_option(rptdetails, option="output_dir", fit=fit)
+#'}
 fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   isgood            = TRUE
   msgs              = c()
@@ -782,7 +808,9 @@ return(res)}
 #'current R session.
 #'@return Example nlmixr2 fit object
 #'@examples
+#'\donttest{
 #' fit = fetch_fit_example()
+#'}
 fetch_fit_example  <- function(use_cache = TRUE){
 
 

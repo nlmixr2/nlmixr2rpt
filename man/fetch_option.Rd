@@ -37,3 +37,23 @@ The option can be one of the following (default: \code{NULL}):
 \item \code{"resolution"} - Resolution of figure files (default: \code{300})
 }
 }
+\examples{
+\donttest{
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# This will create an example fit object to use in the examples below
+fit = fetch_fit_example()
+
+# This reads in the report details as well
+rptdetails = yaml_read_fit(
+ obnd    = obnd,
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+ fit     = fit)$rptdetails
+
+
+fetch_option(rptdetails, option="output_dir", fit=fit)
+}
+}

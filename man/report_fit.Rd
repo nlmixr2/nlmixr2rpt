@@ -52,6 +52,7 @@ fit = fetch_fit_example()
 # Appening fit results
 obnd_pptx = report_fit(
  fit     = fit, 
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
  obnd    = obnd)
 
 # Writing the report to a file

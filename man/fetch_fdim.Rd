@@ -22,3 +22,24 @@ ggplot object
 For a given figure id and report type this will pull out the
 dimensions of the figure.
 }
+\examples{
+\donttest{
+library(onbrand)  
+obnd = read_template(
+ template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
+ mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
+# This will create an example fit object to use in the examples below
+fit = fetch_fit_example()
+
+# This reads in the report details as well
+rptdetails = yaml_read_fit(
+ obnd    = obnd,
+ rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
+ fit     = fit)$rptdetails
+
+fetch_fdim(obnd=obnd, fid="bad_figure", fdim="width", rptdetails=rptdetails)
+
+fetch_fdim(obnd=obnd, fid="bad_figure", fdim="height", rptdetails=rptdetails)
+}
+}

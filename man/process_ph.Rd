@@ -20,6 +20,7 @@ Takes placeholder information from the rptyaml file and
 applies it to strings.
 }
 \examples{
+\donttest{
 library(onbrand)  
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -34,7 +35,8 @@ rptdetails = yaml_read_fit(
  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
  fit     = fit)$rptdetails
 
-str = "This is ===CMPD=="
+str = "This is ===CMPD==="
 
 process_ph(str, rptdetails)
+}
 }

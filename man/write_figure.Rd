@@ -45,3 +45,15 @@ Takes a figure object, optionally
 stamps the image, and writes to a file
 dimensions of the figure.
 }
+\examples{
+library(ggplot2)
+write_figure(
+ p_res = ggplot(),
+ page = NULL,
+ width = 3,
+ height = 3,
+ resolution = 200,
+ fig_file = file.path(tempdir(), "write_figure_example.png"),
+ fig_stamp = "stamp",
+ verbose = TRUE)
+}
