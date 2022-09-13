@@ -37,7 +37,6 @@
 #'   \item \code{"msgs"} - Vector of messages
 #' }
 #'@examples
-#'\donttest{
 #'# We need an onbrand object to use below
 #'library(onbrand)  
 #'obnd = read_template(
@@ -57,7 +56,6 @@
 #'btres = build_tables(obnd        = obnd,
 #'                      fit        = fit, 
 #'                      rptdetails = rptdetails)
-#'}
 build_tables  <- function(obnd        = NULL,
                           fit         = NULL,
                           rptdetails  = NULL,
@@ -343,8 +341,6 @@ btres}
 #'  \item \code{"df"}      - Parameter estimates as a `data.frame`
 #'}
 #'@examples
-#'\donttest{
-#'rm(list=ls())
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -360,7 +356,6 @@ btres}
 #'  fit     = fit)$rptdetails
 #'
 #'gen_pest_table(obnd = obnd, fit = fit, rptdetails = rptdetails, verbose = TRUE)
-#'}
 gen_pest_table  <- function(obnd       = NULL,
                             fit        = NULL,
                             rptdetails = NULL,
@@ -420,10 +415,8 @@ res}
 #'@param msgs Vector of error messages
 #'@return list with a single `flextable` object
 #'@examples
-#'\donttest{
 #'error_tab = mk_error_tab("This is an error")
 #'error_tab$ft[[1]]
-#'}
 mk_error_tab <- function(msgs){
   df = data.frame(Error=paste(msgs, collapse="\n"))
   ft = flextable::flextable(df) %>%

@@ -56,7 +56,6 @@ and the following elements:
 Creates tables specified in a rptyaml file
 }
 \examples{
-\donttest{
 # We need an onbrand object to use below
 library(onbrand)  
 obnd = read_template(
@@ -76,5 +75,4 @@ rptdetails = yaml_read_fit(
 btres = build_tables(obnd        = obnd,
                      fit        = fit, 
                      rptdetails = rptdetails)
-}
 }

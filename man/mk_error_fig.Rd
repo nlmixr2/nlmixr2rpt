@@ -18,7 +18,5 @@ text in the figure. This can be used in automated figure generation to
 cascade an error message to the end user.
 }
 \examples{
-\donttest{
 mk_error_fig("This is an error")
-}
 }

@@ -29,7 +29,6 @@ List with the following elements
 Generates a flextable containting the parameter estimates.
 }
 \examples{
-\donttest{
 rm(list=ls())
 library(onbrand)  
 obnd = read_template(
@@ -46,5 +45,4 @@ rptdetails = yaml_read_fit(
  fit     = fit)$rptdetails
 
 gen_pest_table(obnd = obnd, fit = fit, rptdetails = rptdetails, verbose = TRUE)
-}
 }

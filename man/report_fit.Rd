@@ -40,7 +40,6 @@ Appends \code{nlmixr2} fit results to an onbrand report object with the
 content and format of the report in the supplied yaml file
 }
 \examples{
-\donttest{
 library(onbrand)  
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -57,5 +56,4 @@ obnd_pptx = report_fit(
 
 # Writing the report to a file
 save_report(obnd, file.path(tempdir(), "report.pptx"))
-}
 }

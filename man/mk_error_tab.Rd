@@ -18,8 +18,6 @@ text in the table. This can be used in automated table generation to
 cascade an error message to the end user.
 }
 \examples{
-\donttest{
 error_tab = mk_error_tab("This is an error")
 error_tab$ft[[1]]
-}
 }

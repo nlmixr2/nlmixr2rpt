@@ -18,7 +18,5 @@ String containing the evaled as a character or the original string
 Attempts to evaluate a string as a chunk of R code.
 }
 \examples{
-\donttest{
 res = eval_str(estr="ls()")
-}
 }

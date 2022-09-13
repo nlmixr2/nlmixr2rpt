@@ -19,7 +19,6 @@
 #'@param verbose Boolean variable when set to TRUE messages will be .
 #'@return onbrand object with the report elements added.
 #'@examples
-#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -36,7 +35,6 @@
 #'
 #'# Writing the report to a file
 #'save_report(obnd, file.path(tempdir(), "report.pptx"))
-#'}
 report_fit <- function(obnd          = NULL,
                        fit           = NULL,
                        placeholders  = NULL,
@@ -417,7 +415,6 @@ return(obnd)}
 #'(default: \code{NULL})
 #'@return processed string
 #'@examples
-#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -435,7 +432,6 @@ return(obnd)}
 #' str = "This is ===CMPD==="
 #'
 #' process_ph(str, rptdetails)
-#'}
 process_ph = function(str, rptdetails){
   if("placeholders" %in% names(rptdetails)){
     for(PHNAME in names(rptdetails[["placeholders"]])){
@@ -470,7 +466,6 @@ str}
 #'   \item \code{"rptcont"} - Contents of the report to generate
 #' }
 #'@examples
-#'\donttest{
 #'# We need an onbrand object to use below
 #'library(onbrand)  
 #'obnd = read_template(
@@ -485,7 +480,6 @@ str}
 #'  obnd    = obnd,
 #'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  fit     = fit)
-#'}
 yaml_read_fit = function(obnd = NULL,rptyaml=NULL, placeholders=NULL, parameters=NULL, fit=NULL){
   isgood     = TRUE
   msgs       = c()
@@ -656,9 +650,7 @@ return(res)}
 #'@param fit nlmixr2 fit object to be reported
 #'@return String containing the evaled as a character or the original string
 #'@examples
-#'\donttest{
 #' res = eval_str(estr="ls()")
-#'}
 eval_str  <- function(estr="", fit=NULL){
 
   res =
@@ -694,7 +686,6 @@ eval_str  <- function(estr="", fit=NULL){
 #'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
 #' }
 #'@examples
-#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -711,7 +702,6 @@ eval_str  <- function(estr="", fit=NULL){
 #'
 #'
 #'fetch_option(rptdetails, option="output_dir", fit=fit)
-#'}
 fetch_option  <- function(rptdetails, option=NULL, fit=NULL, verbose=TRUE){
   isgood            = TRUE
   msgs              = c()
@@ -808,9 +798,7 @@ return(res)}
 #'current R session.
 #'@return Example nlmixr2 fit object
 #'@examples
-#'\donttest{
 #' fit = fetch_fit_example()
-#'}
 fetch_fit_example  <- function(use_cache = TRUE){
 
 

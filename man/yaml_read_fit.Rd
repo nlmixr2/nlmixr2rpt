@@ -43,7 +43,6 @@ Reads in the report yaml file and looks it to make sure it has all
 the necessary fields for the given report.
 }
 \examples{
-\donttest{
 # We need an onbrand object to use below
 library(onbrand)  
 obnd = read_template(
@@ -58,5 +57,4 @@ yaml_read_res = yaml_read_fit(
  obnd    = obnd,
  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
  fit     = fit)
-}
 }

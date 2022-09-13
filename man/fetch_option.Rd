@@ -38,7 +38,6 @@ The option can be one of the following (default: \code{NULL}):
 }
 }
 \examples{
-\donttest{
 library(onbrand)  
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -55,5 +54,4 @@ rptdetails = yaml_read_fit(
 
 
 fetch_option(rptdetails, option="output_dir", fit=fit)
-}
 }

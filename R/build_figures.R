@@ -40,7 +40,6 @@
 #' }
 #'@examples
 #'# We need an onbrand object to use below
-#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -59,7 +58,6 @@
 #'bfres = build_figures(obnd       = obnd,
 #'                      fit        = fit, 
 #'                      rptdetails = rptdetails)
-#'}
 build_figures <- function(obnd        = NULL,
                           fit         = NULL,
                           rptdetails  = NULL,
@@ -358,9 +356,7 @@ return(bfres)}
 #'@param msgs Vector of error messages
 #'@return ggplot object
 #'@examples
-#'\donttest{
 #'mk_error_fig("This is an error")
-#'}
 
 mk_error_fig  <- function(msgs){
   p_res = ggplot()+annotate("text",
@@ -383,7 +379,6 @@ p_res}
 #'@param fdim Dimension to fetch either "width" or "height"
 #'@return ggplot object
 #'@examples
-#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -401,7 +396,6 @@ p_res}
 #'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="width", rptdetails=rptdetails)
 #'
 #'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="height", rptdetails=rptdetails)
-#'}
 fetch_fdim  <- function(obnd       = NULL,
                         fid        = NULL,
                         fdim       = "width",
