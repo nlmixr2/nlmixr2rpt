@@ -819,14 +819,16 @@ fetch_fit_example  <- function(use_cache = TRUE){
     # For the dataset we remove the parameter definitions
     # and we filter it down to the single dose data for 3, 
     # 30 and 300 mg
-    DS = read.csv(file_data)   |> 
-      dplyr::select(-.data[["F1"]])       |> 
-      dplyr::select(-.data[["ka"]])       |> 
-      dplyr::select(-.data[["CL"]])       |> 
-      dplyr::select(-.data[["Vc"]])       |> 
-      dplyr::select(-.data[["Vp"]])       |> 
-      dplyr::select(-.data[["Q"]])        |>  
-      dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
+    DS = read.csv(file_data)                               |> 
+      dplyr::select(-.data[["F1"]])                        |> 
+      dplyr::select(-.data[["ka"]])                        |> 
+      dplyr::select(-.data[["CL"]])                        |> 
+      dplyr::select(-.data[["Vc"]])                        |> 
+      dplyr::select(-.data[["Vp"]])                        |> 
+      dplyr::select(-.data[["Q"]])                         |>  
+      dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg")) |>
+      dplyr::filter(.data[["ID"]]      %in%  c(1,2,3))
+  #   dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
     
      model_ui =  rxode2::rxode2(my_model) 
      model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
