@@ -55,9 +55,11 @@
 #'  fit     = fit)$rptdetails
 #'
 #'# Now we will build the figures
+#'\donttest{
 #'bfres = build_figures(obnd       = obnd,
 #'                      fit        = fit, 
 #'                      rptdetails = rptdetails)
+#'}
 build_figures <- function(obnd        = NULL,
                           fit         = NULL,
                           rptdetails  = NULL,

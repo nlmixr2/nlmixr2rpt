@@ -7,7 +7,7 @@ Authors@R: c(person("John", "Harrold",
                      comment = c(ORCID="0000-0003-2052-4373")))
 Maintainer: John Harrold <john.m.harrold@gmail.com>
 Description: This allows you to generate reporting workflows around 'nlmixr2' analyses with outputs in Word and PowerPoint. You can specify figures, tables and report structure in a user-definable 'YAML' file. Also you can use the internal functions to access the figures and tables to allow their including in other outputs (e.g. R Markdown).
-URL: https://github.com/nlmixr2/nlmixr2rpt
+URL: https://nlmixr2.github.io/nlmixr2rpt/
 BugReports: https://github.com/nlmixr2/nlmixr2rpt/issues
 License: GPL (>= 3)
 Encoding: UTF-8

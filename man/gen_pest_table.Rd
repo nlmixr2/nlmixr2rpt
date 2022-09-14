@@ -29,7 +29,6 @@ List with the following elements
 Generates a flextable containting the parameter estimates.
 }
 \examples{
-rm(list=ls())
 library(onbrand)  
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
