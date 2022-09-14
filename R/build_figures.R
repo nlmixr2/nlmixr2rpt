@@ -40,6 +40,7 @@
 #' }
 #'@examples
 #'# We need an onbrand object to use below
+#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -55,7 +56,6 @@
 #'  fit     = fit)$rptdetails
 #'
 #'# Now we will build the figures
-#'\donttest{
 #'bfres = build_figures(obnd       = obnd,
 #'                      fit        = fit, 
 #'                      rptdetails = rptdetails)
