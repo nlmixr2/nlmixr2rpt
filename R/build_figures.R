@@ -394,7 +394,7 @@ p_res}
 #'  obnd    = obnd,
 #'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  fit     = fit)$rptdetails
-#'
+#'Sys.sleep(7)
 #'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="width", rptdetails=rptdetails)
 #'
 #'fetch_fdim(obnd=obnd, fid="bad_figure", fdim="height", rptdetails=rptdetails)
