@@ -20,10 +20,9 @@ Imports:
   ggforce,
   ggpubr,
   ggplot2,
-  ggPMX,
   grDevices,
   stringr,
-  nlmixr2,
+  nlmixr2extra,
   onbrand,
   rxode2,
   utils,
@@ -31,7 +30,9 @@ Imports:
   xpose.nlmixr2,
   yaml
 Suggests: 
+  nlmixr2,
   rmarkdown,
+  ggPMX,
   knitr,
   testthat (>= 3.0.0)
 VignetteBuilder: knitr

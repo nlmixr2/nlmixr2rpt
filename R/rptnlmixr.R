@@ -1,9 +1,9 @@
+#'@import nlmixr2extra 
 #'@import onbrand
 #'@importFrom stringr str_replace_all
 #'@importFrom rxode2 model ini rxode2
 #'@importFrom utils read.csv
 #'@importFrom yaml read_yaml
-
 
 #'@export
 #'@title Report `nlmixr2` Fit Results to PowerPoint and Word
@@ -52,6 +52,23 @@ report_fit <- function(obnd          = NULL,
   rpttabfmt    = NULL
   output_dir   = NULL
   resolution   = NULL
+
+
+  #------------------------
+  # Checking for packages
+  pkg_check_file = file.path(tempdir(), "nlmixr2rpt_pkg_check_file")
+
+  pkgs = c("nlmixr2", "ggPMX", "xpose.nlmixr2")
+  if(!file.exists(pkg_check_file)){
+    for(pkg in pkgs){
+      if(system.file(package=pkg) == ""){
+        cli::cli_alert_warning(paste0("Suggested package: ", pkg," was not found"))
+      }
+    }
+    # Creating the check file so this check is only run once
+    file.create(pkg_check_file)
+  }
+
 
   #------------------------
   # Checking user input
@@ -800,52 +817,55 @@ return(res)}
 #'@examples
 #' fit = fetch_fit_example()
 fetch_fit_example  <- function(use_cache = TRUE){
-
-
-  # This is where the fit will be cached:
-  cache_file = file.path(tempdir(), "fetch_fit_example.rds")
-
-  if(use_cache & file.exists(cache_file)){
-    # Loading the cache file
-    cli::cli_alert_info("Loading fit from cache file")
-    fit = readRDS(cache_file)
-  } else {
-    file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
-    file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
-  
-    my_model = NULL
-    eval(parse(text=paste(readLines(file_model), collapse="\n")))
-  
-    # For the dataset we remove the parameter definitions
-    # and we filter it down to the single dose data for 3, 
-    # 30 and 300 mg
-    DS = read.csv(file_data)                               |> 
-      dplyr::select(-.data[["F1"]])                        |> 
-      dplyr::select(-.data[["ka"]])                        |> 
-      dplyr::select(-.data[["CL"]])                        |> 
-      dplyr::select(-.data[["Vc"]])                        |> 
-      dplyr::select(-.data[["Vp"]])                        |> 
-      dplyr::select(-.data[["Q"]])                         |>  
-      dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg")) |>
-      dplyr::filter(.data[["ID"]]      %in%  c(1,2,3))
-  #   dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
-    
-     model_ui =  rxode2::rxode2(my_model) 
-     model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
-     model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
-    
-    fit = suppressMessages(
-          suppressWarnings(
-            nlmixr2::nlmixr(model_ui, DS, est="posthoc")
-          ))
-  
-    cli::cli_alert_info("Writing fit from cache file")
-    saveRDS(fit, cache_file)
-  }
-
-  # This is mainly to "use" ggPMX to avoid declared imports should be used
-  # errors
-  ggPMX::is.pmx_gpar(NULL)
-
+  fit = nlmixr2extra::theoFitOde
 return(fit)}
 
+# fetch_fit_example  <- function(use_cache = TRUE){
+# 
+# 
+#   # This is where the fit will be cached:
+#   cache_file = file.path(tempdir(), "fetch_fit_example.rds")
+# 
+#   if(use_cache & file.exists(cache_file)){
+#     # Loading the cache file
+#     cli::cli_alert_info("Loading fit from cache file")
+#     fit = readRDS(cache_file)
+#   } else {
+#     file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
+#     file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
+#   
+#     my_model = NULL
+#     eval(parse(text=paste(readLines(file_model), collapse="\n")))
+#   
+#     # For the dataset we remove the parameter definitions
+#     # and we filter it down to the single dose data for 3, 
+#     # 30 and 300 mg
+#     DS = read.csv(file_data)                               |> 
+#       dplyr::select(-.data[["F1"]])                        |> 
+#       dplyr::select(-.data[["ka"]])                        |> 
+#       dplyr::select(-.data[["CL"]])                        |> 
+#       dplyr::select(-.data[["Vc"]])                        |> 
+#       dplyr::select(-.data[["Vp"]])                        |> 
+#       dplyr::select(-.data[["Q"]])                         |>  
+#       dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg")) |>
+#       dplyr::filter(.data[["ID"]]      %in%  c(1,2,3))
+#   #   dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
+#     
+#      model_ui =  rxode2::rxode2(my_model) 
+#      model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
+#      model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
+#     
+#     fit = suppressMessages(
+#           suppressWarnings(
+#             nlmixr2::nlmixr(model_ui, DS, est="posthoc")
+#           ))
+#   
+#     cli::cli_alert_info("Writing fit from cache file")
+#     saveRDS(fit, cache_file)
+#   }
+# 
+#   # This is mainly to "use" ggPMX to avoid declared imports should be used
+#   # errors
+#   ggPMX::is.pmx_gpar(NULL)
+# 
+# return(fit)}
