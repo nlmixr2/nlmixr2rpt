@@ -2,6 +2,9 @@ suppressPackageStartupMessages(library("ggplot2"))
 suppressPackageStartupMessages(library("xpose"))
 suppressPackageStartupMessages(library("ggforce"))
 suppressPackageStartupMessages(library("ggPMX")   )
+suppressPackageStartupMessages(library("onbrand"))
+suppressPackageStartupMessages(library("nlmixr2rpt"))
+
 
 # Objects used in the tests below:
 rptyaml    = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml")
@@ -101,7 +104,7 @@ test_that("PowerPoint Workflow", {
     report_fit(
     fit          = fit,
     obnd         = obnd_pptx,
-    verbose      = FALSE,
+    verbose      = FALSE, 
     parameters   = list(
       TV_Vc = list(
         md  = "V~c~ (L)",
@@ -110,8 +113,9 @@ test_that("PowerPoint Workflow", {
         md  = "k~a~ (1/hr stuff)",
         txt = "ka (1/hr stuff)" )),
     placeholders = list(RUN="10"),
-    cat_covars   = c("SEX","SUBTYPE"),
-    cont_covars  = c("WT") )
+    cat_covars   = NULL, #c("SEX","SUBTYPE"),
+    cont_covars  = NULL #c("WT") 
+    )
    )
    )
    )

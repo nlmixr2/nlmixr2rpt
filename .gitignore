@@ -6,3 +6,4 @@
 .Ruserdata
 inst/doc
 *.Rproj
+tmp/*
