@@ -38,6 +38,7 @@
 #' }
 #'@examples
 #'# We need an onbrand object to use below
+#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
@@ -56,6 +57,7 @@
 #'btres = build_tables(obnd        = obnd,
 #'                      fit        = fit, 
 #'                      rptdetails = rptdetails)
+#'}
 build_tables  <- function(obnd        = NULL,
                           fit         = NULL,
                           rptdetails  = NULL,

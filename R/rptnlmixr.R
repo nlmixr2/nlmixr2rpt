@@ -19,6 +19,7 @@
 #'@param verbose Boolean variable when set to TRUE messages will be .
 #'@return onbrand object with the report elements added.
 #'@examples
+#'\donttest{
 #'library(onbrand)  
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
@@ -35,6 +36,7 @@
 #'
 #'# Writing the report to a file
 #'save_report(obnd, file.path(tempdir(), "report.pptx"))
+#'}
 report_fit <- function(obnd          = NULL,
                        fit           = NULL,
                        placeholders  = NULL,
