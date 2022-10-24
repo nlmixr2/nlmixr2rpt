@@ -110,15 +110,6 @@ build_tables  <- function(obnd        = NULL,
     } else {
       isgood = FALSE
     }
-
-    # Defining the covariate lists from the yaml file if
-    # none have been specified
-    if(is.null(cat_covars)){
-      cat_covars = rptdetails[["covariates"]][["cat"]]
-    }
-    if(is.null(cont_covars)){
-      cont_covars = rptdetails[["covariates"]][["cont"]]
-    }
   }
 
   # Caption format information
@@ -127,6 +118,52 @@ build_tables  <- function(obnd        = NULL,
 
   if(isgood){
     if(verbose){cli::cli_h3(paste0("Building report tables")) }
+    #---------------------------------------------------
+    # Sorting out covariates
+    # Defining the covariate lists from the yaml file if 
+    # none have been specified
+    if(is.null(cat_covars)){
+      cat_covars = rptdetails[["covariates"]][["cat"]]
+    }
+    
+    # Checking the covariates to make sure they are in the dataset
+    if(!is.null(cat_covars)){
+      missing_covars = cat_covars[!(cat_covars %in% names(fit[["origData"]]))]
+      if(length(missing_covars) > 0){
+        if(verbose){
+          cli::cli_alert_warning(paste0("The following categorical covariates were specified"))
+          cli::cli_alert_warning(paste0("but not found in the dataset: ")) 
+          cli::cli_alert_warning(paste0("   ", missing_covars, collapse=", "))
+        }
+      }
+    
+      # Removing the missing covariates
+      cat_covars = cat_covars[cat_covars[cat_covars %in% names(fit$origData)]]
+      if(length(cat_covars) == 0){
+        cat_covars = NULL}
+    }
+    
+    # continuous covariates
+    if(is.null(cont_covars)){
+      cont_covars = rptdetails[["covariates"]][["cont"]]
+    }
+    # Checking the covariates to make sure they are in the dataset
+    if(!is.null(cont_covars)){
+      missing_covars = cont_covars[!(cont_covars %in% names(fit$origData))]
+      if(length(missing_covars) > 0){
+        if(verbose){
+          cli::cli_alert_warning(paste0("The following continuous covariates were specified"))
+          cli::cli_alert_warning(paste0("but not found in the dataset: ")) 
+          cli::cli_alert_warning(paste0("   ", missing_covars, collapse=", "))
+        }
+      }
+    
+      # Removing the missing covariates
+      cont_covars = cont_covars[cont_covars[cont_covars %in% names(fit[["origData"]])]]
+      if(length(cont_covars) == 0){
+        cont_covars = NULL}
+    }
+    #---------------------------------------------------
     if("tables" %in% names(rptdetails)){
       if(verbose){cli::cli_ul()}
       for(tid in names(rptdetails[["tables"]])){
