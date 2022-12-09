@@ -8,8 +8,9 @@
 [![R-CMD-check](https://github.com/nlmixr2/nlmixr2rpt/workflows/R-CMD-check/badge.svg)](https://github.com/nlmixr2/nlmixr2rpt/actions)
 [![Lifecycle:
 Experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![CRAN
+checks](https://cranchecks.info/badges/summary/nlmixr2rpt)](https://cran.r-project.org/web/checks/check_results_nlmixr2rpt.html)
 <!---
-[![CRAN checks](https://cranchecks.info/badges/summary/nlmixr2rpt)](https://cran.r-project.org/web/checks/check_results_nlmixr2rpt.html)
 --> <!-- badges: end -->
 
 Templated Word and PowerPoint reporting for `nlmixr2`
@@ -29,12 +30,17 @@ a copy of the included yaml file and modifying it to suite your needs
 
 ## Installation
 
-Not on CRAN yet. For now you’ll need to install the development version
-from GitHub:
+To install off of [CRAN](https://cran.r-project.org/package=nlmixr2rpt):
+
+``` r
+install.packages("nlmixr2rpt", dependencies = TRUE)
+```
+
+To install the development version from GitHub:
 
 ``` r
 #install.packages("devtools") 
-devtools::install_github("nlmixr2/nlmixr2rpt")
+devtools::install_github("nlmixr2/nlmixr2rpt", dependencies=TRUE)
 ```
 
 ## Getting Started
@@ -73,9 +79,11 @@ Word onbrand template instead of a PowerPoint.
 obnd_docx = read_template(
   template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
   mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
+
 obnd_docx = report_fit(
   fit     = fit, 
   obnd    = obnd_docx)
+
 save_report(obnd_docx, "report.docx")
 ```
 
@@ -86,7 +94,7 @@ own organizational templates in reporting, be sure to browse through the
 [documentation](https://nlmixr2.github.io/nlmixr2rpt/) and check out the
 vignettes:
 
--   [Reporting `nlmixr` Fit
-    Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
--   [Accessing Figures and
-    Tables](https://nlmixr2.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)
+- [Reporting nlmixr Fit
+  Results](https://nlmixr2.github.io/nlmixr2rpt/articles/Reporting_nlmixr_Fit_Results.html)
+- [Accessing Figures and
+  Tables](https://nlmixr2.github.io/nlmixr2rpt/articles/Accessing_Figures_and_Tables.html)
