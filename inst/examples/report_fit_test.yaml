@@ -44,7 +44,6 @@ options:
     library("ggplot2")
     library("xpose")
     library("ggforce")
-    library("ggPMX")   
     # Creating the xpdb object for xpose figures:
     xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
   tabenv_preamble: NULL

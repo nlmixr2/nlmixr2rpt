@@ -1,7 +1,6 @@
 suppressPackageStartupMessages(library("ggplot2"))
 suppressPackageStartupMessages(library("xpose"))
 suppressPackageStartupMessages(library("ggforce"))
-suppressPackageStartupMessages(library("ggPMX")   )
 suppressPackageStartupMessages(library("onbrand"))
 suppressPackageStartupMessages(library("nlmixr2rpt"))
 

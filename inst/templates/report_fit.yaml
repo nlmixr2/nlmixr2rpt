@@ -45,7 +45,9 @@ options:
     library("ggplot2")
     library("xpose")
     library("ggforce")
-    library("ggPMX")   
+    if(system.file(package="ggPMX") != ""){
+      library("ggPMX")   
+    }
     # Creating the xpdb object for xpose figures:
     xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
   tabenv_preamble: NULL
@@ -142,12 +144,16 @@ figures:
     title:       "Effect of categorical covariates"
     cmd: |-
       if(!is.null(cat_covars)){
-        ctr = ggPMX::pmx_nlmixr(fit,
-                vpc = FALSE,
-                conts = cont_covars, 
-                cats  = cat_covars)
-        p_res <- ggPMX::pmx_plot_eta_cats(ctr) +
-          theme_light()
+        if(system.file(package="ggPMX") != ""){
+          ctr = ggPMX::pmx_nlmixr(fit,
+                  vpc = FALSE,
+                  conts = cont_covars, 
+                  cats  = cat_covars)
+          p_res <- ggPMX::pmx_plot_eta_cats(ctr) +
+            theme_light()
+        } else {
+          p_res <- mk_error_fig("ggPMX is not installed")
+        }
       } else {
         p_res <- NA
       }
@@ -157,12 +163,16 @@ figures:
     title:       "Effect of continuous covariates"
     cmd: |-
       if(!is.null(cont_covars)){
-        ctr = ggPMX::pmx_nlmixr(fit,
-                vpc = FALSE,
-                conts = cont_covars, 
-                cats  = cat_covars)
-        p_res <- ggPMX::pmx_plot_eta_conts(ctr) + 
-          theme_light()
+        if(system.file(package="ggPMX") != ""){
+          ctr = ggPMX::pmx_nlmixr(fit,
+                  vpc = FALSE,
+                  conts = cont_covars, 
+                  cats  = cat_covars)
+          p_res <- ggPMX::pmx_plot_eta_conts(ctr) + 
+            theme_light()
+        } else {
+          p_res = mk_error_fig("ggPMX is not installed")
+        }
       } else {
         p_res <- NA
       }
