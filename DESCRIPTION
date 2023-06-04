@@ -1,6 +1,6 @@
 Package: nlmixr2rpt
 Title: Templated Word and PowerPoint Reporting of 'nlmixr2' Fitting Results
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: c(person("John", "Harrold",
                      role    = c("aut", "cre"),
                      email   = "john.m.harrold@gmail.com",
