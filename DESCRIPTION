@@ -21,19 +21,19 @@ Imports:
   ggpubr,
   ggplot2,
   grDevices,
+  knitr,
   stringr,
+  nlmixr2,
   nlmixr2extra (>= 2.0.7),
   onbrand,
+  rmarkdown,
   rxode2,
   utils,
   xpose,
   xpose.nlmixr2,
   yaml
 Suggests: 
-  nlmixr2,
-  rmarkdown,
   ggPMX,
-  knitr,
   testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
