@@ -74,6 +74,14 @@ build_figures <- function(obnd        = NULL,
                      
   fig_stamp          = NULL
 
+
+  # I need to include a useage of nlmixr2 so I can include it in the 
+  # imports section of the package. The generated code is using it.
+  # Specifically xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit) seems to be
+  # calling it. So I'm 
+  if(FALSE){
+    tmp = nlmixr2::model()
+  }
   #------------------------
   # Checking user input
   if(is.null(fit)){

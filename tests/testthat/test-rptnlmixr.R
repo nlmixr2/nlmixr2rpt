@@ -4,7 +4,6 @@ suppressPackageStartupMessages(library("ggforce"))
 suppressPackageStartupMessages(library("onbrand"))
 suppressPackageStartupMessages(library("nlmixr2rpt"))
 
-
 # Objects used in the tests below:
 rptyaml    = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml")
 fit        = fetch_fit_example()
