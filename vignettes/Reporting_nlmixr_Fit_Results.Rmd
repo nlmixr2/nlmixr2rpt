@@ -213,7 +213,7 @@ tables:
   pest_table: 
     orientation:    "portrait"  
     caption:        "Parameter Estimates"
-    caption_format: "Parameter Estimates"
+    caption_format: "text"
     title:          "Parameter Estimates"   
     cmd: |- 
       t_res <- gen_pest_table(

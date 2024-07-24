@@ -1,6 +1,8 @@
 # Rebuilding the pkgdown site
 pkgdown::build_site()
 
+devtools::document(roclets = c('rd', 'collate', 'namespace', 'vignette'))
+
 # Fixing any broken image references
 art_dir = file.path("docs", "articles")
 
@@ -15,7 +17,7 @@ for(htd in htds){
   close(cfn)
 
   # For some reason it's doing this weird relative path thing, so I'm stripping that out here:
-  trim_txt = "../../../../../../My%20Drive/projects/nlmixr2rpt/github/nlmixr2rpt/articles/"
+  trim_txt = "../../../../../../projects/nlmixr2rpt/github/nlmixr2rpt/articles/"
   htd_lines = gsub(trim_txt, "", htd_lines)
 
   write(htd_lines, file=fn, append=FALSE)
