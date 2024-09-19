@@ -1,6 +1,6 @@
 Package: nlmixr2rpt
 Title: Templated Word and PowerPoint Reporting of 'nlmixr2' Fitting Results
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(person("John", "Harrold",
                      role    = c("aut", "cre"),
                      email   = "john.m.harrold@gmail.com",
@@ -12,7 +12,7 @@ BugReports: https://github.com/nlmixr2/nlmixr2rpt/issues
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Imports:
   cli,
   dplyr, 
