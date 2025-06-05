@@ -15,14 +15,14 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
   cli,
-  dplyr, 
+  dplyr,
   flextable,
   ggforce,
   ggpubr,
   ggplot2,
   grDevices,
   stringr,
-  nlmixr2,
+  nlmixr2est,
   nlmixr2extra (>= 2.0.7),
   onbrand,
   rxode2,
@@ -30,7 +30,7 @@ Imports:
   xpose,
   xpose.nlmixr2,
   yaml
-Suggests: 
+Suggests:
   rmarkdown,
   ggPMX,
   knitr,

@@ -40,7 +40,7 @@
 #' }
 #'@examples
 #'# We need an onbrand object to use below
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -56,7 +56,7 @@
 #'
 #'# Now we will build the figures
 #'bfres = build_figures(obnd       = obnd,
-#'                      fit        = fit, 
+#'                      fit        = fit,
 #'                      rptdetails = rptdetails)
 build_figures <- function(obnd        = NULL,
                           fit         = NULL,
@@ -71,16 +71,16 @@ build_figures <- function(obnd        = NULL,
   output_dir         = NULL
   resolution         = NULL
   rpttype            = "Unknown"
-                     
+
   fig_stamp          = NULL
 
 
-  # I need to include a useage of nlmixr2 so I can include it in the 
+  # I need to include a useage of nlmixr2 so I can include it in the
   # imports section of the package. The generated code is using it.
   # Specifically xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit) seems to be
-  # calling it. So I'm 
+  # calling it. So I'm
   if(FALSE){
-    tmp = nlmixr2::model()
+    tmp = nlmixr2est::nlmixr2()
   }
   #------------------------
   # Checking user input
@@ -148,29 +148,29 @@ build_figures <- function(obnd        = NULL,
 
       #---------------------------------------------------
       # Sorting out covariates
-      # Defining the covariate lists from the yaml file if 
+      # Defining the covariate lists from the yaml file if
       # none have been specified
       if(is.null(cat_covars)){
         cat_covars = rptdetails[["covariates"]][["cat"]]
       }
-      
+
       # Checking the covariates to make sure they are in the dataset
       if(!is.null(cat_covars)){
         missing_covars = cat_covars[!(cat_covars %in% names(fit[["origData"]]))]
         if(length(missing_covars) > 0){
           if(verbose){
             cli::cli_alert_warning(paste0("The following categorical covariates were specified"))
-            cli::cli_alert_warning(paste0("but not found in the dataset: ")) 
+            cli::cli_alert_warning(paste0("but not found in the dataset: "))
             cli::cli_alert_warning(paste0("   ", missing_covars, collapse=", "))
           }
         }
-      
+
         # Removing the missing covariates
         cat_covars = cat_covars[cat_covars[cat_covars %in% names(fit$origData)]]
         if(length(cat_covars) == 0){
           cat_covars = NULL}
       }
-      
+
       # continuous covariates
       if(is.null(cont_covars)){
         cont_covars = rptdetails[["covariates"]][["cont"]]
@@ -181,11 +181,11 @@ build_figures <- function(obnd        = NULL,
         if(length(missing_covars) > 0){
           if(verbose){
             cli::cli_alert_warning(paste0("The following continuous covariates were specified"))
-            cli::cli_alert_warning(paste0("but not found in the dataset: ")) 
+            cli::cli_alert_warning(paste0("but not found in the dataset: "))
             cli::cli_alert_warning(paste0("   ", missing_covars, collapse=", "))
           }
         }
-      
+
         # Removing the missing covariates
         cont_covars = cont_covars[cont_covars[cont_covars %in% names(fit[["origData"]])]]
         if(length(cont_covars) == 0){
@@ -296,7 +296,7 @@ build_figures <- function(obnd        = NULL,
 
           # Starting the sub bullets
           if(verbose){ cli_list_fn     = cli::cli_ul() }
-          
+
           if(is.null(nfpages)){
             # creating and storing the output file name:
             fig_file = file.path(output_dir, paste0(fid, "-", rpttype, ".png"))
@@ -305,10 +305,10 @@ build_figures <- function(obnd        = NULL,
             if(verbose){ cli::cli_li(fig_file) }
              wfres = write_figure(
                p_res              = p_res,
-               page               = NULL, 
+               page               = NULL,
                width              = width,
                height             = height,
-               resolution         = resolution, 
+               resolution         = resolution,
                fig_file           = fig_file,
                fig_stamp          = fig_stamp,
                verbose            = verbose)
@@ -327,7 +327,7 @@ build_figures <- function(obnd        = NULL,
                 page               = fpage,
                 width              = width,
                 height             = height,
-                resolution         = resolution, 
+                resolution         = resolution,
                 fig_file           = fig_file,
                 fig_stamp          = fig_stamp,
                 verbose            = verbose)
@@ -361,7 +361,7 @@ build_figures <- function(obnd        = NULL,
         rptfigs[[fid]][["isgood"]] = FISGOOD
 
         # Store the skip state of the figure
-        rptfigs[[fid]][["skip"]] = SKIP   
+        rptfigs[[fid]][["skip"]] = SKIP
 
         # Now we append any messages generated
         rptfigs[[fid]][["msgs"]] = fmsgs
@@ -428,7 +428,7 @@ p_res}
 #'@param fdim Dimension to fetch either "width" or "height"
 #'@return ggplot object
 #'@examples
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -490,7 +490,7 @@ res}
 #'@param fig_stamp Character object containing the text to stamp on the figure with optional ===file=== placeholder.
 #'@param verbose Boolean variable when set to TRUE (default) messages will be.
 #'displayed on the terminal
-#'@return list with the following 
+#'@return list with the following
 #' \itemize{
 #'   \item \code{"isgood"} - Boolean variable indicating success or failure
 #'   \item \code{"msgs"} - Vector of messages
@@ -514,7 +514,7 @@ write_figure  <- function(p_res              = NULL,
                           fig_file           = NULL,
                           fig_stamp          = NULL,
                           verbose            = TRUE){
-                                             
+
   isgood = TRUE
   msgs   = c()
 
@@ -538,7 +538,7 @@ write_figure  <- function(p_res              = NULL,
            # If we're using a manually paneled figure using ggarrange we have
            # to use annotate_figure:
            if("ggarrange" %in% class(p_res)){
-           # p_res = ggpubr::annotate_figure(p_res, 
+           # p_res = ggpubr::annotate_figure(p_res,
            #          fig.lab=paste(fig_stamp, "\n"),
            #          fig.lab.size=5,
            #          fig.lab.pos="bottom.left")
@@ -549,23 +549,23 @@ write_figure  <- function(p_res              = NULL,
                                        hjust=1,
                                        vjust=0,
                                        size=5), p_res)
-         
+
 
 
            } else {
              p_res = p_res +
                labs(tag=fig_stamp) +
-               theme(plot.tag.position=c(.01, -.01), 
+               theme(plot.tag.position=c(.01, -.01),
                      plot.tag=element_text(size=5, vjust=0, hjust=0))
-               
+
            }
          }
        }
        # Saving the figure:
-       grDevices::png(width    = width,    
-                      height   = height, 
+       grDevices::png(width    = width,
+                      height   = height,
                       units    = "in",
-           filename = fig_file, 
+           filename = fig_file,
            res      = resolution)
        if(is.null(page)){
          suppressMessages( print(p_res))
@@ -589,10 +589,10 @@ write_figure  <- function(p_res              = NULL,
     # Generating an error figure and putting it into the specified output file
     p_res = mk_error_fig(msgs)
     # Writing the error figure:
-    grDevices::png(width    = width,    
-                   height   = height, 
+    grDevices::png(width    = width,
+                   height   = height,
                    units    = "in",
-        filename = fig_file, 
+        filename = fig_file,
         res      = resolution)
     suppressMessages( print(p_res))
     grDevices::dev.off()

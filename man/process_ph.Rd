@@ -20,7 +20,7 @@ Takes placeholder information from the rptyaml file and
 applies it to strings.
 }
 \examples{
-library(onbrand)  
+library(onbrand)
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))

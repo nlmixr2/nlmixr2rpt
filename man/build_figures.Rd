@@ -56,7 +56,7 @@ Creates figures specified in a rptyaml file
 }
 \examples{
 # We need an onbrand object to use below
-library(onbrand)  
+library(onbrand)
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -72,6 +72,6 @@ rptdetails = yaml_read_fit(
 
 # Now we will build the figures
 bfres = build_figures(obnd       = obnd,
-                     fit        = fit, 
+                     fit        = fit,
                      rptdetails = rptdetails)
 }

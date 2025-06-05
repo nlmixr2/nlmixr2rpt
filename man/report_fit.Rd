@@ -41,7 +41,7 @@ content and format of the report in the supplied yaml file
 }
 \examples{
 \donttest{
-library(onbrand)  
+library(onbrand)
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -51,7 +51,7 @@ fit = fetch_fit_example()
 
 # Appening fit results
 obnd_pptx = report_fit(
- fit     = fit, 
+ fit     = fit,
  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
  obnd    = obnd)
 
