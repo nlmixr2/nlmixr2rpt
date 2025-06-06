@@ -1,7 +1,14 @@
+rm(list=ls())
+repo_root = here::here()
+setwd(repo_root)
+
+devtools::document(roclets = c('rd', 'collate', 'namespace'))
+
+devtools::load_all()
+
 # Rebuilding the pkgdown site
 pkgdown::build_site()
 
-devtools::document(roclets = c('rd', 'collate', 'namespace', 'vignette'))
 
 # Fixing any broken image references
 art_dir = file.path("docs", "articles")

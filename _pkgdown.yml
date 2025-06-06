@@ -1,3 +1,4 @@
+url: https://nlmixr2.github.io/nlmixr2rpt/
 template:
   bootstrap: 5
   params:
@@ -36,6 +37,8 @@ navbar:
           href: articles/Reporting_nlmixr_Fit_Results.html
         - text: "Accessing Figures and Tables"
           href: articles/Accessing_Figures_and_Tables.html
+        - text: "Howtos"
+          href: articles/Howto.html
   - text: "Functions"
     icon: fas fa-hat-wizard
     href: reference/index.html

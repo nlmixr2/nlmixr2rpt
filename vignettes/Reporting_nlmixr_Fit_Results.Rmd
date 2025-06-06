@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ```
 
-# Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" />
+# Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" alt="nlmixr2rpt hex sticker."/>
 
 The purpose of `nlmixr2rpt` is to automate reporting of `nlmixr2` analyses. This is accomplished by creating a yaml file that contains reporting options, figure and table generation code, and general content for Word and PowerPoint files.  
 
@@ -191,6 +191,8 @@ It creates the figure with the ID `dv_vs_pred`. It has the following elements:
 * `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
 * `caption`^[PH]^ - Figure caption in Word reports.
 * `caption_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
+* `notes` - Notes about the figure.
+* `notes_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
 * `title`^[PH]^ - Slide title when the figure is used in PowerPoint.
 * `cmd`^[PH]^ - Command to generate the figure.
 
@@ -203,6 +205,7 @@ Tables behave similarly to figures. In the tables section you create a table ID 
 * `orientation` - Orientation when used in a Word report, it can be either "portrait" or "landscape". 
 * `caption`^[PH]^ - Table caption in Word reports.
 * `caption_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
+* `notes_format` - This element is optional and can be either  `"text"`(default plain text) or `"md"` (Markdown).
 * `title`^[PH]^ - Slide title when the table is used in PowerPoint.
 * `cmd`^[PH]^ - Command to generate the table.
 
@@ -226,8 +229,9 @@ tables:
 
 * `df` - List of data frames containing the tabular information.
 * `ft` - List of flextables containing the tabular information
+* `notes` - Optional list of table notes.
 
-If you only supply the data frames list element, they will be converted into flextables internally. Flextables will span multiple pages automatically. If you prefer to have a caption on each page you can split the tables manually into multiple data frames/flextables. The reporting functionality is written to support table spanning multiple pages. If you define a separate table for each page you need to add those as sequential list elements to the `df` and `ft` elements. For example:
+If you only supply the data frames list element, they will be converted into flextables internally. Flextables will span multiple pages automatically. If you prefer to have a caption on each page you can split the tables manually into multiple data frames/flextables (see `span_table()` from the `onbrand` package). The reporting functionality is written to support table spanning multiple pages. If you define a separate table for each page you need to add those as sequential list elements to the `df` and `ft` elements. For example:
 
 ```
 t_res$df = list()

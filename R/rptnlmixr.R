@@ -283,14 +283,24 @@ report_fit <- function(obnd          = NULL,
               message("Skipping figure: ", fid, " (NA found, not generated)")
             } else {
               for(fpage in 1:length(curr_fig[["figure"]])){
+                content  = list(image           = curr_fig[["figure"]][fpage],
+                                key             = fid,
+                                caption         = curr_fig[["caption_proc"]],
+                                caption_format  = curr_fig[["caption_format"]],
+                                width           = curr_fig[["width"]],
+                                height          = curr_fig[["height"]])
+
+                # Adding notes if they are present
+                if(!is.null( curr_fig[["notes_format"]])){
+                  content[["notes_format"]] = curr_fig[["notes_format"]]
+                }
+                if(!is.null( curr_fig[["notes"]])){
+                  content[["notes"]] = curr_fig[["notes"]]
+                }
+
                 obnd = onbrand::report_add_doc_content(obnd,
                   type     = "imagefile",
-                  content  = list(image           = curr_fig[["figure"]][fpage],
-                                  key             = fid,
-                                  caption         = curr_fig[["caption_proc"]],
-                                  caption_format  = curr_fig[["caption_format"]],
-                                  width           = curr_fig[["width"]],
-                                  height          = curr_fig[["height"]]))
+                  content  = content)
 
                 # adding breaks between figures of multipage figures
                 # between figures 1 & 2, 2 & 3,  ... n-1 & n
@@ -353,6 +363,7 @@ report_fit <- function(obnd          = NULL,
               } else {
                 # Adding one slide per table
                 for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                  # JMH add notes here
                   elements = list()
                   # The title element is the table  caption:
                   elements[[rpttabfmt[["master"]][["title_ph"]]]] =
@@ -373,11 +384,23 @@ report_fit <- function(obnd          = NULL,
                 message("Skipping table: ", tid, " (NA found, not generated)")
               } else {
                 for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
+                  # By default we have the table, caption and caption format
+                  content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
+                                  key             = tid,
+                                  caption_format  = curr_tab[["caption_format"]],
+                                  caption         = curr_tab[["caption_proc"]])
+
+                  # JMH add notes here
+                  if(!is.null( curr_tab[["notes_format"]])){
+                    content[["notes_format"]] = curr_tab[["notes_format"]]
+                  }
+                  if(!is.null( curr_tab[["table"]][["notes"]][[tpage]])){
+                    content[["notes"]] = curr_tab[["table"]][["notes"]][[tpage]]
+                  }
+
                   obnd =  onbrand::report_add_doc_content(obnd,
                     type     = "flextable_object",
-                    content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                    caption_format  = curr_tab[["caption_format"]],
-                                    caption         = curr_tab[["caption_proc"]]))
+                    content = content)
                   # adding breaks between tables of multipage tables
                   # between tables 1 & 2, 2 & 3,  ... n-1 & n
                   if(length(curr_tab[["table"]][["ft"]])  > 1){

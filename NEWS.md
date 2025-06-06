@@ -1,6 +1,8 @@
 # nlmixr2rpt 0.2.1 (development version)
 
-* NA
+* Added notes option for tables and figures in Word
+* Added example to show how to use `span_table()` from `onbrand` to create multi-page tables with notes, consistent captions, etc.
+* Rearranged the default order in tables and figures to caption, figure/table, notes
 
 # nlmixr2rpt 0.2.0
 
