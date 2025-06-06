@@ -23,7 +23,7 @@ For a given figure id and report type this will pull out the
 dimensions of the figure.
 }
 \examples{
-library(onbrand)  
+library(onbrand)
 obnd = read_template(
  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))

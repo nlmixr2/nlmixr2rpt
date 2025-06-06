@@ -1,4 +1,4 @@
-#'@import nlmixr2extra 
+#'@import nlmixr2extra
 #'@import onbrand
 #'@importFrom stringr str_replace_all
 #'@importFrom rxode2 model ini rxode2
@@ -14,13 +14,13 @@
 #'@param placeholders Manual placeholders, see \code{\link{yaml_read_fit}} for more.
 #'@param rptyaml yaml file containing the report elements and structure.
 #'@param cat_covars character vector of categorical covariates to overwrite defaults in yaml file.
-#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file. 
+#'@param cont_covars character vector of continuous covariates to overwrite defaults in yaml file.
 #'@param parameters  list with element names for each parameter to overwrite defaults in yaml file.
 #'@param verbose Boolean variable when set to TRUE messages will be .
 #'@return onbrand object with the report elements added.
 #'@examples
 #'\donttest{
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -30,7 +30,7 @@
 #'
 #'# Appening fit results
 #'obnd_pptx = report_fit(
-#'  fit     = fit, 
+#'  fit     = fit,
 #'  rptyaml = system.file(package="nlmixr2rpt", "examples", "report_fit_test.yaml"),
 #'  obnd    = obnd)
 #'
@@ -100,7 +100,7 @@ report_fit <- function(obnd          = NULL,
   if(isgood){
   yamlrr = yaml_read_fit(obnd         = obnd,
                          placeholders = placeholders,
-                         parameters   = parameters, 
+                         parameters   = parameters,
                          fit          = fit,
                          rptyaml      = rptyaml)
     if(!yamlrr[["isgood"]]){
@@ -137,8 +137,8 @@ report_fit <- function(obnd          = NULL,
     #------------------------
     # Building Tables
     btres = build_tables(
-      obnd        = obnd, 
-      fit         = fit, 
+      obnd        = obnd,
+      fit         = fit,
       rptdetails  = rptdetails,
       cont_covars = cont_covars,
       cat_covars  = cat_covars,
@@ -146,9 +146,9 @@ report_fit <- function(obnd          = NULL,
     #------------------------
     # Building Figures
     bfres = build_figures(
-      obnd        = obnd, 
-      fit         = fit, 
-      rptdetails  = rptdetails, 
+      obnd        = obnd,
+      fit         = fit,
+      rptdetails  = rptdetails,
       cont_covars = cont_covars,
       cat_covars  = cat_covars,
       verbose     = verbose)
@@ -284,7 +284,7 @@ report_fit <- function(obnd          = NULL,
             } else {
               for(fpage in 1:length(curr_fig[["figure"]])){
                 content  = list(image           = curr_fig[["figure"]][fpage],
-                                key             = fid, 
+                                key             = fid,
                                 caption         = curr_fig[["caption_proc"]],
                                 caption_format  = curr_fig[["caption_format"]],
                                 width           = curr_fig[["width"]],
@@ -386,7 +386,7 @@ report_fit <- function(obnd          = NULL,
                 for(tpage in 1:length(curr_tab[["table"]][["ft"]])){
                   # By default we have the table, caption and caption format
                   content  = list(ft              = curr_tab[["table"]][["ft"]][[tpage]],
-                                  key             = tid, 
+                                  key             = tid,
                                   caption_format  = curr_tab[["caption_format"]],
                                   caption         = curr_tab[["caption_proc"]])
 
@@ -397,7 +397,7 @@ report_fit <- function(obnd          = NULL,
                   if(!is.null( curr_tab[["table"]][["notes"]][[tpage]])){
                     content[["notes"]] = curr_tab[["table"]][["notes"]][[tpage]]
                   }
-                  
+
                   obnd =  onbrand::report_add_doc_content(obnd,
                     type     = "flextable_object",
                     content = content)
@@ -457,7 +457,7 @@ return(obnd)}
 #'(default: \code{NULL})
 #'@return processed string
 #'@examples
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -509,7 +509,7 @@ str}
 #' }
 #'@examples
 #'# We need an onbrand object to use below
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.docx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -728,7 +728,7 @@ eval_str  <- function(estr="", fit=NULL){
 #'   \item \code{"resolution"} - Resolution of figure files (default: \code{300})
 #' }
 #'@examples
-#'library(onbrand)  
+#'library(onbrand)
 #'obnd = read_template(
 #'  template = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.pptx"),
 #'  mapping  = system.file(package="nlmixr2rpt", "templates","nlmixr_obnd_template.yaml"))
@@ -846,11 +846,11 @@ fetch_fit_example  <- function(use_cache = TRUE){
 return(fit)}
 
 # fetch_fit_example  <- function(use_cache = TRUE){
-# 
-# 
+#
+#
 #   # This is where the fit will be cached:
 #   cache_file = file.path(tempdir(), "fetch_fit_example.rds")
-# 
+#
 #   if(use_cache & file.exists(cache_file)){
 #     # Loading the cache file
 #     cli::cli_alert_info("Loading fit from cache file")
@@ -858,39 +858,39 @@ return(fit)}
 #   } else {
 #     file_model = system.file(package="nlmixr2rpt", "examples", "model.R")
 #     file_data  = system.file(package="nlmixr2rpt", "examples", "TEST_DATA.csv")
-#   
+#
 #     my_model = NULL
 #     eval(parse(text=paste(readLines(file_model), collapse="\n")))
-#   
+#
 #     # For the dataset we remove the parameter definitions
-#     # and we filter it down to the single dose data for 3, 
+#     # and we filter it down to the single dose data for 3,
 #     # 30 and 300 mg
-#     DS = read.csv(file_data)                               |> 
-#       dplyr::select(-.data[["F1"]])                        |> 
-#       dplyr::select(-.data[["ka"]])                        |> 
-#       dplyr::select(-.data[["CL"]])                        |> 
-#       dplyr::select(-.data[["Vc"]])                        |> 
-#       dplyr::select(-.data[["Vp"]])                        |> 
-#       dplyr::select(-.data[["Q"]])                         |>  
+#     DS = read.csv(file_data)                               |>
+#       dplyr::select(-.data[["F1"]])                        |>
+#       dplyr::select(-.data[["ka"]])                        |>
+#       dplyr::select(-.data[["CL"]])                        |>
+#       dplyr::select(-.data[["Vc"]])                        |>
+#       dplyr::select(-.data[["Vp"]])                        |>
+#       dplyr::select(-.data[["Q"]])                         |>
 #       dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg")) |>
 #       dplyr::filter(.data[["ID"]]      %in%  c(1,2,3))
 #   #   dplyr::filter(.data[["Cohort"]]  %in%  c("SD 3 mg", "SD 30 mg", "SD 300 mg"))
-#     
-#      model_ui =  rxode2::rxode2(my_model) 
+#
+#      model_ui =  rxode2::rxode2(my_model)
 #      model_ui =  eval(parse(text="rxode2::ini(model_ui, TV_ka=fix(log(0.5)))"))
 #      model_ui =  eval(parse(text="rxode2::model(model_ui, ka=exp(TV_ka))"))
-#     
+#
 #     fit = suppressMessages(
 #           suppressWarnings(
-#             nlmixr2::nlmixr(model_ui, DS, est="posthoc")
+#             nlmixr2est::nlmixr(model_ui, DS, est="posthoc")
 #           ))
-#   
+#
 #     cli::cli_alert_info("Writing fit from cache file")
 #     saveRDS(fit, cache_file)
 #   }
-# 
+#
 #   # This is mainly to "use" ggPMX to avoid declared imports should be used
 #   # errors
 #   ggPMX::is.pmx_gpar(NULL)
-# 
+#
 # return(fit)}
