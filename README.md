@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nlmixr2rpt <img src="man/figures/nlmixr2rpt_hex.png" align="right" width="138.5" />
+# nlmixr2rpt <img src="man/figures/nlmixr2rpt_hex.png" align="right" width="138.5" alt="nlmixr2lib hex sticker" />
 
 <!-- badges: start -->
 

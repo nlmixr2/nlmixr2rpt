@@ -1,0 +1,93 @@
+---
+title: 'Howtos'
+output: html_document
+#output: rmarkdown::html_vignette
+#vignette: >
+#  %\VignetteIndexEntry{Howtos}
+#  %\VignetteEngine{knitr::rmarkdown}
+#  %\V
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  message   = FALSE,
+  echo      = TRUE,
+  warning   = FALSE,
+  eval      = TRUE,
+  collapse  = TRUE,
+  comment = "#>"
+)
+
+
+
+```
+
+# Introduction <img src="nlmixr2rpt_hex.png" align="right" width="138.5" border="0px" alt="nlmixr2rpt hex sticker."/>
+
+This article will introduce specific examples to generate specific types of reporting elements.
+
+# Dealing with large tables
+
+Sometimes we have tables that are too large to place on one page. To include this kind of reported output we need to span a large table across several pages. This example assumes that we have a large amount of data where we want the same common set of row data on each table followed by an amount of reported data. For example consider subject-level timecourse data. We may want the subject IDs to be preserved across several sheets. To do this we will use the `span_table()` function from the `onbrand` package. If we load this package we can use the following example datasets returned from the `mk_lg_tbl()` function::
+
+* `lg_tbl_row_common` - dataframe with rows that are common for each sub table
+* `lg_tbl_row_common_head` Header information (same number of columns as `lg_tbl_row_common`)
+* `lg_tbl_body`- Data to spread across multiple pages/slides (same number of rows as `lg_tbl_row_common`)
+* `lg_tbl_body_head` - header information for the body of data (same number of columns as `lg_tbl_body`)
+
+With our data formatted correctly we can call `span_table()` to spread the large table across smaller tables:
+
+```{r}
+library(onbrand)
+# Creating the test data
+tbl_res = mk_lg_tbl()
+
+# Spanning the data across several tables
+res =
+span_table(table_body      = tbl_res$lg_tbl_body,
+           row_common      = tbl_res$lg_tbl_row_common,
+           table_body_head = tbl_res$lg_tbl_body_head,
+           row_common_head = tbl_res$lg_tbl_row_common_head,
+           max_row         = 16,
+           max_col         = 10,
+           notes_detect    = c("BQL", "NC"))
+```
+
+The `notes_detect` option will look at each table on a per-page basis for the presence of notes in the `table_body` input. Using the detected notes we will constrcut the table notes for eac table. First we create a list mapping the initialisms to verbose text.
+
+```{r}
+notes = list(
+  "BQL" = "Below the level of quantification",
+  "NC" = "Not calculated")
+```
+
+Now we need to reformat the data in a way that can be used for reporting:
+
+```{r}
+t_res = list()
+for(tidx in 1:length(res[["tables"]])){
+  t_res[["ft"]][[tidx]] = res[["tables"]][[tidx]][["ft"]]
+  
+  # Now we construct the notes for the current table
+  if(is.null(res[["tables"]][[tidx]][["notes"]])){
+    # If the table has no notes, then we just use ""
+    t_res[["notes"]][[tidx]]   = ""
+  } else {
+    # This will keep only the notes found
+    tmp_notes = notes[res[["tables"]][[tidx]][["notes"]]]
+    tmp_notes = paste0(names(tmp_notes), ": ", unlist(tmp_notes))
+    tmp_notes = paste0(tmp_notes, collapse=", ")
+    t_res[["notes"]][[tidx]]   = tmp_notes
+  }
+}
+```
+
+For each note detected it creates a string of the format: `note1: verbose text 1, note2: verbose text 2`. Now `t_res` can be returned as a table in the `nlmixr2rpt` yaml file. See the configuration file below for an example:
+
+## Report configuration file `report_fit_test_lg_tbl.yaml`
+```{r echo=FALSE, comment='', message=TRUE, eval=TRUE}
+fc = readLines(file.path(system.file(package="nlmixr2rpt"), "examples", "report_fit_test_lg_tbl.yaml"))
+# Stripping out comments:
+fc = fc[!stringr::str_detect(fc, pattern="^\\s*#")]
+cat(fc, sep="\n")
+```

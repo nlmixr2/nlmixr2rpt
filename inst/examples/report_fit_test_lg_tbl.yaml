@@ -1,0 +1,154 @@
+# Notes:
+#
+# This controls default placeholders used in the figure and table labels,
+# captions, etc  below. The commands and other strings just need a
+# placeholder surrounded by === and that will be substituted for the
+# placeholder value. The placeholder value can be a string or R Code. The
+# underlying functions will attempt to evaluate them. If they evaluate
+# successfully, they will have the return value of that evaluation. Otherwise
+# the string will be kept as is. To force a string to be a string you need to
+# double quote it. So if you specify "'ls()'" you will just see that string.
+# If you specify ls() you will see the contents of the enviornment where the
+# string is evaluated
+placeholders:
+  CMPD: Compound Name
+  CUNITS: ng/ml
+  TUNITS: days
+  RUN: RUNN
+  TEST: "'ls()'"
+  TEST2: ls()
+  OBJ: sprintf("%3g", fit$objf)
+parameters:
+  lCLint:
+    md:  "CL~int~ (L/hr)"
+    txt: "CLint (L/hr)"
+  TV_ka:
+    md:  "k~a~ (1/hr)"
+    txt: "ka  (1/hr)"
+  log_CIRC0:
+    md:  "log(CIRC~0~)"
+    txt: "log(CIRC0)"
+  prop.err:
+    md:  "Prop Err"
+    txt: "Prop Err"
+covariates:
+  cat:  NULL
+  cont: NULL
+options:
+  output_dir:   "file.path(tempdir(), '===RUN===')"
+  resolution:   300
+  # Set fig_stamp to NULL to suppress
+  fig_stamp:          "source: ===FILE==="
+  figenv_preamble: |-
+    # Loading required libraries
+    library("ggplot2")
+    library("xpose")
+    library("ggforce")
+    # Creating the xpdb object for xpose figures:
+    xpdb = xpose.nlmixr2::xpose_data_nlmixr(fit)
+  tabenv_preamble: NULL
+#------
+# Both figures and tables are generated based on user defined commands. These
+# will be depdendnt on input data (e.g., nlmixr fit object), default
+# dimensions (figure width and height), the type of report being generated
+# (onbrand report object), etc. The following objects will be created
+# in the environment where the user code is executed and can be used by the
+# user defined code. Some variables are content type specific and are only
+# present in the environtment for that content type. For example the resoluion
+# option only applies to figures and is not defined in the table generation
+# environment:
+#
+#  fid          - current figure ID
+#  fit          - nlmixr fit object
+#  height       - figure height (figure enviornment only)
+#  length_units - units for length and width below (figure enviornment only)
+#  obnd         - onbrand object of the report document
+#  output_dir   - directory where figures are stored
+#  resolution   - resolution of the figure (figure environment only)
+#  rptdetails   - result of reading in the report yaml file
+#  rpttype      - either "Word" or "PowerPoint"
+#  width        - figure width  (figure environment only)
+#  xpdb         - xpose object created from xpose_data_nlmixr(fit) (figure
+#                 environment only)
+#
+# The output must be stored in p_res and it can be either of the following:
+#  - character variable containing the path to the figure file (you can have
+#    multiple figures that will be treated as paginated).
+#  - ggplot object (this can be a single figure or a paginated figure)
+#
+tables:
+  # Here we list all the tables to be generated
+  lg_tbl:    
+    orientation: "portrait"
+    caption:     "Large Table"
+    title:       "Large Table"
+    cmd: |-
+      tbl_res = mk_lg_tbl()
+
+      # Spanning the data across several tables
+      res =
+      span_table(
+        table_body      = tbl_res$lg_tbl_body,
+        row_common      = tbl_res$lg_tbl_row_common,
+        table_body_head = tbl_res$lg_tbl_body_head,
+        row_common_head = tbl_res$lg_tbl_row_common_head,
+        max_row         = 16,
+        max_col         = 10,
+        notes_detect    = c("BQL", "NC"))
+
+      # Mapping the notes
+      notes = list(
+        "BQL" = "Below the level of quantification",
+         "NC" = "Not calculated")
+
+      # Creating the expected t_res object 
+      t_res = list()
+      for(tidx in 1:length(res[["tables"]])){
+        t_res[["ft"]][[tidx]] = res[["tables"]][[tidx]][["ft"]]
+        
+        # Now we construct the notes for the current table
+        if(is.null(res[["tables"]][[tidx]][["notes"]])){
+          # If the table has no notes, then we just use ""
+          t_res[["notes"]][[tidx]]   = ""
+        } else {
+          # This will keep only the notes found
+          tmp_notes = notes[res[["tables"]][[tidx]][["notes"]]]
+          tmp_notes = paste0(names(tmp_notes), ": ", unlist(tmp_notes))
+          tmp_notes = paste0(tmp_notes, collapse=", ")
+          t_res[["notes"]][[tidx]]   = tmp_notes
+        }
+      }
+pptx:
+  # Tables and figures aree generated 1 per slide, here you need to give the
+  # information about that slide master found in the onbrand template for
+  # your organization
+  figures:
+    master:
+      name:       "content_text"
+      title_ph:   "title"
+      content_ph: "content_body"
+    # The figure dimensions here are take from the
+    # master slide and have the same units as those
+    # specified in analysis
+    width:  9.5
+    height: 5.0
+  tables:
+    master:
+      name:       "content_text"
+      title_ph:   "title"
+      content_ph: "content_body"
+  content:
+    - table: lg_tbl 
+docx:
+  figures:
+    landscape:
+      width:  8.0
+      height: 4.2
+    portrait:
+      width:  6.5
+      height: 6.0
+  content:
+    - text:
+        text:  "Tables"
+        style: Heading_1
+    - table: lg_tbl     

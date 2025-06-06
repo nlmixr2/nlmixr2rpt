@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 fit = fetch_fit_example()
 ```
 
-# nlmixr2rpt <img src="man/figures/nlmixr2rpt_hex.png" align="right" width="138.5" />
+# nlmixr2rpt <img src="man/figures/nlmixr2rpt_hex.png" align="right" width="138.5" alt="nlmixr2lib hex sticker" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/nlmixr2/nlmixr2rpt/workflows/R-CMD-check/badge.svg)](https://github.com/nlmixr2/nlmixr2rpt/actions)
