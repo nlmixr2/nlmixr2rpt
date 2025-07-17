@@ -60,7 +60,7 @@ report_fit <- function(obnd          = NULL,
   # Checking for packages
   pkg_check_file = file.path(tempdir(), "nlmixr2rpt_pkg_check_file")
 
-  pkgs = c("nlmixr2", "ggPMX", "xpose.nlmixr2")
+  pkgs = c("nlmixr2est", "ggPMX", "xpose.nlmixr2")
   if(!file.exists(pkg_check_file)){
     for(pkg in pkgs){
       if(system.file(package=pkg) == ""){
