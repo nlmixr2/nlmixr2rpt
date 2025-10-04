@@ -258,7 +258,6 @@ build_figures <- function(obnd        = NULL,
             # If everything worked out we just return the result
             p_res = tcres[["p_res"]]
           } else {
-            browser()
             # Otherwise we capture erro information here:
             fmsgs = c(fmsgs,
             "Unable to generate figure",

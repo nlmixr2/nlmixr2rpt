@@ -25,8 +25,6 @@ DS = read.csv(file_data) |>
   dplyr::filter(Cohort  %in%  c("SD 3 mg IV", "SD 30 mg IV", "SD 300 mg IV")) 
 
 
-
-
 model_ui = rxode2(my_model)   |> 
     ini(TV_ka=fix(log(0.5)))  |>
       model(ka=exp(TV_ka)) 
