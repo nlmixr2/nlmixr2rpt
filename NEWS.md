@@ -1,5 +1,7 @@
 # nlmixr2rpt 0.2.2 (development version)
 
+* Fixed issue with {} in messages creatining the `safe_text()` function to deal with it.
+* Fixed issue with processing covariates that set them to NA :)
 
 # nlmixr2rpt 0.2.1 
 
