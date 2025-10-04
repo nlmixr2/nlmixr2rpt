@@ -128,7 +128,7 @@ build_tables  <- function(obnd        = NULL,
     
     # Checking the covariates to make sure they are in the dataset
     if(!is.null(cat_covars)){
-      missing_covars = cat_covars[!(cat_covars %in% names(fit[["origData"]]))]
+      missing_covars = cat_covars[!(cat_covars %in% names(fit$origData))]
       if(length(missing_covars) > 0){
         if(verbose){
           cli::cli_alert_warning(paste0("The following categorical covariates were specified"))
@@ -159,7 +159,7 @@ build_tables  <- function(obnd        = NULL,
       }
     
       # Removing the missing covariates
-      cont_covars = cont_covars[cont_covars[cont_covars %in% names(fit[["origData"]])]]
+      cont_covars = cont_covars[cont_covars[cont_covars %in% names(fit$origData)]]
       if(length(cont_covars) == 0){
         cont_covars = NULL}
     }
@@ -171,7 +171,7 @@ build_tables  <- function(obnd        = NULL,
         SKIP       = FALSE
         # Pulling out the current table information:
         tinfo = rptdetails[["tables"]][[tid]]
-        if(verbose){cli::cli_alert(paste0(tid))}
+        if(verbose){cli::cli_alert(safe_text(paste0(tid)))}
         # Initializing information about the current table
         tmsgs = c(paste("table id:", tid))
         TISGOOD = TRUE
@@ -318,7 +318,7 @@ build_tables  <- function(obnd        = NULL,
           if(verbose){
             cli::cli_h3("Table generation failed")
             for(msg in tmsgs){
-              cli::cli_alert(msg)
+              cli::cli_alert(safe_text(msg))
             }
           }
         }

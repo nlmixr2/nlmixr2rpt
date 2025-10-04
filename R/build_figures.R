@@ -156,7 +156,7 @@ build_figures <- function(obnd        = NULL,
 
       # Checking the covariates to make sure they are in the dataset
       if(!is.null(cat_covars)){
-        missing_covars = cat_covars[!(cat_covars %in% names(fit[["origData"]]))]
+        missing_covars = cat_covars[!(cat_covars %in% names(fit$origData))]
         if(length(missing_covars) > 0){
           if(verbose){
             cli::cli_alert_warning(paste0("The following categorical covariates were specified"))
@@ -166,7 +166,7 @@ build_figures <- function(obnd        = NULL,
         }
 
         # Removing the missing covariates
-        cat_covars = cat_covars[cat_covars[cat_covars %in% names(fit$origData)]]
+        cat_covars = cat_covars[cat_covars %in% names(fit$origData)]
         if(length(cat_covars) == 0){
           cat_covars = NULL}
       }
@@ -187,7 +187,7 @@ build_figures <- function(obnd        = NULL,
         }
 
         # Removing the missing covariates
-        cont_covars = cont_covars[cont_covars[cont_covars %in% names(fit[["origData"]])]]
+        cont_covars = cont_covars[cont_covars %in% names(fit$origData)]
         if(length(cont_covars) == 0){
           cont_covars = NULL}
       }
@@ -246,7 +246,7 @@ build_figures <- function(obnd        = NULL,
                # Some errors don't show up until the figures are built
                # while saving. This will force ggplot objects to be built
                # and trap any errors to be passed on to the user.
-               if(is.ggplot(p_res)){
+               if(is_ggplot(p_res)){
                  ggplot2::ggplot_build(p_res)
                }
               list(isgood=TRUE, p_res=p_res)},
@@ -258,6 +258,7 @@ build_figures <- function(obnd        = NULL,
             # If everything worked out we just return the result
             p_res = tcres[["p_res"]]
           } else {
+            browser()
             # Otherwise we capture erro information here:
             fmsgs = c(fmsgs,
             "Unable to generate figure",
@@ -274,7 +275,7 @@ build_figures <- function(obnd        = NULL,
             if(verbose){
               cli::cli_h3("Figure generation failed")
               for(msg in fmsgs){
-                cli::cli_alert(msg)
+                cli::cli_alert(safe_text(msg))
               }
             }
 
@@ -289,7 +290,7 @@ build_figures <- function(obnd        = NULL,
         figure = c()
         # Figuring out if we have a ggplot or an image file:
 
-        if(is.ggplot(p_res)){
+        if(is_ggplot(p_res)){
           # This is the number of figure pages in the current figure. If
           # The figure isn't paginated, it will return NULL
           nfpages = ggforce::n_pages(p_res)
@@ -522,12 +523,11 @@ write_figure  <- function(p_res              = NULL,
     tryCatch(
       {
        # Adding stamps if necessary
-       if(is.ggplot(p_res)){
+       if(is_ggplot(p_res)){
          if(!is.null(fig_stamp)){
            # If we are processing a ggplot object and fig_stamp has been
            # defined we append the fig_stamp to the figure:
            fig_stamp = stringr::str_replace_all(fig_stamp, "===FILE===", fig_file)
-
 
           ## If the plot is a ggplot but hasn't been arranged we arrange it
           ## so we can stamp it
@@ -600,11 +600,11 @@ write_figure  <- function(p_res              = NULL,
     if(verbose){
       cli::cli_h3("Writing figure failed:")
       for(msg in msgs){
-        cli::cli_alert(msg)
+        cli::cli_alert(safe_text(msg))
       }
     }
   }
 
   res = list(isgood = isgood,
              msgs   = msgs)
-res}
+  res}

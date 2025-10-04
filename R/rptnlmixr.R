@@ -894,3 +894,16 @@ return(fit)}
 #   ggPMX::is.pmx_gpar(NULL)
 #
 # return(fit)}
+
+
+#'@export
+#'@title Escapes Curly Braces for cli functions
+#'@description Converts curly braces to double curly braces in order to prevent interpertation with the cli package
+#'@param x String with curly braces
+#'@return String with curly braces escaped 
+#'@examples
+#' safe_text("This string has curly {braces}")
+safe_text <- function(x) {
+  x = gsub("\\{", "{{", x, fixed = FALSE) 
+  x = gsub("\\}", "}}", x, fixed = FALSE)
+x}
