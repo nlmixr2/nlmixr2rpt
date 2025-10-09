@@ -27,6 +27,7 @@ reference:
   - fetch_fit_example
   - gen_pest_table
   - process_ph
+  - safe_text
   - write_figure
 navbar:
   left:

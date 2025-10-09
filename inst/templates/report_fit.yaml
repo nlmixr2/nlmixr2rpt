@@ -192,6 +192,19 @@ figures:
       ylab(" ===CMPD=== (===CUNITS===)") +
       xlab("Time (===TUNITS===)")  +
       theme_light()
+  eta_matrix:
+    orientation: "landscape"
+    caption:     "Correlation between IIV terms and parameters"
+    title:       "IIV Correlation"
+    cmd: |-
+      if(system.file(package="ggPMX") != ""){
+        ctr = ggPMX::pmx_nlmixr(fit,
+                vpc = FALSE,
+                conts = cont_covars, 
+                cats  = cat_covars)
+        p_res <- ggPMX::pmx_plot_eta_matrix(ctr) +
+          theme_light()
+      }
 # vpc:        
 #   orientation: "landscape"
 #   caption:     "VPC"
@@ -234,7 +247,7 @@ pptx:
       name:       "content_text"
       title_ph:   "title"
       content_ph: "content_body"
-    # The figure dimensions here are take from the
+    # The figure dimensions here are taken from the
     # master slide and have the same units as those
     # specified in analysis
     width:  9.5

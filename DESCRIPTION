@@ -32,6 +32,7 @@ Imports:
   yaml
 Suggests:
   rmarkdown,
+  GGally,
   ggPMX,
   knitr,
   testthat (>= 3.0.0)

@@ -287,9 +287,25 @@ build_figures <- function(obnd        = NULL,
         }
 
         figure = c()
-        # Figuring out if we have a ggplot or an image file:
+        # Figuring out if we have a ggplot, an image file, ggmatrix or skipping the figure:
+        # A p_type of NULL means we couldnt' figure it out
+        p_type = NULL
+        if(is.na(p_res)){
+          p_type = "skip"
+        }
+        if(ggplot2::is_ggplot(p_res)){
+          p_type = "ggplot"
+        }
+        if(is.null(p_type) & system.file(package="GGally") != ""){
+          if(GGally::is_ggmatrix(p_res)){
+            p_type = "ggmatrix"
+          }
+        }
+        if(is.null(p_type) & is.character(p_res)){
+          p_type = "file_path"
+        }
 
-        if(is_ggplot(p_res)){
+        if(p_type == "ggplot"){
           # This is the number of figure pages in the current figure. If
           # The figure isn't paginated, it will return NULL
           nfpages = ggforce::n_pages(p_res)
@@ -339,14 +355,32 @@ build_figures <- function(obnd        = NULL,
           }
           # Closing the subbullets
           if(verbose){cli::cli_end(cli_list_fn)}
-        } else if(is.na(p_res)){
+        } else if(p_type == "ggmatrix"){
+          fig_file = file.path(output_dir, paste0(fid, "-", rpttype, ".png"))
+          if(verbose){ cli::cli_li(fig_file) }
+          figure   = c(fig_file)
+          wfres = write_figure(
+            p_res              = p_res,
+            page               = NULL,
+            width              = width,
+            height             = height,
+            resolution         = resolution,
+            fig_file           = fig_file,
+            fig_stamp          = fig_stamp,
+            verbose            = verbose)
+        } else if(p_type == "skip"){
           # Figure was set to NA to skip
           SKIP   = TRUE
           figure = p_res
-        } else if(is.character(p_res)){
+        } else if(p_type == "file_path"){
           #JMH test this with a vector of image files
           if(file.exists(p_res)){
             figure = p_res
+          }
+        } else if(is.null(p_type)){
+          msgs = c(msgs, paste0("unable to determine the file type of ", fid, " will not be included in the report"))
+          if(verbose){
+            cli::cli_alert_warning( paste0("unable to determine the file type of ", fid, " will not be included in report"))
           }
         }
 
