@@ -20,19 +20,29 @@ import(nlmixr2extra)
 import(onbrand)
 import(stringr)
 import(xpose)
-importFrom(cli,cli_alert)
-importFrom(cli,cli_h3)
-importFrom(dplyr,mutate)
-importFrom(dplyr,relocate)
-importFrom(flextable,autofit)
-importFrom(flextable,compose)
-importFrom(flextable,flextable)
+importFrom(cli,
+  cli_alert,
+  cli_h3
+)
+importFrom(dplyr,
+  mutate,
+  relocate
+)
+importFrom(flextable,
+  autofit,
+  compose,
+  flextable
+)
 importFrom(ggforce,n_pages)
-importFrom(onbrand,fetch_md_def)
-importFrom(onbrand,md_to_oo)
-importFrom(rxode2,ini)
-importFrom(rxode2,model)
-importFrom(rxode2,rxode2)
+importFrom(onbrand,
+  fetch_md_def,
+  md_to_oo
+)
+importFrom(rxode2,
+  ini,
+  model,
+  rxode2
+)
 importFrom(stringr,str_replace_all)
 importFrom(utils,read.csv)
 importFrom(xpose.nlmixr2,xpose_data_nlmixr)
