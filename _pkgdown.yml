@@ -25,6 +25,7 @@ reference:
   - fetch_option
   - fetch_fdim
   - fetch_fit_example
+  - gen_eqn_table
   - gen_pest_table
   - process_ph
   - safe_text
