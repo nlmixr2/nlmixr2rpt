@@ -221,6 +221,12 @@ figures:
     title:       "ind_plots title"
     cmd: |-
       p_res <- NA
+  model_diagram:
+    orientation: "portrait"
+    caption:     "Model structure"
+    title:       "Model structure"
+    cmd: |-
+      p_res <- nlmixr2plot::modelDiagram(fit, engine = "ggplot2", labels = TRUE)
 tables:
   # Here we list all the tables to be generated
   skip_table:
@@ -238,6 +244,12 @@ tables:
       fit        = fit,
       obnd       = obnd,
       rptdetails = rptdetails)
+  model_equations:
+    orientation: "portrait"
+    caption:     "Model equations"
+    title:       "Model equations"
+    cmd: |-
+      t_res <- list(ft = list(gen_eqn_table(fit, obnd)))
 pptx:
   # Tables and figures aree generated 1 per slide, here you need to give the
   # information about that slide master found in the onbrand template for
@@ -258,6 +270,8 @@ pptx:
       title_ph:   "title"
       content_ph: "content_body"
   content:
+    - figure: model_diagram
+    - table: model_equations
     - table: pest_table
     - table: skip_table
     - figure: ind_plots
@@ -276,6 +290,12 @@ docx:
       width:  6.5
       height: 6.0
   content:
+    - 
+    - text:
+        text:  "Model Structure"
+        style: Heading_1
+    - figure: model_diagram
+    - table: model_equations
     - text:
         text:  "Tables"
         style: Heading_1
