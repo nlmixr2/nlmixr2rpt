@@ -1,6 +1,6 @@
 # nlmixr2rpt 0.2.3 (development version)
 
-
+* Added support for modal diagrams via `nlmixr2plot` and also model equations
 
 # nlmixr2rpt 0.2.2 
 
