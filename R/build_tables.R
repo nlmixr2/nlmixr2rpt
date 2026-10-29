@@ -425,6 +425,17 @@ gen_pest_table  <- function(obnd       = NULL,
     }
   }
 
+  # Naming the parameters in each BSV correlation row the way the report
+  # names them
+  for(rname in rownames(fex_df)){
+    if(is.null(rptdetails[["parameters"]][[rname]][["md"]])){
+      bsv_cor = bsv_cor_label(rname, rptdetails)
+      if(!is.null(bsv_cor)){
+        fex_df[rname, "Parameter"] = bsv_cor
+      }
+    }
+  }
+
   # Pulling out the default formating
   dft_body = onbrand::fetch_md_def(obnd, style="Table")$md_def
 
@@ -445,6 +456,31 @@ gen_pest_table  <- function(obnd       = NULL,
              ft     = list(fex_ft),
              df     = list(fex_df))
 res}
+
+#'@title Label of a BSV Correlation Row of the Parameter Table
+#'@description `nlmixr2est` ends the parameter table with one row per
+#'estimated between-subject covariance, named
+#'`BSV correlation between A and B`, where `A` and `B` are model parameter
+#'(or eta) names. This names `A` and `B` with the report's markdown names
+#'(`rptdetails$parameters[[A]]$md`) when they are given.
+#'@param rname row name of the parameter table
+#'@param rptdetails object creating when reading in rptyaml file
+#'@return The row's label, or `NULL` when `rname` is not a BSV correlation
+#'row
+#'@noRd
+bsv_cor_label <- function(rname, rptdetails){
+  pair = regmatches(rname, regexec("^BSV correlation between ([^ ]+) and ([^ ]+)$", rname))[[1]]
+  if(length(pair) != 3){
+    return(NULL)
+  }
+  pnames = pair[2:3]
+  for(pidx in 1:2){
+    md = rptdetails[["parameters"]][[pnames[pidx]]][["md"]]
+    if(!is.null(md)){
+      pnames[pidx] = md
+    }
+  }
+paste0("BSV correlation between ", pnames[1], " and ", pnames[2])}
 
 #'@export
 #'@title Generates a `flextable` Object with Error Message
