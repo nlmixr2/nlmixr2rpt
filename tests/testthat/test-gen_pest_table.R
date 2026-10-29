@@ -18,6 +18,24 @@ pest_rendered_text = function(ft, col){
   ic = ic[order(ic[[".row_id"]], ic[[".chunk_index"]]), ]
 as.vector(tapply(ic[["txt"]], ic[[".row_id"]], paste, collapse = ""))}
 
+# The rendered chunks of one body cell: text and formatting flags
+pest_rendered_chunks = function(ft, col, row){
+  ic = flextable::information_data_chunk(ft)
+  ic = ic[ic[[".part"]] == "body" & ic[[".col_id"]] == col & ic[[".row_id"]] == row, ]
+  ic = ic[order(ic[[".chunk_index"]]), ]
+  data.frame(
+    txt            = ic[["txt"]],
+    italic         = ic[["italic"]],
+    vertical.align = ic[["vertical.align"]])}
+
+# A one-row table holding the correlation row `rname`
+pest_cor_table = function(rname){
+  data.frame(
+    "Est."     = "",
+    "BSV(CV%)" = "0.725",
+    row.names  = rname,
+    check.names = FALSE)}
+
 # The parameter table nlmixr2est reports for a correlated block: without
 # parameter labels, and with them (the label column then describes the
 # correlation row)
@@ -65,8 +83,57 @@ test_that("gen_pest_table labels a BSV correlation row with the report names", {
   }
 })
 
+test_that("gen_pest_table renders a correlation row's names as separate runs", {
+  plain = function(txt){
+    data.frame(txt = txt, italic = FALSE, vertical.align = "baseline")}
+  # model names are plain text: an underscore is not markdown
+  for(pair in list(c("eta_cl", "eta_v"), c("a_b_c", "d_e_f"))){
+    rname = paste0("bsvcorr(", pair[1], ",", pair[2], ")")
+    res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pest_cor_table(rname)), rptdetails = NULL)
+    expect_identical(res$df[[1]]$Parameter, paste0("BSV correlation between ", pair[1], " and ", pair[2]))
+    expect_identical(
+      pest_rendered_chunks(res$ft[[1]], "Parameter", 1),
+      plain(c("BSV correlation between ", pair[1], " and ", pair[2])))
+  }
+  # each report name is rendered on its own, so markdown in one does not
+  # reach the other
+  for(mds in list(c("CL_int", "V_c"), c("CL*", "V*"))){
+    rd = list(parameters = list(tcl = list(md = mds[1]), tv = list(md = mds[2])))
+    res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pest_cor_table("bsvcorr(tcl,tv)")), rptdetails = rd)
+    expect_identical(
+      pest_rendered_chunks(res$ft[[1]], "Parameter", 1),
+      plain(c("BSV correlation between ", mds[1], " and ", mds[2])))
+  }
+  # a report name's own markdown still renders
+  res = gen_pest_table(
+    obnd       = obnd_pest,
+    fit        = list(par.fixed = pest_cor_table("bsvcorr(tcl,tv)")),
+    rptdetails = rptdetails_pest)
+  expect_identical(
+    pest_rendered_chunks(res$ft[[1]], "Parameter", 1),
+    data.frame(
+      txt            = c("BSV correlation between ", "CL", "int", " (L/hr)", " and ", "V (L)"),
+      italic         = FALSE,
+      vertical.align = c("baseline", "baseline", "subscript", "baseline", "baseline", "baseline")))
+})
+
+test_that("gen_pest_table renders every row of a label that repeats", {
+  pf = data.frame(
+    "Est."      = c("1.01", "3.46"),
+    row.names   = c("tcl", "tv"),
+    check.names = FALSE)
+  rd = list(parameters = list(tcl = list(md = "k~a~"), tv = list(md = "k~a~")))
+  res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = rd)
+  for(ridx in 1:2){
+    expect_identical(
+      pest_rendered_chunks(res$ft[[1]], "Parameter", ridx),
+      data.frame(txt = c("k", "a"), italic = FALSE, vertical.align = c("baseline", "subscript")))
+  }
+})
+
 test_that("gen_pest_table reports the BSV correlation rows of a fit", {
   skip_on_cran()
+  skip_if_not_installed("nlmixr2data")
   mod = function() {
     ini({
       tka <- 0.45
