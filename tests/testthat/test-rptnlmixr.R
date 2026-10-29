@@ -160,3 +160,51 @@ test_that("Word Workflow", {
   expect_true(save_res$isgood)
 
 })
+
+test_that("gen_pest_table names a row without a label by its row name", {
+  # nlmixr2est gives a non-mu-referenced eta's row an NA label in a model with
+  # labels (later versions give ""); both are named by the row name
+  for(eta_label in c(NA_character_, "")){
+    pf = data.frame(
+      "Parameter" = c("Ka (1/hr)", "", eta_label),
+      "Est."      = c("0.476", "0.687", ""),
+      "BSV(CV%)"  = c("", "", "69.5"),
+      row.names   = c("tka", "add.sd", "eta.ka"),
+      check.names = FALSE)
+    res = gen_pest_table(obnd = obnd_test, fit = list(par.fixed = pf), rptdetails = NULL)
+    expect_true(res$isgood)
+    expect_identical(res$df[[1]]$Parameter, c("Ka (1/hr)", "add.sd", "eta.ka"))
+  }
+})
+
+test_that("gen_pest_table reports a labelled fit with a non-mu-referenced eta", {
+  skip_on_cran()
+  mod = function() {
+    ini({
+      tka <- 0.45
+      label("Ka (1/hr)")
+      tcl <- 1
+      label("CL (L/hr)")
+      tv <- 3.45
+      eta.ka ~ 0.6
+      eta.cl ~ 0.3
+      eta.v ~ 0.1
+      add.sd <- 0.7
+    })
+    model({
+      ka <- exp(tka) * exp(eta.ka)
+      cl <- exp(tcl + eta.cl)
+      v <- exp(tv + eta.v)
+      linCmt() ~ add(add.sd)
+    })
+  }
+  fit_labels = suppressMessages(suppressWarnings(nlmixr2est::nlmixr2(
+    mod,
+    nlmixr2data::theo_sd,
+    "focei",
+    control = nlmixr2est::foceiControl(print = 0, maxOuterIterations = 0, calcTables = FALSE, covMethod = ""))))
+  expect_identical(rownames(fit_labels$par.fixed), c("tka", "tcl", "tv", "add.sd", "eta.ka"))
+  res = gen_pest_table(obnd = obnd_test, fit = fit_labels, rptdetails = NULL)
+  expect_true(res$isgood)
+  expect_identical(res$df[[1]]$Parameter, c("Ka (1/hr)", "CL (L/hr)", "tv", "add.sd", "eta.ka"))
+})
