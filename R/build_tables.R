@@ -425,17 +425,41 @@ gen_pest_table  <- function(obnd       = NULL,
     }
   }
 
+  # Labelling each BSV correlation row bsvcorr(A,B) as "BSV correlation
+  # between A and B", with A and B named the way the report names them. This
+  # replaces both the row name and the description nlmixr2est gives a fit with
+  # labels.
+  for(rname in rownames(fex_df)){
+    if(is.null(rptdetails[["parameters"]][[rname]][["md"]])){
+      bsv_cor = bsv_cor_label(rname, rptdetails)
+      if(!is.null(bsv_cor)){
+        fex_df[rname, "Parameter"] = bsv_cor
+      }
+    }
+  }
+
   # Pulling out the default formating
   dft_body = onbrand::fetch_md_def(obnd, style="Table")$md_def
 
   fex_ft = flextable::flextable(fex_df)
-  for(pstr in fex_df$Parameter){
+  # Row by row, so two rows with the same label are each rendered
+  for(ridx in seq_len(nrow(fex_df))){
+    rname     = rownames(fex_df)[ridx]
+    cor_parts = NULL
+    if(is.null(rptdetails[["parameters"]][[rname]][["md"]])){
+      cor_parts = bsv_cor_parts(rname, rptdetails)
+    }
+    if(is.null(cor_parts)){
+      par_oo = c(onbrand::md_to_oo(fex_df$Parameter[ridx], dft_body)$oo)
+    } else {
+      par_oo = bsv_cor_oo(cor_parts, dft_body)
+    }
     fex_ft = fex_ft %>%
     flextable::compose(
       j     = "Parameter",
-      i     = match(pstr, fex_df$Parameter),
+      i     = ridx,
       part  = "body",
-      value = c(onbrand::md_to_oo(pstr, dft_body)$oo))
+      value = par_oo)
   }
 
   fex_ft = flextable::autofit(fex_ft)
@@ -445,6 +469,84 @@ gen_pest_table  <- function(obnd       = NULL,
              ft     = list(fex_ft),
              df     = list(fex_df))
 res}
+
+#'@title Parameters of a BSV Correlation Row of the Parameter Table
+#'@description `nlmixr2est` ends the parameter table with one row per
+#'estimated between-subject covariance, named `bsvcorr(A,B)`, where `A` and
+#'`B` are model parameter (or eta) names. Each of `A` and `B` is given the
+#'report's markdown name (`rptdetails$parameters[[A]]$md`) when there is one.
+#'@param rname row name of the parameter table
+#'@param rptdetails object creating when reading in rptyaml file
+#'@return `NULL` when `rname` is not a BSV correlation row, otherwise a list
+#'with `txt`, the two names, and `md`, whether each is a report markdown name
+#'@noRd
+bsv_cor_parts <- function(rname, rptdetails){
+  pair = regmatches(rname, regexec("^bsvcorr\\(([^,]+),([^)]+)\\)$", rname))[[1]]
+  if(length(pair) != 3){
+    return(NULL)
+  }
+  parts = list(txt = pair[2:3], md = c(FALSE, FALSE))
+  for(pidx in 1:2){
+    md = rptdetails[["parameters"]][[parts[["txt"]][pidx]]][["md"]]
+    if(!is.null(md)){
+      parts[["txt"]][pidx] = md
+      parts[["md"]][pidx]  = TRUE
+    }
+  }
+parts}
+
+#'@title Label of a BSV Correlation Row of the Parameter Table
+#'@description `BSV correlation between A and B`, with `A` and `B` from
+#'`bsv_cor_parts()`.
+#'@param rname row name of the parameter table
+#'@param rptdetails object creating when reading in rptyaml file
+#'@return The row's label, or `NULL` when `rname` is not a BSV correlation
+#'row
+#'@noRd
+bsv_cor_label <- function(rname, rptdetails){
+  parts = bsv_cor_parts(rname, rptdetails)
+  if(is.null(parts)){
+    return(NULL)
+  }
+paste0("BSV correlation between ", parts[["txt"]][1], " and ", parts[["txt"]][2])}
+
+#'@title Text Run Without Markdown
+#'@description A run of `txt` with the default table formatting, its
+#'characters (`_`, `*`, `~`, `^`) taken literally.
+#'@param txt text
+#'@param dft_body default formatting from `onbrand::fetch_md_def()`
+#'@return One-row chunk data frame of the kind `onbrand::md_to_oo()` returns
+#'@noRd
+md_plain_chunk <- function(txt, dft_body){
+  # the formatting of a run with no markdown, given the text afterwards
+  chunk = onbrand::md_to_oo("x", dft_body)$oo[[1]]
+  chunk[["txt"]] = txt
+chunk}
+
+#'@title Rendered Label of a BSV Correlation Row
+#'@description `BSV correlation between A and B` as separate runs: a report
+#'markdown name is rendered on its own, and a model name and the joining
+#'text are plain, so markdown in one name cannot reach the other.
+#'@param parts list from `bsv_cor_parts()`
+#'@param dft_body default formatting from `onbrand::fetch_md_def()`
+#'@return Paragraph for `flextable::compose()`
+#'@noRd
+bsv_cor_oo <- function(parts, dft_body){
+  runs = list(md_plain_chunk("BSV correlation between ", dft_body))
+  for(pidx in 1:2){
+    if(parts[["md"]][pidx]){
+      runs[[length(runs) + 1]] = onbrand::md_to_oo(parts[["txt"]][pidx], dft_body)$oo[[1]]
+    } else {
+      runs[[length(runs) + 1]] = md_plain_chunk(parts[["txt"]][pidx], dft_body)
+    }
+    if(pidx == 1){
+      runs[[length(runs) + 1]] = md_plain_chunk(" and ", dft_body)
+    }
+  }
+  par_oo = onbrand::md_to_oo("x", dft_body)$oo
+  par_oo[[1]] = do.call(rbind, runs)
+  par_oo[[1]][[".chunk_index"]] = seq_len(nrow(par_oo[[1]]))
+par_oo}
 
 #'@export
 #'@title Generates a `flextable` Object with Error Message
