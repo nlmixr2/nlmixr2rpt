@@ -6,6 +6,8 @@
   `BSV correlation between A and B`, naming `A` and `B` with the report's
   parameter names from the `parameters` section of the report yaml when it
   gives them.
+* `gen_pest_table()` now renders the markdown of every row whose label
+  repeats another row's; only the first was rendered.
 
 # nlmixr2rpt 0.2.2 
 
