@@ -1,10 +1,11 @@
 # nlmixr2rpt 0.2.3 (development version)
 
 * Added support for modal diagrams via `nlmixr2plot` and also model equations
-* `gen_pest_table()` names the parameters in each BSV correlation row
-  (`BSV correlation between A and B`, which newer `nlmixr2est` adds for each
-  estimated between-subject covariance) with the report's parameter names from
-  the `parameters` section of the report yaml, when it gives them.
+* `gen_pest_table()` labels each BSV correlation row (`bsvcorr(A,B)`, which
+  newer `nlmixr2est` adds for each estimated between-subject covariance)
+  `BSV correlation between A and B`, naming `A` and `B` with the report's
+  parameter names from the `parameters` section of the report yaml when it
+  gives them.
 
 # nlmixr2rpt 0.2.2 
 

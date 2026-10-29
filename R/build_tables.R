@@ -425,8 +425,10 @@ gen_pest_table  <- function(obnd       = NULL,
     }
   }
 
-  # Naming the parameters in each BSV correlation row the way the report
-  # names them
+  # Labelling each BSV correlation row bsvcorr(A,B) as "BSV correlation
+  # between A and B", with A and B named the way the report names them. This
+  # replaces both the row name and the description nlmixr2est gives a fit with
+  # labels.
   for(rname in rownames(fex_df)){
     if(is.null(rptdetails[["parameters"]][[rname]][["md"]])){
       bsv_cor = bsv_cor_label(rname, rptdetails)
@@ -459,17 +461,17 @@ res}
 
 #'@title Label of a BSV Correlation Row of the Parameter Table
 #'@description `nlmixr2est` ends the parameter table with one row per
-#'estimated between-subject covariance, named
-#'`BSV correlation between A and B`, where `A` and `B` are model parameter
-#'(or eta) names. This names `A` and `B` with the report's markdown names
-#'(`rptdetails$parameters[[A]]$md`) when they are given.
+#'estimated between-subject covariance, named `bsvcorr(A,B)`, where `A` and
+#'`B` are model parameter (or eta) names. The row is labelled
+#'`BSV correlation between A and B`, with `A` and `B` given the report's
+#'markdown names (`rptdetails$parameters[[A]]$md`) when there are any.
 #'@param rname row name of the parameter table
 #'@param rptdetails object creating when reading in rptyaml file
 #'@return The row's label, or `NULL` when `rname` is not a BSV correlation
 #'row
 #'@noRd
 bsv_cor_label <- function(rname, rptdetails){
-  pair = regmatches(rname, regexec("^BSV correlation between ([^ ]+) and ([^ ]+)$", rname))[[1]]
+  pair = regmatches(rname, regexec("^bsvcorr\\(([^,]+),([^)]+)\\)$", rname))[[1]]
   if(length(pair) != 3){
     return(NULL)
   }

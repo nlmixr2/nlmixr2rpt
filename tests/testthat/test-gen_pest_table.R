@@ -18,39 +18,51 @@ pest_rendered_text = function(ft, col){
   ic = ic[order(ic[[".row_id"]], ic[[".chunk_index"]]), ]
 as.vector(tapply(ic[["txt"]], ic[[".row_id"]], paste, collapse = ""))}
 
-test_that("gen_pest_table names a BSV correlation row's parameters with the report names", {
-  # the parameter table nlmixr2est reports for a correlated block
-  pf = data.frame(
+# The parameter table nlmixr2est reports for a correlated block: without
+# parameter labels, and with them (the label column then describes the
+# correlation row)
+pest_pf = list(
+  unlabelled = data.frame(
     "Est."     = c("1.01", "3.46", ""),
     "BSV(CV%)" = c("24.3", "14.1", "0.725"),
-    row.names  = c("tcl", "tv", "BSV correlation between tcl and tv"),
-    check.names = FALSE)
-  res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = rptdetails_pest)
-  expect_true(res$isgood)
-  expect_identical(
-    res$df[[1]]$Parameter,
-    c("CL~int~ (L/hr)", "V (L)", "BSV correlation between CL~int~ (L/hr) and V (L)"))
-  expect_identical(
-    pest_rendered_text(res$ft[[1]], "Parameter"),
-    c("CLint (L/hr)", "V (L)", "BSV correlation between CLint (L/hr) and V (L)"))
-  # the other cells of the row are as nlmixr2est gave them
-  expect_identical(res$df[[1]][3, "BSV(CV%)"], "0.725")
-  expect_identical(res$df[[1]][3, "Est."], "")
+    row.names  = c("tcl", "tv", "bsvcorr(tcl,tv)"),
+    check.names = FALSE),
+  labelled = data.frame(
+    "Parameter" = c("CL (L/hr)", "", "BSV correlation between tcl and tv"),
+    "Est."      = c("1.01", "3.46", ""),
+    "BSV(CV%)"  = c("24.3", "14.1", "0.725"),
+    row.names   = c("tcl", "tv", "bsvcorr(tcl,tv)"),
+    check.names = FALSE))
 
-  # a name the report does not give stays the model's
-  res = gen_pest_table(
-    obnd       = obnd_pest,
-    fit        = list(par.fixed = pf),
-    rptdetails = list(parameters = list(tcl = list(md = "CL~int~ (L/hr)"))))
-  expect_identical(res$df[[1]]$Parameter[3], "BSV correlation between CL~int~ (L/hr) and tv")
-  res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = NULL)
-  expect_identical(res$df[[1]]$Parameter, c("tcl", "tv", "BSV correlation between tcl and tv"))
+test_that("gen_pest_table labels a BSV correlation row with the report names", {
+  for(pf in pest_pf){
+    res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = rptdetails_pest)
+    expect_true(res$isgood)
+    expect_identical(
+      res$df[[1]]$Parameter,
+      c("CL~int~ (L/hr)", "V (L)", "BSV correlation between CL~int~ (L/hr) and V (L)"))
+    expect_identical(
+      pest_rendered_text(res$ft[[1]], "Parameter"),
+      c("CLint (L/hr)", "V (L)", "BSV correlation between CLint (L/hr) and V (L)"))
+    # the other cells of the row are as nlmixr2est gave them
+    expect_identical(res$df[[1]][3, "BSV(CV%)"], "0.725")
+    expect_identical(res$df[[1]][3, "Est."], "")
 
-  # a report name given for the whole row is used as it is
-  rd_row = rptdetails_pest
-  rd_row$parameters[["BSV correlation between tcl and tv"]] = list(md = "corr(CL, V)")
-  res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = rd_row)
-  expect_identical(res$df[[1]]$Parameter[3], "corr(CL, V)")
+    # a name the report does not give stays the model's
+    res = gen_pest_table(
+      obnd       = obnd_pest,
+      fit        = list(par.fixed = pf),
+      rptdetails = list(parameters = list(tcl = list(md = "CL~int~ (L/hr)"))))
+    expect_identical(res$df[[1]]$Parameter[3], "BSV correlation between CL~int~ (L/hr) and tv")
+    res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = NULL)
+    expect_identical(res$df[[1]]$Parameter[3], "BSV correlation between tcl and tv")
+
+    # a report name given for the whole row is used as it is
+    rd_row = rptdetails_pest
+    rd_row$parameters[["bsvcorr(tcl,tv)"]] = list(md = "corr(CL, V)")
+    res = gen_pest_table(obnd = obnd_pest, fit = list(par.fixed = pf), rptdetails = rd_row)
+    expect_identical(res$df[[1]]$Parameter[3], "corr(CL, V)")
+  }
 })
 
 test_that("gen_pest_table reports the BSV correlation rows of a fit", {
@@ -78,7 +90,7 @@ test_that("gen_pest_table reports the BSV correlation rows of a fit", {
     control = nlmixr2est::foceiControl(print = 0, maxOuterIterations = 0, calcTables = FALSE, covMethod = ""))))
   # nlmixr2est versions before the BSV correlation rows report none
   skip_if_not(
-    any(startsWith(rownames(fit$par.fixed), "BSV correlation between ")),
+    any(grepl("^bsvcorr\\(", rownames(fit$par.fixed))),
     "the installed nlmixr2est does not report BSV correlation rows")
   res = gen_pest_table(obnd = obnd_pest, fit = fit, rptdetails = rptdetails_pest)
   expect_true(res$isgood)
@@ -95,7 +107,7 @@ test_that("gen_pest_table reports the BSV correlation rows of a fit", {
 test_that("gen_pest_table is unchanged for a fit without BSV correlation rows", {
   fit = fetch_fit_example()
   pf  = fit$par.fixed
-  expect_false(any(startsWith(rownames(pf), "BSV correlation between ")))
+  expect_false(any(grepl("^bsvcorr\\(", rownames(pf))))
   res = gen_pest_table(obnd = obnd_pest, fit = fit, rptdetails = rptdetails_pest)
   expect_true(res$isgood)
   expect_identical(res$df[[1]]$Parameter, c("tka", "CL~int~ (L/hr)", "V (L)", "add.sd"))
