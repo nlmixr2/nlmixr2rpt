@@ -4,6 +4,13 @@
   needed") on a fit with parameter labels and a non-mu-referenced eta, whose
   row `nlmixr2est` gives an `NA` label; the row is named by its row name.
 * Added support for modal diagrams via `nlmixr2plot` and also model equations
+* `gen_pest_table()` labels each BSV correlation row (`bsvcorr(A,B)`, which
+  newer `nlmixr2est` adds for each estimated between-subject covariance)
+  `BSV correlation between A and B`, naming `A` and `B` with the report's
+  parameter names from the `parameters` section of the report yaml when it
+  gives them.
+* `gen_pest_table()` now renders the markdown of every row whose label
+  repeats another row's; only the first was rendered.
 
 # nlmixr2rpt 0.2.2 
 
