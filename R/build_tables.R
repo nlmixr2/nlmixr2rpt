@@ -418,8 +418,9 @@ gen_pest_table  <- function(obnd       = NULL,
       fex_df[rname, "Parameter"] = rptdetails[["parameters"]][[rname]][["md"]]
     } else {
       # If there is no value for the current parameter name we
-      # replace it with the row name
-      if( fex_df[rname, "Parameter"] == ""){
+      # replace it with the row name (nlmixr2est can leave an
+      # unlabelled row's label NA rather than "")
+      if(is.na(fex_df[rname, "Parameter"]) || fex_df[rname, "Parameter"] == ""){
         fex_df[rname, "Parameter"] = rname
       }
     }

@@ -1,5 +1,8 @@
 # nlmixr2rpt 0.2.3 (development version)
 
+* `gen_pest_table()` no longer fails ("missing value where TRUE/FALSE
+  needed") on a fit with parameter labels and a non-mu-referenced eta, whose
+  row `nlmixr2est` gives an `NA` label; the row is named by its row name.
 * Added support for modal diagrams via `nlmixr2plot` and also model equations
 
 # nlmixr2rpt 0.2.2 
